@@ -92,7 +92,6 @@ const filteredServers = computed(() => {
     if (!serverSearchKeyword.value) {
         return servers.value;
     }
-    console.log(sortedServers)
     return servers.value.filter(server => (server.VMName + server.Status + server.IP + server.HyperVisor + server.Hostname).toLowerCase().includes(serverSearchKeyword.value.toLowerCase()));
 });
 
@@ -103,7 +102,7 @@ const SortingOrder = {
 }
 
 let sorting = {
-    sorting_col: 'VMName',
+    sorting_col: '',
     sorting_order: SortingOrder.Ascending
 }
 
@@ -149,10 +148,6 @@ const getSortingIcon = (column) => {
         return '';
     }
 };
-
-
-
-
 </script>
   
 <style scoped>

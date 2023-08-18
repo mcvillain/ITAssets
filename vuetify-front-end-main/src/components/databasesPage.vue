@@ -12,9 +12,9 @@
                 <thead>
                     <tr>
                         <!-- Add click events and icons for sorting -->
-                        <th class="dName" @click="sortDatabases('name')">Name {{ getSortingIcon('name') }}</th>
-                        <th class="dSize" @click="sortDatabases('size')">Size in GB {{ getSortingIcon('size') }}</th>
-                        <th class="dPath" @click="sortDatabases('paths')">Path {{ getSortingIcon('paths') }}</th>
+                        <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
+                        <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
+                        <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,7 +24,6 @@
                         <td class="pathWrap">
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
-                        <!--<td class="dCost">{{ calculateCost(database.size) }}</td>-->
                     </tr>
                 </tbody>
             </table>
@@ -38,6 +37,8 @@ import notification from './notification.vue';
 import router from './router/index.js';
 const databaseSearchKeyword = ref('');
 var databases = ref(null);
+
+var update = ref(0);
 
 //localStorages
 const ong = localStorage.getItem('brotha');
@@ -60,6 +61,10 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
             .then(data => {
                 databases.value = data;
             })
+            .then(() => {
+                sortBy("size");
+                update.value += 1;
+            })
             .catch(error => {
                 console.error('Error fetching database data:', error);
             });
@@ -68,63 +73,60 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
     router.push('/');
 }
 
-// Custom sorting function for databases
-const customSortDatabases = (a, b, property) => {
-    const sortOrder = sortingOrders[property];
-    const valueA = a[property];
-    const valueB = b[property];
-    if (valueA === null) return 1;
-    if (valueB === null) return -1;
-    if (property === 'size' || property === 'cost') { // Include 'cost' here
-        return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
-    }
-    if (property === 'paths') {
-        return sortOrder === 'asc' ? valueA[0].localeCompare(valueB[0]) : valueB[0].localeCompare(valueA[0]);
-    }
-    if(property === 'cost')
-    return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-};
-
-const sortDatabases = (property) => {
-    toggleSortingOrder(property); // Toggle the sorting order first
-    databases.value.sort((a, b) => customSortDatabases(a, b, property));
-};
-
 const filteredDatabases = computed(() => {
     if (!databaseSearchKeyword.value) {
         return databases.value;
     }
     const keywordTwo = databaseSearchKeyword.value.toLowerCase();
-    return databases.value.filter(database => 
+    return databases.value.filter(database =>
         (database.name + database.paths.join('') + calculateCost(database.size)).toLowerCase().includes(keywordTwo)
     );
 });
 
-const sortingOrders = {
-    VMName: 'asc',
-    Status: 'asc',
-    IP: 'asc',
-    LastCheckInTime: 'asc',
-    HyperVisor: 'asc',
-    Hostname: 'asc',
-    name: 'asc',
-    size: 'asc',
-    paths: 'asc',
-    cost: 'asc',
-};
+const SortingOrder = {
+    Ascending: 0,
+    Descending: 1
+}
+
+let sorting = {
+    sorting_col: 'size',
+    sorting_order: SortingOrder.Ascending
+}
+
+function sortBy(col) {
+    if (sorting.sorting_col == col) {
+        sorting.sorting_order = sorting.sorting_order == SortingOrder.Ascending ? SortingOrder.Descending : SortingOrder.Ascending;
+    } else {
+        sorting.sorting_col = col;
+        sorting.sorting_order = SortingOrder.Ascending;
+    }
+
+    databases.value.sort((a, b) => {
+        let val1 = a[sorting.sorting_col];
+        let val2 = b[sorting.sorting_col];
+        if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
+        if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
+        if (sorting.sorting_col === 'paths') {
+            return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
+        }
+        if (typeof val1 === 'string' && typeof val2 === 'string')
+            return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        else
+            return sorting.sorting_order == SortingOrder.Ascending ? val1 - val2 : val2 - val1;
+    });
+}
 
 const getSortingIcon = (column) => {
     // Return appropriate icon based on the sorting order
-    if (sortingOrders[column] === 'asc') {
-        return '\u25B2'; // Upward-pointing triangle
+    if (sorting.sorting_col == column) {
+        if (sorting.sorting_order === SortingOrder.Ascending) {
+            return '\u25B2'; // Upward-pointing triangle
+        } else {
+            return '\u25BC'; // Downward-pointing triangle
+        }
     } else {
-        return '\u25BC'; // Downward-pointing triangle
+        return '';
     }
-};
-
-const toggleSortingOrder = (column) => {
-    // Toggle the sorting order for the given column
-    sortingOrders[column] = sortingOrders[column] === 'asc' ? 'desc' : 'asc';
 };
 </script>
 
@@ -169,10 +171,12 @@ input[type="text"] {
     margin-left: auto;
     margin-right: auto;
 }
+
 .pathWrap {
     display: flex;
     flex-direction: column;
 }
+
 .vm:hover {
     background-color: #af2525;
     scale: 105%;

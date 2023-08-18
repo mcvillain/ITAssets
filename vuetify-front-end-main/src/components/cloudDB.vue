@@ -12,10 +12,10 @@
                 <thead>
                     <tr>
                         <!-- Add click events and icons for sorting -->
-                        <th class="dName" @click="sortDatabases('name')">Name {{ getSortingIcon('name') }}</th>
-                        <th class="dSize" @click="sortDatabases('size')">Size in GB {{ getSortingIcon('size') }}</th>
-                        <th class="dPath" @click="sortDatabases('paths')">Path {{ getSortingIcon('paths') }}</th>
-                        <th class="dCost1" @click="sortDatabases('size')">Cost of Database {{ getSortingIcon('size') }}</th>
+                        <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
+                        <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
+                        <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
+                        <th class="dCost1" @click="sortBy('size')" :key="update">Cost of Database {{ getSortingIcon('size') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +40,8 @@ import router from './router/index.js';
 const databaseSearchKeyword = ref('');
 var databases = ref(null);
 
+var update = ref(0);
+
 //localStorages
 const ong = localStorage.getItem('brotha');
 const token = localStorage.getItem('jwt');
@@ -60,6 +62,10 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
             .then(response => response.json())
             .then(data => {
                 databases.value = data;
+            })
+            .then(() => {
+                sortBy("size");
+                update.value += 1;
             })
             .catch(error => {
                 console.error('Error fetching database data:', error);
@@ -101,31 +107,50 @@ const filteredDatabases = computed(() => {
     );
 });
 
-const sortingOrders = {
-    VMName: 'asc',
-    Status: 'asc',
-    IP: 'asc',
-    LastCheckInTime: 'asc',
-    HyperVisor: 'asc',
-    Hostname: 'asc',
-    name: 'asc',
-    size: 'asc',
-    paths: 'asc',
-    cost: 'asc',
-};
+const SortingOrder = {
+    Ascending: 0,
+    Descending: 1
+}
+
+let sorting = {
+    sorting_col: 'size',
+    sorting_order: SortingOrder.Ascending
+}
+
+function sortBy(col) {
+    if (sorting.sorting_col == col) {
+        sorting.sorting_order = sorting.sorting_order == SortingOrder.Ascending ? SortingOrder.Descending : SortingOrder.Ascending;
+    } else {
+        sorting.sorting_col = col;
+        sorting.sorting_order = SortingOrder.Ascending;
+    }
+
+    databases.value.sort((a, b) => {
+        let val1 = a[sorting.sorting_col];
+        let val2 = b[sorting.sorting_col];
+        if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
+        if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
+        if (sorting.sorting_col === 'paths') {
+            return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
+        }
+        if (typeof val1 === 'string' && typeof val2 === 'string')
+            return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        else
+            return sorting.sorting_order == SortingOrder.Ascending ? val1 - val2 : val2 - val1;
+    });
+}
 
 const getSortingIcon = (column) => {
     // Return appropriate icon based on the sorting order
-    if (sortingOrders[column] === 'asc') {
-        return '\u25B2'; // Upward-pointing triangle
+    if (sorting.sorting_col == column) {
+        if (sorting.sorting_order === SortingOrder.Ascending) {
+            return '\u25B2'; // Upward-pointing triangle
+        } else {
+            return '\u25BC'; // Downward-pointing triangle
+        }
     } else {
-        return '\u25BC'; // Downward-pointing triangle
+        return '';
     }
-};
-
-const toggleSortingOrder = (column) => {
-    // Toggle the sorting order for the given column
-    sortingOrders[column] = sortingOrders[column] === 'asc' ? 'desc' : 'asc';
 };
 </script>
 
