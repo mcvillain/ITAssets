@@ -1,49 +1,49 @@
 # Generate new version
 Set-Variable -Name "random" -Value (Get-Random) -Option constant
-echo ("Generated random number: " + $random)
+Write-Output ("Generated random number: " + $random)
 Set-Alias -Name sed -Value C:\"Program Files"\Git\usr\bin\sed.exe
 # Pull
-echo "Updating Repo"
-cd ~/Documents/GitHub/Vuetfy-Server-Project/
+Write-Output "Updating Repo"
+Set-Location $PSScriptRoot/../
 git fetch origin
 git reset --hard origin/main
 git pull
 # Clear Old
-echo "Clearing Old Images"
-cd ~/Documents/GitHub/Vuetfy-Server-Project/builders
-rm ./*.tar
+Write-Output "Clearing Old Images"
+Set-Location $PSScriptRoot/../builders
+Remove-Item ./*.tar
 # Backend
-echo "Building Backend"
-cd ~/Documents/GitHub/Vuetfy-Server-Project/builders/backend
+Write-Output "Building Backend"
+Set-Location $PSScriptRoot/backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
-cp ~/Documents/GitHub/Vuetfy-Server-Project/Backend-main/src/package.json .
+Copy-Item ~/Documents/GitHub/Vuetfy-Server-Project/Backend-main/src/package.json .
 docker build -t backend .
 docker image save -o backend.tar backend:latest
-mv ./backend.tar ..
-rm ./package.json
+Move-Item ./backend.tar ..
+Remove-Item ./package.json
 # Frontend
-echo "Building Frontend"
-cd ~/Documents/GitHub/Vuetfy-Server-Project/builders/frontend
+Write-Output "Building Frontend"
+Set-Location $PSScriptRoot/frontend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
 docker build -t frontend .
 docker image save -o frontend.tar frontend:latest
-mv ./frontend.tar ..
+Move-Item ./frontend.tar ..
 # Deploy
-echo Deploying...
-cd ~/Documents/GitHub/Vuetfy-Server-Project/builders
+Write-Output Deploying...
+Set-Location $PSScriptRoot
 ssh jared@4.246.161.216 "rm /tmp/*.tar"
 scp ./backend.tar jared@4.246.161.216:/tmp
 scp ./frontend.tar jared@4.246.161.216:/tmp
-echo "Deploying Backend..."
+Write-Output "Deploying Backend..."
 ssh jared@4.246.161.216 "docker rm backend_ctr --force ; docker image rm backend ; docker load -i /tmp/backend.tar ; docker run -d -p 3030:3000 --restart=always --name backend_ctr backend:latest"
-echo "Deploying Frontend..."
+Write-Output "Deploying Frontend..."
 ssh jared@4.246.161.216 "docker rm frontend_ctr --force ; docker image rm frontend ; docker load -i /tmp/frontend.tar ; docker run -d -p 8080:80 --restart=always --name frontend_ctr frontend:latest"
 # Reset Changes to Dockerfiles
-echo "Reverting Dockerfile Changes"
-cd ~/Documents/GitHub/Vuetfy-Server-Project/
+Write-Output "Reverting Dockerfile Changes"
+Set-Location $PSScriptRoot/..
 git fetch origin
 git reset --hard origin/main
 git pull
 # Done
-cd ~/Documents/GitHub/Vuetfy-Server-Project/builders
-echo "DONE!"
+Set-Location $PSScriptRoot
+Write-Output "DONE!"
