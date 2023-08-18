@@ -16,7 +16,7 @@ Remove-Item ./*.tar
 Write-Output "Building Backend"
 Set-Location $PSScriptRoot/backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
-Copy-Item ~/Documents/GitHub/Vuetfy-Server-Project/Backend-main/src/package.json .
+Copy-Item $PSScriptRoot/../Backend-main/src/package.json .
 docker build -t backend .
 docker image save -o backend.tar backend:latest
 Move-Item ./backend.tar ..
