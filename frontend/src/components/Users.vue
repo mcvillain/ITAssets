@@ -1,7 +1,7 @@
 <template>
   <notification />
   <h2 class=heading>Total Accounts</h2>
-  <div class="userNumbers" :key="uns">
+  <div class="userNumbers" :key="update">
     <p><span class="b">Total Users: </span>{{ data.totalUsers }}</p>
     <p><span class="b">Service Accounts: </span>{{ data.serviceAccounts }}</p>
   </div>
@@ -10,18 +10,18 @@
   <div class="chart-container">
     <div class="doughnut-container">
       <div class="doughnut">
-        <doughnut :userdata="data" :key="dnt" />
+        <doughnut :userdata="data" :key="update" />
       </div>
     </div>
     <div class="divider"></div>
     <div class="bargraphs">
       <div class="bg upm">
         <b class=heading>Users per Manager</b>
-        <perManager :userdata="data" :key="upm" />
+        <perManager :userdata="data" :key="update" />
       </div>
       <div class="bg upjt">
         <b class=heading>Users per Job Title</b>
-        <jobTitles :userdata="data" :key="upjt" />
+        <jobTitles :userdata="data" :key="update" />
       </div>
     </div>
   </div>
@@ -34,16 +34,10 @@ import perManager from './perManager.vue';
 import jobTitles from './jobTitles.vue';
 import { onMounted, ref } from 'vue';
 
-const uns = ref(0);
-const dnt = ref(0);
-const upm = ref(0);
-const upjt = ref(0);
+const update = ref(0);
 
 const forceRerender = () => {
-  uns.value += 1;
-  dnt.value += 1;
-  upm.value += 1;
-  upjt.value += 1;
+  update.value += 1;
 };
 
 type UsersResponse = {

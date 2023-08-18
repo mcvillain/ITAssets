@@ -104,17 +104,12 @@ function sortBy(col) {
     }
 
     databases.value.sort((a, b) => {
-        let val1 = a[sorting.sorting_col];
-        let val2 = b[sorting.sorting_col];
+        let val1 = a[sorting.sorting_col=="cost"?"size":sorting.sorting_col];
+        let val2 = b[sorting.sorting_col=="cost"?"size":sorting.sorting_col];
         if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
         if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
         if (sorting.sorting_col === 'paths') {
             return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
-        }
-        if (sorting.sorting_col === 'cost') {
-            let cost1 = Number.parseFloat(val1);
-            let cost2 = Number.parseFloat(val2);
-            return sorting.sorting_order == SortingOrder.Ascending ? cost1 - cost2 : cost2 - cost1;
         }
         if (typeof val1 === 'string' && typeof val2 === 'string')
             return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
