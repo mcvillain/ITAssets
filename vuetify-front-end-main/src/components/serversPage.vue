@@ -12,22 +12,29 @@
                 <thead>
                     <tr>
                         <!-- Add click events and icons for sorting -->
-                        <th class="vm" @click="sortServers('VMName')">VM Name {{ getSortingIcon('VMName') }}</th>
-                        <th class="stat status_row_cell" @click="sortServers('Status')">Status {{ getSortingIcon('Status') }}</th>
-                        <th class="ip" @click="sortServers('IP')">IP {{ getSortingIcon('IP') }}</th>
-                        <th class="time" @click="sortServers('LastCheckInTime')">Last Check-In Time {{
+                        <th class="vm" @click="sortBy('VMName')">VM Name {{ getSortingIcon('VMName') }}</th>
+                        <th class="stat status_row_cell" @click="sortBy('Status')">Status {{ getSortingIcon('Status')
+                        }}</th>
+                        <th class="ip" @click="sortBy('IP')">IP {{ getSortingIcon('IP') }}</th>
+                        <th class="time" @click="sortBy('LastCheckInTime')">Last Check-In Time {{
                             getSortingIcon('LastCheckInTime') }}</th>
-                        <th class="hv" @click="sortServers('HyperVisor')">HyperVisor {{ getSortingIcon('HyperVisor') }}</th>
-                        <th class="host" @click="sortServers('Hostname')">Hostname {{ getSortingIcon('Hostname') }}</th>
-                        <th class="Cost" @click="sortServers('Cost')">Cost {{ getSortingIcon('Cost') }}</th>
+                        <th class="hv" @click="sortBy('HyperVisor')">HyperVisor {{ getSortingIcon('HyperVisor') }}</th>
+                        <th class="host" @click="sortBy('Hostname')">Hostname {{ getSortingIcon('Hostname') }}</th>
+                        <th class="Cost" @click="sortBy('Cost')">Cost {{ getSortingIcon('Cost') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="server in filteredServers" :key="server.VMName">
                         <td>{{ server.VMName }}</td>
                         <td class="status_row_cell">
-                            <div class="status_row" v-if="server.Status === 'Running'"><div class="running"></div><div class="status_text">{{ server.Status }}</div></div>
-                            <div class="status_row" v-else><div class="offline"></div><div class="status_text">{{ server.Status }}</div></div>
+                            <div class="status_row" v-if="server.Status === 'Running'">
+                                <div class="running"></div>
+                                <div class="status_text">{{ server.Status }}</div>
+                            </div>
+                            <div class="status_row" v-else>
+                                <div class="offline"></div>
+                                <div class="status_text">{{ server.Status }}</div>
+                            </div>
                         </td>
                         <td>{{ server.IP }}</td>
                         <td>{{ dateToString(server.LastCheckInTime) }}</td>
@@ -70,6 +77,9 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
             .then(data => {
                 servers.value = data;
             })
+            .then(() => {
+                sortBy("VMName");
+            })
             .catch(error => {
                 console.error('Error fetching server data:', error);
             });
@@ -78,73 +88,71 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
     router.push('/');
 }
 
-const customSortServers = (a, b, property) => {
-    const sortOrder = sortingOrders[property];
-    const valueA = a[property];
-    const valueB = b[property];
-    if (valueA === null) return 1;
-    if (valueB === null) return -1;
-    if (property === 'IP') {
-        const ipPartsA = valueA.split('.').map(Number);
-        const ipPartsB = valueB.split('.').map(Number);
-
-        for (let i = 0; i < 4; i++) {
-            if (ipPartsA[i] < ipPartsB[i]) return sortOrder === 'asc' ? -1 : 1;
-            if (ipPartsA[i] > ipPartsB[i]) return sortOrder === 'asc' ? 1 : -1;
-        }
-        return 0;
-    }
-
-    // Check if valueA and valueB are strings before using localeCompare
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-    } else {
-        // Fallback comparison using default order if localeCompare is not available
-        return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
-    }
-};
-
-
-const sortServers = (property) => {
-    toggleSortingOrder(property); // Toggle the sorting order first
-    servers.value.sort((a, b) => customSortServers(a, b, property));
-};
-
-
-
 const filteredServers = computed(() => {
     if (!serverSearchKeyword.value) {
         return servers.value;
     }
+    console.log(sortedServers)
     return servers.value.filter(server => (server.VMName + server.Status + server.IP + server.HyperVisor + server.Hostname).toLowerCase().includes(serverSearchKeyword.value.toLowerCase()));
 });
 
 
+const SortingOrder = {
+    Ascending: 0,
+    Descending: 1
+}
 
-const sortingOrders = {
-    VMName: 'asc',
-    Status: 'asc',
-    IP: 'asc',
-    LastCheckInTime: 'asc',
-    HyperVisor: 'asc',
-    Hostname: 'asc',
-    size: 'asc',
-    Cost: 'asc',
-};
+let sorting = {
+    sorting_col: 'VMName',
+    sorting_order: SortingOrder.Ascending
+}
+
+function sortBy(col) {
+    if (sorting.sorting_col == col) {
+        sorting.sorting_order = sorting.sorting_order == SortingOrder.Ascending ? SortingOrder.Descending : SortingOrder.Ascending;
+    } else {
+        sorting.sorting_col = col;
+        sorting.sorting_order = SortingOrder.Ascending;
+    }
+
+    servers.value.sort((a, b) => {
+        let val1 = a[sorting.sorting_col];
+        let val2 = b[sorting.sorting_col];
+        if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
+        if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
+        if (sorting.sorting_col == "IP") {
+            const ip1 = val1.split('.').map(Number);
+            const ip2 = val2.split('.').map(Number);
+            for (let i = 0; i < 4; i++) {
+                if (ip1[i] < ip2[i])
+                    return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
+                else
+                    return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
+            }
+        }
+        if (typeof val1 === 'string' && typeof val2 === 'string')
+            return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        else
+            return sorting.sorting_order == SortingOrder.Ascending ? val1 - val2 : val2 - val1;
+    });
+}
 
 const getSortingIcon = (column) => {
     // Return appropriate icon based on the sorting order
-    if (sortingOrders[column] === 'asc') {
-        return '\u25B2'; // Upward-pointing triangle
+    if (sorting.sorting_col == column) {
+        if (sorting.sorting_order === SortingOrder.Ascending) {
+            return '\u25B2'; // Upward-pointing triangle
+        } else {
+            return '\u25BC'; // Downward-pointing triangle
+        }
     } else {
-        return '\u25BC'; // Downward-pointing triangle
+        return '';
     }
 };
 
-const toggleSortingOrder = (column) => {
-    // Toggle the sorting order for the given column
-    sortingOrders[column] = sortingOrders[column] === 'asc' ? 'desc' : 'asc';
-};
+
+
+
 </script>
   
 <style scoped>
