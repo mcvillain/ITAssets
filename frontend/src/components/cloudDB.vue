@@ -15,7 +15,7 @@
                         <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
                         <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
                         <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
-                        <th class="dCost1" @click="sortBy('size')" :key="update">Cost of Database {{ getSortingIcon('size') }}</th>
+                        <th class="dCost1" @click="sortBy('cost')" :key="update">Cost of Database {{ getSortingIcon('cost') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,28 +75,6 @@ if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgN
     router.push('/');
 }
 
-// Custom sorting function for databases
-const customSortDatabases = (a, b, property) => {
-    const sortOrder = sortingOrders[property];
-    const valueA = a[property];
-    const valueB = b[property];
-    if (valueA === null) return 1;
-    if (valueB === null) return -1;
-    if (property === 'size' || property === 'cost') { // Include 'cost' here
-        return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
-    }
-    if (property === 'paths') {
-        return sortOrder === 'asc' ? valueA[0].localeCompare(valueB[0]) : valueB[0].localeCompare(valueA[0]);
-    }
-    if(property === 'cost')
-    return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-};
-
-const sortDatabases = (property) => {
-    toggleSortingOrder(property); // Toggle the sorting order first
-    databases.value.sort((a, b) => customSortDatabases(a, b, property));
-};
-
 const filteredDatabases = computed(() => {
     if (!databaseSearchKeyword.value) {
         return databases.value;
@@ -132,6 +110,11 @@ function sortBy(col) {
         if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
         if (sorting.sorting_col === 'paths') {
             return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
+        }
+        if (sorting.sorting_col === 'cost') {
+            let cost1 = Number.parseFloat(val1);
+            let cost2 = Number.parseFloat(val2);
+            return sorting.sorting_order == SortingOrder.Ascending ? cost1 - cost2 : cost2 - cost1;
         }
         if (typeof val1 === 'string' && typeof val2 === 'string')
             return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);

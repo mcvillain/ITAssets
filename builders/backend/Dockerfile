@@ -5,8 +5,8 @@ RUN apt-get -qq update && apt-get install sudo -y
 RUN sudo apt-get -q -y install git npm
 WORKDIR /srv/
 ENV VERSION = RANDOM_NUM  
-RUN git clone https://github.com/EvanComiciotto-lschs/Vuetfy-Server-Project.git
-WORKDIR /srv/Vuetfy-Server-Project/Backend-main/src
+RUN git clone https://github.com/AegisSoftware/ITAssets.git
+WORKDIR /srv/ITAssets/backend/src
 COPY package.json ./
 RUN npm install cors --save
 RUN npm install jsonwebtoken --save
