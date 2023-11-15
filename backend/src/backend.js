@@ -326,7 +326,7 @@ app.get('/internalDB', function (req, res) {
 });
 
 async function getAzDBPrice() {
-  const url = "https://prices.azure.com/api/retail/prices?$filter=productName eq 'Standard SSD Managed Disks' and location eq 'US East' and meterName eq 'E60 Disks'";
+  const url = "https://prices.azure.com/api/retail/prices?$filter=productName eq 'Standard SSD Managed Disks' and location eq 'US East' and meterName eq 'E60 ZRS Disk'";
   const response = await fetch(url)
   const body = await response.json();
   pricePerGB = body.Items[0].retailPrice / 8192;
