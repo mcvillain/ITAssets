@@ -226,7 +226,8 @@ let user_data = {
   manager: {}
 };
 
-
+//define all_user_data context outside of post
+let all_user_data = {};
 
 app.post('/users', (req, res) => {
   user_data = {
@@ -235,8 +236,11 @@ app.post('/users', (req, res) => {
     serviceAccounts: 0,
     title: {},
     manager: {}
-
   };
+
+  //store all_user_data for queries
+  all_user_data = req.body;
+  
   var reqData = req.body.users;
   if (req.headers.auth == token) {
     if (reqData == undefined || reqData == null) {
@@ -276,11 +280,23 @@ app.post('/users', (req, res) => {
 
 });
 
-
-
 app.get('/users', (req, res) => {
-  if (req.headers.auth == token) {
-    res.status(200).json(user_data);
+  if (req.headers.auth === token) {
+    // If there is a 'user' query parameter.
+    if (req.query.user) {
+      const targetUser = req.query.user;
+      //find the user in the all_user_data array
+      const user = all_user_data.users.find(u => u.username === targetUser);
+      // If a user is found, send that user's data as the response.
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).send("User not found");
+      }
+    } else {
+      // If no user query parameter, send the general user_data
+      res.status(200).json(user_data);
+    }
   } else {
     res.status(401).send("401 Unauthorized");
   }
