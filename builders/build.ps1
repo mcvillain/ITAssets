@@ -12,8 +12,8 @@ git pull
 Write-Output "Clearing Old Images"
 Set-Location $PSScriptRoot/../builders
 Remove-Item ./*.tar
+
 # Backend
-<#
 Write-Output "Building Backend"
 Set-Location $PSScriptRoot/backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
@@ -22,7 +22,7 @@ docker build -t backend .
 docker image save -o backend.tar backend:latest
 Move-Item ./backend.tar ..
 Remove-Item ./package.json
-#>
+
 # Frontend
 Write-Output "Building Frontend"
 Set-Location $PSScriptRoot/frontend
@@ -31,7 +31,6 @@ docker build -t frontend .
 docker image save -o frontend.tar frontend:latest
 Move-Item ./frontend.tar ..
 # Deploy
-<#
 Write-Output Deploying...
 Set-Location $PSScriptRoot
 ssh jared@4.246.161.216 "rm /tmp/*.tar"
@@ -41,7 +40,7 @@ Write-Output "Deploying Backend..."
 ssh jared@4.246.161.216 "docker rm backend_ctr --force ; docker image rm backend ; docker load -i /tmp/backend.tar ; docker run -d -p 3030:3000 --restart=always --name backend_ctr backend:latest"
 Write-Output "Deploying Frontend..."
 ssh jared@4.246.161.216 "docker rm frontend_ctr --force ; docker image rm frontend ; docker load -i /tmp/frontend.tar ; docker run -d -p 8080:80 --restart=always --name frontend_ctr frontend:latest"
-#>
+
 # Reset Changes to Dockerfiles
 Write-Output "Reverting Dockerfile Changes"
 Set-Location $PSScriptRoot/..
