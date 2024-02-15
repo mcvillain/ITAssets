@@ -13,6 +13,7 @@ Write-Output "Clearing Old Images"
 Set-Location $PSScriptRoot/../builders
 Remove-Item ./*.tar
 # Backend
+<#
 Write-Output "Building Backend"
 Set-Location $PSScriptRoot/backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
@@ -21,6 +22,7 @@ docker build -t backend .
 docker image save -o backend.tar backend:latest
 Move-Item ./backend.tar ..
 Remove-Item ./package.json
+#>
 # Frontend
 Write-Output "Building Frontend"
 Set-Location $PSScriptRoot/frontend
