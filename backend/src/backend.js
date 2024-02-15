@@ -119,6 +119,7 @@ app.post('/databases', function (req, res) {
           name: db.name,
           paths: [db.path],
           size: db.size,
+          created: db.created,
           cost: (Math.ceil((db.size*pricePerGB)*100)/100)
         });
       }

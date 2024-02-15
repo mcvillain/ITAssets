@@ -15,6 +15,7 @@
                         <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
                         <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
                         <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
+                        <th class="dPath" @click="sortBy('created')">Path {{ getSortingIcon('created') }}</th>
                         <th class="dCost1" @click="sortBy('cost')" :key="update">Cost of Database {{ getSortingIcon('cost') }}</th>
                     </tr>
                 </thead>
@@ -52,7 +53,7 @@ const calculateCost = (sizeInGB) => {
 };
 
 if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgNJfvZi8DO7pTghhHHTHkWdbyCvngkmXiY5ZXbsjl0XxnPGlwkVkgVo7kCgbknRN991FMdjeY6SeSf6ImylDy0DXIyfkKYclpvmWrCr2aiYaT0w6pVZAvxj1IDHKnuSMmUOQ4jHdE5qMKpvfepe5o2VDYDixXGMAYGpvNc7TdKyUUK7y3n0qiJ2AE8IGD5RdYKd2W0cpuOHwAeBZ44j1E75joAXoGl8UCaMGzLiZtMgcVvDlbCmLKfZnJEDc5tVTj0waoqYxTzzbXwCSo8QZLH2Aevt2rj' && auth === 'Bearer ' + token) {
-    console.log('hello');
+    //console.log('hello');
     onMounted(() => {
         fetch('https://itassets.aiscorp.com:3000/databases', {
             headers: {
