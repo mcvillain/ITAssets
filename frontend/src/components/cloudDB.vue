@@ -15,7 +15,7 @@
                         <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
                         <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
                         <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
-                        <th class="dPath" @click="sortBy('created')">Path {{ getSortingIcon('created') }}</th>
+                        <th class="dPath" @click="sortBy('created')">Created {{ getSortingIcon('created') }}</th>
                         <th class="dCost1" @click="sortBy('cost')" :key="update">Cost of Database {{ getSortingIcon('cost') }}</th>
                     </tr>
                 </thead>
