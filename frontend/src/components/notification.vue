@@ -8,7 +8,7 @@ export default {
     var messageCheck = ref(false);
 
     onMounted(async () => {
-      let resp = await fetch('https://itassets.aiscorp.com:3000/messages', {
+      let resp = await fetch('http://itassets.aiscorp.com:3000/messages', {
         headers: {
           auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
         },
