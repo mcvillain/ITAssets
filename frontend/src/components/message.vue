@@ -21,7 +21,7 @@ export default {
                 if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
                     router.push('/');
                 }  
-                let resp = await fetch("http://itassets.aiscorp.com:3000/messages/", {
+                let resp = await fetch("https://itassets.aiscorp.com:3000/messages/", {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
@@ -42,7 +42,7 @@ export default {
             if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
                 router.push('/');
             }
-                let resp = await fetch("http://itassets.aiscorp.com:3000/messages/", {
+                let resp = await fetch("https://itassets.aiscorp.com:3000/messages/", {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
