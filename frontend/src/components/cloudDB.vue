@@ -26,6 +26,7 @@
                         <td class="pathWrap">
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
+                        <td>{{ database.created }}</td>
                         <td class="dCost">{{ calculateCost(database.size) }}</td>
                     </tr>
                 </tbody>
@@ -177,6 +178,8 @@ input[type="text"] {
 .pathWrap {
     display: flex;
     flex-direction: column;
+    max-width: 600px;
+
 }  
 
 .vm:hover {
