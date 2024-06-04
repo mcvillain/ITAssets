@@ -67,7 +67,7 @@ let data: UsersResponse = {
 
 onMounted(async () => {
   // Fetch data from the server
-  let resp = await fetch('https://itassets.aiscorp.com:3000/users', {
+  let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/users', {
     headers: {
       auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
     },

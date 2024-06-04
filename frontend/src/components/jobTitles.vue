@@ -89,12 +89,12 @@ onMounted(async () => {
    newData.datasets[0].data = titlesBySize.map((title) => title.size); //Object.values(data.manager).filter(data => data != 0) as [];
    chartData.value = newData;
 
-   //  let resp = await fetch('https://itassets.aiscorp.com:3000/users', {
+   //  let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/users', {
    //     headers: {
    //        auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
    //     },
    //  });
-   //  //  let resp = await fetch('http://fkhan.aiscorp.local:3000/users', {
+   //  //  let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/users', {
    //  //     headers: {
    //  //        auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
    //  //     },
