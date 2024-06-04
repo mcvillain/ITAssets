@@ -39,21 +39,19 @@ export default {
         password: ""
       },
       output: "",
-      endpoint: import.meta.env.VITE_API_ENDPOINT,
     }
   },
   methods: {
     async login() {
       try {
-        console.log(endpoint);
         if (this.input.username == 'aegis' && this.input.password == 'aegis') {
-          const response = await axios.post(endpoint+'/login', {
+          const response = await axios.post('https://itassets.aiscorp.com:3000/login', {
             username: this.input.username,
             password: this.input.password,
           });
 
           token = response.data.token;
-          const res = await axios.post(endpoint+'/auth', {});
+          const res = await axios.post('https://itassets.aiscorp.com:3000/auth', {});
           const word = res.data.code;
           const authHeader = `Bearer ${token}`;
 
@@ -67,7 +65,7 @@ export default {
           //this.$router.push('/servers')
           window.location.href = "/servers";
         } else if (this.input.username == 'admin' && this.input.password == 'Interns2023@Aegis') {
-          const response = await axios.post(endpoint+'/login', {
+          const response = await axios.post('https://itassets.aiscorp.com:3000/login', {
             username: this.input.username,
             password: this.input.password,
           });
