@@ -7,6 +7,8 @@ WORKDIR /srv/
 ENV VERSION = RANDOM_NUM 
 RUN git clone https://github.com/mcvillain/ITAssets.git
 WORKDIR /srv/ITAssets/frontend/
+COPY .env.production* /srv/ITAssets/frontend/
+# COPY .env.production.local /srv/ITAssets/frontend/.env.production.local
 RUN npm install && npm install axios && npm install vue-router@4 && npm install vue-router && npm run build
 RUN mv /srv/ITAssets/frontend/dist/* /usr/local/apache2/htdocs/
 WORKDIR /usr/local/apache2/htdocs/

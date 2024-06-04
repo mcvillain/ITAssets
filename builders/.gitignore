@@ -1,3 +1,4 @@
 backend/package.json
 backend.tar
 frontend.tar
+frontend/*.local
