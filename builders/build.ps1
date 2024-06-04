@@ -1,3 +1,9 @@
+##################################################################
+#################### This Script Requires SED ####################
+##################################################################
+# Get it here: https://gnuwin32.sourceforge.net/packages/sed.htm #
+##################################################################
+
 # Generate new version
 Set-Variable -Name "random" -Value (Get-Random) -Option constant
 Write-Output ("Generated random number: " + $random)
