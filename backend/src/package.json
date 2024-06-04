@@ -1,16 +1,25 @@
 {
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "*",
-    "jsonwebtoken": "*"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "*",
+    "memory-cache": "^0.2.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
-  "name": "dockernodejsproject",
-  "version": "1.0.0",
-  "main": "app.js",
-  "author": "SaravAK",
+  "name": "itassets-backend",
+  "version": "2.0.0",
+  "main": "index.js",
+  "author": "Aegis Industrial Software Corporation",
   "license": "MIT",
-  "description": "Sample NodeJS Project with Expres FrameWork and Running in Docker Container"
+  "description": "The backend for the ITAssets page",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/memory-cache": "^0.2.5",
+    "@types/node": "^20.14.1",
+    "typescript": "^5.4.5"
+  }
 }
