@@ -45,7 +45,7 @@ docker build -t frontend .
 Write-Output Deploying...
 Set-Location $PSScriptRoot
 docker run -d -p 3030:3000 --restart=always --name backend_ctr backend:latest
-docker run -d -p 8080:80 --restart=always -e VITE_API_ENDPOINT='http://localhost:3000' --name frontend_ctr frontend:latest
+docker run -d -p 8080:80 --restart=always -e VITE_API_ENDPOINT='http://localhost:3030' --name frontend_ctr frontend:latest
 
 # ssh jared@4.246.161.216 "rm /tmp/*.tar"
 # scp ./backend.tar jared@4.246.161.216:/tmp
