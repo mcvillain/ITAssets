@@ -1,10 +1,21 @@
 <script>
 import { ref } from 'vue';
 import router from './router/index.js';
-const random = localStorage.getItem('random');
+// const random = localStorage.getItem('random');
 
-if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
-    router.push('/');
+// if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
+//     router.push('/');
+// }
+
+import axios from 'axios';
+import VueCookies from 'vue-cookies';
+const session_id = VueCookies.get('session_id');
+let auth_lvl = "0";
+if (session_id != undefined && session_id != null) {
+    auth_lvl = await axios.get(import.meta.env.VITE_API_ENDPOINT+'/auth');
+    if (auth_lvl != "2") {
+        location.href='/';
+    }
 }
 
 export default {
@@ -18,15 +29,15 @@ export default {
 
     methods: {
         async fill() {
-                if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
+                if(auth_lvl != "2"){
                     router.push('/');
                 }  
                 let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+"/messages/", {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
+                        'Content-Type': 'application/json'
+                        // auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
                     },
 
                     //make sure to serialize your JSON body
@@ -39,15 +50,15 @@ export default {
             
         },
         async empty() {
-            if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
+            if(auth_lvl != "2"){
                 router.push('/');
             }
                 let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+"/messages/", {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
+                        'Content-Type': 'application/json'
+                        // auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
                     },
                     body: JSON.stringify({
                         message: "",

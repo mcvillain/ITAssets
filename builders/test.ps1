@@ -7,7 +7,7 @@
 # Generate new version
 Set-Variable -Name "random" -Value (Get-Random) -Option constant
 Write-Output ("Generated random number: " + $random)
-Set-Alias -Name sed -Value C:\"Program Files"\Git\usr\bin\sed.exe
+Set-Alias -Name sed -Value C:\"Program Files"\Git\usr\bin\sed.exe # CHANGE TO 'sed.exe' PATH
 # Pull
 Write-Output "Updating Repo"
 Set-Location $PSScriptRoot/../
@@ -25,9 +25,9 @@ docker image rm frontend
 
 # Backend
 Write-Output "Building Backend"
-Set-Location $PSScriptRoot/backend
+Set-Location $PSScriptRoot/dev_backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
-Copy-Item $PSScriptRoot/../backend/src/package.json .
+# Copy-Item $PSScriptRoot/../backend/src/package.json .
 docker build -t backend .
 # docker image save -o backend.tar backend:latest
 # Move-Item ./backend.tar ..
@@ -35,7 +35,7 @@ docker build -t backend .
 
 # Frontend
 Write-Output "Building Frontend"
-Set-Location $PSScriptRoot/frontend
+Set-Location $PSScriptRoot/dev_frontend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
 docker build -t frontend .
 # docker image save -o frontend.tar frontend:latest
