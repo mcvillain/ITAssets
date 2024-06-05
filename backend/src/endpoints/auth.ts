@@ -91,6 +91,11 @@ export async function get_auth(
     memcache: NodeCache
 ) {
     const session_id = req.cookies["session_id"];
+    if (session_id == undefined) {
+        console.log(req.cookies);
+        res.sendStatus(500);
+        return;
+    }
     const auth_lvl = get_auth_lvl(session_id, memcache);
     res.status(200);
     res.send(auth_lvl);
