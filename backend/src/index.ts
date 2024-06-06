@@ -24,6 +24,7 @@ let loginCache = new NodeCache({
     maxKeys: 100,
     deleteOnExpire: true,
 });
+loginCache.set("b71516c0-90ec-4ff6-9fa6-591b2fc8d781", "svc");
 let dataCache= new NodeCache({
     stdTTL: 0,
 });

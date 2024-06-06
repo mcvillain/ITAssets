@@ -3,9 +3,9 @@ import { createHash } from "crypto";
 import NodeCache from "node-cache";
 
 function hash_pwd(pwd: string, salt: string): string {
-    const hash = createHash('sha256');
+    const hash = createHash("sha256");
     hash.update(pwd + salt);
-    return hash.digest('hex');
+    return hash.digest("hex");
 }
 
 class Account {
@@ -36,7 +36,8 @@ function create_account(
 }
 function populate_accounts() {
     create_account("aegis", "aegis", 1);
-    create_account("admin", "Interns2023@Aegis", 2);
+    create_account("svc", "", 2);
+    create_account("admin", "Interns2023@Aegis", 3);
 }
 
 async function create_session(
@@ -56,6 +57,7 @@ export async function get_login(
     populate_accounts();
     const username = req.body.username;
     const password = req.body.password;
+    console.log(req.body);
     if (
         valid_accounts[username] != undefined &&
         valid_accounts[username] != null
