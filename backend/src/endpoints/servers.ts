@@ -31,7 +31,7 @@ export async function post_servers(
     for (let i = 0; i < new_servers.length; i++) {
         let currSize: string | undefined = new_servers[i].Size;
         if (currSize !== undefined)
-            new_servers[i].Cost = size_price_map[currSize];
+            new_servers[i]["Cost"] = size_price_map[currSize];
     }
     dataMemcache.set(Servers, new_servers);
     console.log("Done processing servers...");
