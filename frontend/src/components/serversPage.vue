@@ -14,7 +14,7 @@
                         <!-- Add click events and icons for sorting -->
                         <th class="vm" @click="sortBy('VMName')">VM Name {{ getSortingIcon('VMName') }}</th>
                         <th class="stat status_row_cell" @click="sortBy('Status')">Status {{ getSortingIcon('Status')
-                        }}</th>
+                            }}</th>
                         <th class="ip" @click="sortBy('IP')">IP {{ getSortingIcon('IP') }}</th>
                         <th class="time" @click="sortBy('LastCheckInTime')">Last Check-In Time {{
                             getSortingIcon('LastCheckInTime') }}</th>
@@ -47,7 +47,7 @@
         </div>
     </div>
 </template>
-  
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import notification from './notification.vue';
@@ -55,38 +55,39 @@ import router from './router/index.js';
 const serverSearchKeyword = ref('');
 var servers = ref(null);
 
-//localStorages
-const ong = localStorage.getItem('brotha');
-const token = localStorage.getItem('jwt');
-const auth = localStorage.getItem('header');
+import axios from "axios";
+import VueCookies from "vue-cookies";
+const session_id = VueCookies.get("session_id");
+let auth_lvl = 0;
+if (session_id != undefined && session_id != null) {
+    axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
+        if (resp.status == 200 && resp.data.auth_lvl < 1) {
+            location.href = "/";
+        }
+        auth_lvl = resp.data.auth_lvl;
+    });
+}
 
 function dateToString(old_date) {
     let date = new Date(old_date);
     return `${(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12).toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} ${date.getHours() >= 12 ? "PM" : "AM"} ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
 
-if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgNJfvZi8DO7pTghhHHTHkWdbyCvngkmXiY5ZXbsjl0XxnPGlwkVkgVo7kCgbknRN991FMdjeY6SeSf6ImylDy0DXIyfkKYclpvmWrCr2aiYaT0w6pVZAvxj1IDHKnuSMmUOQ4jHdE5qMKpvfepe5o2VDYDixXGMAYGpvNc7TdKyUUK7y3n0qiJ2AE8IGD5RdYKd2W0cpuOHwAeBZ44j1E75joAXoGl8UCaMGzLiZtMgcVvDlbCmLKfZnJEDc5tVTj0waoqYxTzzbXwCSo8QZLH2Aevt2rj' && auth === 'Bearer ' + token) {
-    console.log('hello');
-    onMounted(() => {
-        fetch(import.meta.env.VITE_API_ENDPOINT+'/servers', {
-            headers: {
-                auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
-            },
+onMounted(() => {
+    fetch(import.meta.env.VITE_API_ENDPOINT + '/servers', {
+        credentials: "include",
+    })
+        .then(response => response.json())
+        .then(data => {
+            servers.value = data;
         })
-            .then(response => response.json())
-            .then(data => {
-                servers.value = data;
-            })
-            .then(() => {
-                sortBy("VMName");
-            })
-            .catch(error => {
-                console.error('Error fetching server data:', error);
-            });
-    });
-} else {
-    router.push('/');
-}
+        .then(() => {
+            sortBy("VMName");
+        })
+        .catch(error => {
+            console.error('Error fetching server data:', error);
+        });
+});
 
 const filteredServers = computed(() => {
     if (!serverSearchKeyword.value) {
@@ -149,7 +150,7 @@ const getSortingIcon = (column) => {
     }
 };
 </script>
-  
+
 <style scoped>
 .running {
     width: 1rem;

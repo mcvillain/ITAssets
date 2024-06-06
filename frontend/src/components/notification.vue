@@ -9,9 +9,7 @@ export default {
 
     onMounted(async () => {
       let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/messages', {
-        headers: {
-          auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
-        },
+        credentials: "include",
       });
       if (resp.ok) {
         const data = await resp.json();

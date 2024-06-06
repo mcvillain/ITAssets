@@ -4,9 +4,10 @@ import dotenv from "dotenv";
 import cors, {CorsOptions} from "cors";
 import NodeCache from "node-cache";
 
-import { AzureDatabase, LocalDatabase, Message, Users } from "./types";
+import { Message } from "./types";
 import { get_auth, post_login } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
+import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserMeta, Message as CurrentMessage } from "./const";
 
 dotenv.config();
 
@@ -35,16 +36,17 @@ loginCache.set("b71516c0-90ec-4ff6-9fa6-591b2fc8d781", "svc");
 let dataCache = new NodeCache({
     stdTTL: 0,
 });
+dataCache.set(Servers, []);
 // const localDatabases: LocalDatabase[] = [];
-dataCache.set("localDatabases", []);
+dataCache.set(LocalDatabases, []);
 // const azureDatabases: AzureDatabase[] = [];
-dataCache.set("azureDatabases", []);
+dataCache.set(AzureDatabases, []);
 // const itarDatabases: AzureDatabase[] = [];
-dataCache.set("itarDatabases", []);
+dataCache.set(ItarDatabases, []);
 // const users: Users[] = [];
-dataCache.set("users", []);
+dataCache.set(UserMeta, []);
 // let currentMessage: string = "";
-dataCache.set("message", new Message());
+dataCache.set(CurrentMessage, new Message());
 
 // AUTH
 app.post("/login", async (req: Request, res: Response) => {

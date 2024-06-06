@@ -1,3 +1,4 @@
+export const Servers = "servers";
 export const LocalDatabases = "localDatabases";
 export const AzureDatabases = "azureDatabases";
 export const ItarDatabases = "itarDatabases";
