@@ -16,28 +16,30 @@ export async function post_servers(
         return;
     }
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
-    if (auth_lvl == 2) {
-        const incoming_servers: Server[] = req.body.Servers;
-        res.sendStatus(202);
-        let _servers: Server[] | undefined = dataMemcache.get(Servers);
-        let servers: Server[];
-        if (_servers === undefined) servers = [];
-        else servers = _servers;
-        const new_servers: Server[] = update_server_list(
-            incoming_servers,
-            servers
-        );
-        const sizes = extract_server_sizes(new_servers);
-        const size_price_map = generate_size_price_map(sizes);
-        for (let i = 0; i < new_servers.length; i++) {
-            let currSize: string | undefined = new_servers[i].Size;
-            if (currSize !== undefined)
-                new_servers[i].Cost = size_price_map[currSize];
-        }
-        dataMemcache.set(Servers, new_servers);
-        return;
+    if (auth_lvl < 2) 
+        res.sendStatus(401);
+    console.log("Servers Incoming...");
+    const incoming_servers: Server[] = req.body.Servers;
+    res.sendStatus(202);
+    console.log(incoming_servers);
+    let _servers: Server[] | undefined = dataMemcache.get(Servers);
+    let servers: Server[];
+    if (_servers === undefined) servers = [];
+    else servers = _servers;
+    const new_servers: Server[] = update_server_list(
+        incoming_servers,
+        servers
+    );
+    const sizes = extract_server_sizes(new_servers);
+    const size_price_map = generate_size_price_map(sizes);
+    for (let i = 0; i < new_servers.length; i++) {
+        let currSize: string | undefined = new_servers[i].Size;
+        if (currSize !== undefined)
+            new_servers[i].Cost = size_price_map[currSize];
     }
-    res.sendStatus(401);
+    dataMemcache.set(Servers, new_servers);
+    console.log("Done processing servers...");
+    return;
 }
 
 export async function get_servers(
