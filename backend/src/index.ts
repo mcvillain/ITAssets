@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 import dotenv from "dotenv";
 import cors from "cors";
 import NodeCache from "node-cache";
@@ -13,7 +13,13 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+// CORS
+var corsOptions = {
+    origin: process.env.FRONTEND_ORIGIN,
+    optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+// Middleware
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 app.use(cookieParser());
@@ -25,7 +31,7 @@ let loginCache = new NodeCache({
     deleteOnExpire: true,
 });
 loginCache.set("b71516c0-90ec-4ff6-9fa6-591b2fc8d781", "svc");
-let dataCache= new NodeCache({
+let dataCache = new NodeCache({
     stdTTL: 0,
 });
 // const localDatabases: LocalDatabase[] = [];
@@ -51,11 +57,11 @@ app.get("/auth", async (req: Request, res: Response) => {
 // MESSAGES
 app.get("/messages", async (req: Request, res: Response) => {
     await get_messages(req, res, dataCache, loginCache);
-})
+});
 
 app.post("/messages", async (req: Request, res: Response) => {
     await post_messages(req, res, dataCache, loginCache);
-})
+});
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
