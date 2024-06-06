@@ -57,7 +57,6 @@ export async function post_login(
     populate_accounts();
     const username = req.body.username;
     const password = req.body.password;
-    console.log(req.body);
     if (
         valid_accounts[username] != undefined &&
         valid_accounts[username] != null
@@ -66,8 +65,12 @@ export async function post_login(
         const pass_hash = await hash_pwd(password, account.salt);
         if (pass_hash == account.pass_hash) {
             const session_id = await create_session(username, memcache);
-            res.status(200);
-            res.send(session_id);
+            res.cookie("session_id", session_id, {
+                maxAge: 28800000, // 8 Hours
+                path: "/",
+            });
+            res.sendStatus(200);
+            // res.send(session_id);
             return;
         }
     }

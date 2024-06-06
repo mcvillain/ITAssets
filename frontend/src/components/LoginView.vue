@@ -64,7 +64,6 @@ export default {
                 );
                 if (loginReq.status == 200) {
                     //Success
-                    VueCookies.set("session_id", loginReq.data, 28800); // Valid for 8 hours
                     const auth_lvl = await axios.get(
                         import.meta.env.VITE_API_ENDPOINT + "/auth"
                     );
@@ -78,6 +77,8 @@ export default {
                     this.output =
                         "Login failed. Check your username and password.";
                 }
+            } else {
+                this.output = "Please specify your username and password.";
             }
             // try {
             //   if (this.input.username == 'aegis' && this.input.password == 'aegis') {
