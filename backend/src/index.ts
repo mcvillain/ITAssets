@@ -5,9 +5,11 @@ import cors, {CorsOptions} from "cors";
 import NodeCache from "node-cache";
 
 import { Message } from "./types";
+import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserMeta, Message as CurrentMessage } from "./const";
+
 import { get_auth, post_login } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
-import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserMeta, Message as CurrentMessage } from "./const";
+import { get_servers, post_servers } from "./endpoints/servers";
 
 dotenv.config();
 
@@ -64,6 +66,15 @@ app.get("/messages", async (req: Request, res: Response) => {
 
 app.post("/messages", async (req: Request, res: Response) => {
     await post_messages(req, res, dataCache, loginCache);
+});
+
+// SERVERS
+app.get("/servers", async (req: Request, res: Response) => {
+    await get_servers(req, res, dataCache, loginCache);
+});
+
+app.post("/servers", async (req: Request, res: Response) => {
+    await post_servers(req, res, dataCache, loginCache);
 });
 
 app.listen(port, () => {
