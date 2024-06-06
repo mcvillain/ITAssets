@@ -42,7 +42,7 @@ export async function get_messages(
         const msg: Message | undefined = await dataMemcache.get(CurrentMessage);
         if (msg != undefined) {
             res.status(200).send(
-                JSON.stringify({ message: msg.data, timestamp: msg.timestamp })
+                JSON.stringify(msg)
             );
             return;
         } else {
