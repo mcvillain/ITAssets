@@ -20,7 +20,6 @@ export async function post_servers(
     console.log("Servers Incoming...");
     const incoming_servers: Server[] = req.body.Servers;
     res.sendStatus(202);
-    console.log(incoming_servers);
     let _servers: Server[] | undefined = dataMemcache.get(Servers);
     let servers: Server[];
     if (_servers === undefined) servers = [];
@@ -33,6 +32,7 @@ export async function post_servers(
         if (currSize !== undefined)
             new_servers[i]["Cost"] = size_price_map[currSize];
     }
+    console.log(new_servers);
     dataMemcache.set(Servers, new_servers);
     console.log("Done processing servers...");
     return;
@@ -122,6 +122,7 @@ async function generate_size_price_map(
         )[0];
         const serverPriceHourly = correctItem.retailPrice;
         const price = serverPriceHourly * 24 * 30;
+        console.log(`Size '${size}' is \$${Math.ceil(price * 100) / 100}`);
         pricemap[size] = Math.ceil(price * 100) / 100;
     });
     return pricemap;
