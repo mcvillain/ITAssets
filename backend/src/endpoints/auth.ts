@@ -100,7 +100,7 @@ export async function get_auth(
     const session_id = req.cookies["session_id"];
     if (session_id == undefined) {
         res.status(200);
-        res.send(0)
+        res.send('0');
         return;
     }
     const auth_lvl = get_auth_lvl(session_id, memcache);
