@@ -15,8 +15,8 @@ export async function post_servers(
         res.sendStatus(401);
         return;
     }
-    const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
-    if (auth_lvl < 2) 
+    const username: string | undefined = loginMemcache.get(session_id);
+    if (username === undefined || username != "svc") 
         res.sendStatus(401);
     console.log("Servers Incoming...");
     const incoming_servers: Server[] = req.body.Servers;
