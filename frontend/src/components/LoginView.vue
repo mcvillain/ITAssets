@@ -5,27 +5,13 @@
             <br />
             <br />
             <label for="username">Username </label>
-            <input
-                class="user"
-                type="text"
-                id="username"
-                v-model="input.username"
-            />
+            <input class="user" type="text" id="username" v-model="input.username" />
         </div>
         <div class="mb-3">
             <label for="password">Password: </label>
-            <input
-                class="pass"
-                type="password"
-                id="password"
-                v-model="input.password"
-            />
+            <input class="pass" type="password" id="password" v-model="input.password" />
         </div>
-        <button
-            class="btn btn-outline-dark"
-            type="submit"
-            v-on:click.prevent="login()"
-        >
+        <button class="btn btn-outline-dark" type="submit" v-on:click.prevent="login()">
             Login
         </button>
     </form>
@@ -69,16 +55,11 @@ export default {
                 this.input.username.length > 0 &&
                 this.input.password.length > 0
             ) {
-                const loginReq = await axios.get(
+                const loginReq = await axios.post(
                     import.meta.env.VITE_API_ENDPOINT + "/login",
                     {
                         username: this.input.username,
                         password: this.input.password,
-                    },
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
                     }
                 );
                 if (loginReq.status == 200) {

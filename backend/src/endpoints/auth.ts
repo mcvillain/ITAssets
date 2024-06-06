@@ -49,7 +49,7 @@ async function create_session(
     return session_id;
 }
 
-export async function get_login(
+export async function post_login(
     req: Request,
     res: Response,
     memcache: NodeCache

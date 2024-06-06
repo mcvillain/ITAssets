@@ -5,7 +5,7 @@ import cors from "cors";
 import NodeCache from "node-cache";
 
 import { AzureDatabase, LocalDatabase, Message, Users } from "./types";
-import { get_auth, get_login } from "./endpoints/auth";
+import { get_auth, post_login } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
 
 dotenv.config();
@@ -40,8 +40,8 @@ dataCache.set("users", []);
 dataCache.set("message", new Message());
 
 // AUTH
-app.get("/login", async (req: Request, res: Response) => {
-    await get_login(req, res, loginCache);
+app.post("/login", async (req: Request, res: Response) => {
+    await post_login(req, res, loginCache);
 });
 
 app.get("/auth", async (req: Request, res: Response) => {
