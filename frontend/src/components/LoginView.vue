@@ -47,6 +47,10 @@ export default {
             console.log(resp);
             if (auth_lvl == 0) {
                 this.output = "Your session has expired. Please login again.";
+            } else if (auth_lvl == 1) {
+                location.href = "/servers";
+            } else if (auth_lvl == 3) {
+                location.href = "/admin";
             }
         });
     },
@@ -68,8 +72,11 @@ export default {
                     const auth_lvl = await axios.get(
                         import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }
                     );
-                    if (auth_lvl.status == 200 && auth_lvl.data.auth_lvl == 3) {
-                        location.href = "/admin";
+                    if (auth_lvl.status == 200) {
+                        if (auth_lvl.data.auth_lvl == 3)
+                            location.href = "/admin";
+                        else if (auth_lvl.data.auth_lvl == 1)
+                            location.href = "/servers";
                     }
                     location.href = "/";
                 } else if (loginReq.status == 401) {
