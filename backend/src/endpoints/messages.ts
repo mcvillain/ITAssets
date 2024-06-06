@@ -6,6 +6,10 @@ import NodeCache from "node-cache";
 
 export async function post_messages(req: Request, res: Response, dataMemcache: NodeCache, loginMemcache: NodeCache) {
     const session_id = req.cookies['session_id'];
+    if (session_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (auth_lvl >= 3) {
         const msg: string = req.body.message;
@@ -19,6 +23,10 @@ export async function post_messages(req: Request, res: Response, dataMemcache: N
 
 export async function get_messages(req: Request, res: Response, dataMemcache: NodeCache, loginMemcache: NodeCache) {
     const session_id = req.cookies['session_id'];
+    if (session_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (auth_lvl > 0) {
         const msg: Message | undefined = await dataMemcache.get(CurrentMessage);
