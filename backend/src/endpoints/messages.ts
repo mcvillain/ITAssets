@@ -22,6 +22,7 @@ export async function post_messages(
         const new_msg = new Message(msg, timestamp);
         await dataMemcache.set(CurrentMessage, new_msg);
         res.sendStatus(200);
+        return;
     }
     res.sendStatus(401);
 }
@@ -41,15 +42,12 @@ export async function get_messages(
     if (auth_lvl > 0) {
         const msg: Message | undefined = await dataMemcache.get(CurrentMessage);
         if (msg != undefined) {
-            res.status(200).send(
-                JSON.stringify(msg)
-            );
+            res.status(200).send(JSON.stringify(msg));
             return;
         } else {
             res.sendStatus(500);
             return;
         }
-    } else {
-        res.sendStatus(401);
     }
+    res.sendStatus(401);
 }
