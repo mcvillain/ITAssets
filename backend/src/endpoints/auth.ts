@@ -32,7 +32,7 @@ function create_account(
         valid_accounts[username] == undefined ||
         valid_accounts[username] == null
     )
-        valid_accounts[username] = new Account(username, username, auth_level);
+        valid_accounts[username] = new Account(username, password, auth_level);
 }
 function populate_accounts() {
     create_account("aegis", "aegis", 1);
@@ -57,14 +57,13 @@ export async function post_login(
     populate_accounts();
     const username = req.body.username;
     const password = req.body.password;
-    console.log(`User attempting login with username '${username}' and password '${password}'`);
+    console.log(`User attempting login with username '${username}'`);
     if (
         valid_accounts[username] != undefined &&
         valid_accounts[username] != null
     ) {
         const account: Account = valid_accounts[username];
         const pass_hash = await hash_pwd(password, account.salt);
-        console.log(`Account Hash: ${account.pass_hash}\nPass Hash: ${pass_hash}`);
         if (pass_hash == account.pass_hash) {
             const session_id = await create_session(username, memcache);
             console.log(`Created session with id (${session_id}) for user (${username})`);
