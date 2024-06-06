@@ -77,6 +77,7 @@ app.post("/servers", async (req: Request, res: Response) => {
     await post_servers(req, res, dataCache, loginCache);
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+server.keepAliveTimeout = 30000;
