@@ -42,7 +42,7 @@ export default {
         };
     },
     mounted() {
-        axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth").then((resp) => {
+        axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
             const auth_lvl = resp.data;
             console.log(auth_lvl);
             if (auth_lvl == 0 || auth_lvl == "0") {
