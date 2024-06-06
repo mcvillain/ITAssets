@@ -16,8 +16,7 @@ export async function post_servers(
         return;
     }
     const username: string | undefined = loginMemcache.get(session_id);
-    if (username === undefined || username != "svc") 
-        res.sendStatus(401);
+    if (username === undefined || username != "svc") res.sendStatus(401);
     console.log("Servers Incoming...");
     const incoming_servers: Server[] = req.body.Servers;
     res.sendStatus(202);
@@ -26,10 +25,7 @@ export async function post_servers(
     let servers: Server[];
     if (_servers === undefined) servers = [];
     else servers = _servers;
-    const new_servers: Server[] = update_server_list(
-        incoming_servers,
-        servers
-    );
+    let new_servers: Server[] = update_server_list(incoming_servers, servers);
     const sizes = extract_server_sizes(new_servers);
     const size_price_map = await generate_size_price_map(sizes);
     for (let i = 0; i < new_servers.length; i++) {
@@ -106,7 +102,9 @@ function extract_server_sizes(servers: Server[]): string[] {
     return sizes;
 }
 
-async function generate_size_price_map(sizes: string[]): Promise<{ [size: string]: number; }> {
+async function generate_size_price_map(
+    sizes: string[]
+): Promise<{ [size: string]: number }> {
     const pricemap: { [size: string]: number } = {};
     sizes.forEach(async (size) => {
         const url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
@@ -116,10 +114,15 @@ async function generate_size_price_map(sizes: string[]): Promise<{ [size: string
             return;
         }
         const data = await resp.json();
-        const correctItem = data.Items.filter((i:any)=>!i.meterName.toLowerCase().includes("spot") && !i.meterName.toLowerCase().includes("low") && i.productName.toLowerCase().includes("windows"))[0];
+        const correctItem = data.Items.filter(
+            (i: any) =>
+                !i.meterName.toLowerCase().includes("spot") &&
+                !i.meterName.toLowerCase().includes("low") &&
+                i.productName.toLowerCase().includes("windows")
+        )[0];
         const serverPriceHourly = correctItem.retailPrice;
         const price = serverPriceHourly * 24 * 30;
-        pricemap[size] = Math.ceil(price * 100)/100;
+        pricemap[size] = Math.ceil(price * 100) / 100;
     });
     return pricemap;
 }
