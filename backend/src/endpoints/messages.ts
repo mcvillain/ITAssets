@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
 import { Message } from "../types";
-import { Message as CurrentMessage } from '../const';
+import { Message as CurrentMessage } from "../const";
 import NodeCache from "node-cache";
 
-export async function post_messages(req: Request, res: Response, dataMemcache: NodeCache, loginMemcache: NodeCache) {
-    const session_id = req.cookies['session_id'];
+export async function post_messages(
+    req: Request,
+    res: Response,
+    dataMemcache: NodeCache,
+    loginMemcache: NodeCache
+) {
+    const session_id = req.cookies["session_id"];
     if (session_id === undefined) {
         res.sendStatus(401);
         return;
@@ -21,8 +26,13 @@ export async function post_messages(req: Request, res: Response, dataMemcache: N
     res.sendStatus(401);
 }
 
-export async function get_messages(req: Request, res: Response, dataMemcache: NodeCache, loginMemcache: NodeCache) {
-    const session_id = req.cookies['session_id'];
+export async function get_messages(
+    req: Request,
+    res: Response,
+    dataMemcache: NodeCache,
+    loginMemcache: NodeCache
+) {
+    const session_id = req.cookies["session_id"];
     if (session_id === undefined) {
         res.sendStatus(401);
         return;
@@ -31,12 +41,15 @@ export async function get_messages(req: Request, res: Response, dataMemcache: No
     if (auth_lvl > 0) {
         const msg: Message | undefined = await dataMemcache.get(CurrentMessage);
         if (msg != undefined) {
-            res.status(200).send(JSON.stringify({ message: msg.data, timestamp: msg.timestamp }));
+            res.status(200).send(
+                JSON.stringify({ message: msg.data, timestamp: msg.timestamp })
+            );
             return;
         } else {
             res.sendStatus(500);
             return;
         }
+    } else {
+        res.sendStatus(401);
     }
-    res.sendStatus(401);
 }
