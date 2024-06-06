@@ -100,10 +100,10 @@ export async function get_auth(
     const session_id = req.cookies["session_id"];
     if (session_id == undefined) {
         res.status(200);
-        res.send('0');
+        res.send(JSON.stringify({auth_lvl: 0}));
         return;
     }
-    const auth_lvl = get_auth_lvl(session_id, memcache);
+    const auth_lvl = await get_auth_lvl(session_id, memcache);
     res.status(200);
-    res.send(auth_lvl);
+    res.send(JSON.stringify({auth_lvl}));
 }
