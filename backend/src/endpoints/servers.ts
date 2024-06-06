@@ -31,7 +31,7 @@ export async function post_servers(
         servers
     );
     const sizes = extract_server_sizes(new_servers);
-    const size_price_map = generate_size_price_map(sizes);
+    const size_price_map = await generate_size_price_map(sizes);
     for (let i = 0; i < new_servers.length; i++) {
         let currSize: string | undefined = new_servers[i].Size;
         if (currSize !== undefined)
@@ -106,31 +106,20 @@ function extract_server_sizes(servers: Server[]): string[] {
     return sizes;
 }
 
-function generate_size_price_map(sizes: string[]): { [size: string]: number } {
+async function generate_size_price_map(sizes: string[]): Promise<{ [size: string]: number; }> {
     const pricemap: { [size: string]: number } = {};
-    sizes.forEach((size) => {
+    sizes.forEach(async (size) => {
         const url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
-        fetch(url)
-            .then((response) => {
-                if (!response.ok) {
-                    console.error(`Couldn't get price for size: ${size}`);
-                    return;
-                }
-                return response.json();
-            })
-            .then((data) => {
-                // Handle the data
-                let body = data;
-                let correctItem = body.Items.filter(
-                    (i: any) =>
-                        !i.meterName.toLowerCase().includes("spot") &&
-                        !i.meterName.toLowerCase().includes("low") &&
-                        i.productName.toLowerCase().includes("windows")
-                )[0];
-                var serverPriceHourly = correctItem.retailPrice;
-                var cost = serverPriceHourly * 24 * 30;
-                pricemap[size] = Math.ceil(cost * 100) / 100;
-            });
+        const resp = await fetch(url);
+        if (!resp.ok) {
+            console.error(`Couldn't get price for size: ${size}`);
+            return;
+        }
+        const data = await resp.json();
+        const correctItem = data.Items.filter((i:any)=>!i.meterName.toLowerCase().includes("spot") && !i.meterName.toLowerCase().includes("low") && i.productName.toLowerCase().includes("windows"))[0];
+        const serverPriceHourly = correctItem.retailPrice;
+        const price = serverPriceHourly * 24 * 30;
+        pricemap[size] = Math.ceil(price * 100)/100;
     });
     return pricemap;
 }
