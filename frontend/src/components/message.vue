@@ -13,7 +13,7 @@ const session_id = VueCookies.get("session_id");
 let auth_lvl = "0";
 if (session_id != undefined && session_id != null) {
     axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
-        if (resp.status == 200 && resp.data != "2") {
+        if (resp.status == 200 && resp.data.auth_lvl < 3) {
             location.href = "/";
         }
     });
