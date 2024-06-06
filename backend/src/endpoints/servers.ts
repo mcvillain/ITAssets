@@ -56,6 +56,7 @@ export async function get_servers(
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (auth_lvl > 0) {
         res.json(dataMemcache.get(Servers));
+        return;
     }
     res.sendStatus(401);
 }
