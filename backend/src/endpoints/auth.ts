@@ -72,7 +72,6 @@ export async function post_login(
                 path: "/",
             });
             res.sendStatus(200);
-            // res.send(session_id);
             return;
         }
     }
@@ -85,7 +84,9 @@ export async function get_auth_lvl(
 ): Promise<number> {
     const username: string | undefined = await memcache.get(session_id);
     if (username != undefined) {
-        const user: Account = valid_accounts[username];
+        const user: Account | undefined = valid_accounts[username];
+        if (user === undefined)
+            return 0;
         const auth_level = user.auth_level;
         return auth_level;
     }
