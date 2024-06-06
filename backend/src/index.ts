@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 const cookieParser = require("cookie-parser");
 import dotenv from "dotenv";
-import cors from "cors";
+import cors, {CorsOptions} from "cors";
 import NodeCache from "node-cache";
 
 import { AzureDatabase, LocalDatabase, Message, Users } from "./types";
@@ -14,8 +14,9 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 
 // CORS
-var corsOptions = {
+var corsOptions: CorsOptions = {
     origin: process.env.FRONTEND_ORIGIN,
+    credentials: true,
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
