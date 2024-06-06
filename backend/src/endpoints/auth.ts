@@ -65,6 +65,7 @@ export async function post_login(
         const pass_hash = await hash_pwd(password, account.salt);
         if (pass_hash == account.pass_hash) {
             const session_id = await create_session(username, memcache);
+            console.log(`Created session with id (${session_id}) for user (${username})`);
             res.cookie("session_id", session_id, {
                 maxAge: 28800000, // 8 Hours
                 path: "/",
@@ -95,10 +96,11 @@ export async function get_auth(
     res: Response,
     memcache: NodeCache
 ) {
+    console.log(`User requesting auth with session (${req.cookies['session_id']})`);
     const session_id = req.cookies["session_id"];
     if (session_id == undefined) {
-        console.log(req.cookies);
-        res.sendStatus(500);
+        res.status(200);
+        res.send(0)
         return;
     }
     const auth_lvl = get_auth_lvl(session_id, memcache);
