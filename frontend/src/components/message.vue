@@ -12,7 +12,7 @@ import VueCookies from "vue-cookies";
 const session_id = VueCookies.get("session_id");
 let auth_lvl = "0";
 if (session_id != undefined && session_id != null) {
-    axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth").then((resp) => {
+    axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
         if (resp.status == 200 && resp.data != "2") {
             location.href = "/";
         }
@@ -78,12 +78,7 @@ export default {
 
 <template>
     <div>
-        <input
-            class="in"
-            type="text"
-            v-model="message"
-            placeholder="Send a message"
-        />
+        <input class="in" type="text" v-model="message" placeholder="Send a message" />
         <button @click="fill()" style="border: 2px solid; padding: 5px">
             Submit
         </button>
@@ -96,12 +91,7 @@ export default {
         <p>{{ sendMsg }}</p>
     </div>
     <div>
-        <input
-            class="input"
-            type="text"
-            v-model="message"
-            placeholder="Update Database GB Cost"
-        />
+        <input class="input" type="text" v-model="message" placeholder="Update Database GB Cost" />
     </div>
 </template>
 
@@ -113,6 +103,7 @@ input {
 input::placeholder {
     text-align: center;
 }
+
 .in {
     /* border-radius: 1px !important; */
     padding: 2px 3px !important;
@@ -120,6 +111,7 @@ input::placeholder {
     outline: auto 2px !important;
     margin: 1rem !important;
 }
+
 .input {
     padding: 2px 3px !important;
     outline-offset: 0 !important;

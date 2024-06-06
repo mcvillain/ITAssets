@@ -65,7 +65,7 @@ export default {
                 if (loginReq.status == 200) {
                     //Success
                     const auth_lvl = await axios.get(
-                        import.meta.env.VITE_API_ENDPOINT + "/auth"
+                        import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }
                     );
                     if (auth_lvl.status == 200 && auth_lvl.data == "2") {
                         location.href = "/admin";
