@@ -42,7 +42,7 @@ export default {
                         Accept: "application/json",
                         "Content-Type": "application/json",
                     },
-                    withCredentials: true,
+                    credentials: "include",
                     //make sure to serialize your JSON body
                     body: JSON.stringify({
                         message: this.message,
@@ -64,7 +64,7 @@ export default {
                         Accept: "application/json",
                         "Content-Type": "application/json",
                     },
-                    withCredentials: true,
+                    credentials: "include",
                     body: JSON.stringify({
                         message: "",
                         timestamp: "",

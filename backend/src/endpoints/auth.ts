@@ -66,7 +66,7 @@ export async function post_login(
         const pass_hash = await hash_pwd(password, account.salt);
         if (pass_hash == account.pass_hash) {
             const session_id = await create_session(username, memcache);
-            console.log(`Created session with id (${session_id}) for user (${username})`);
+            console.log(`Created session for user (${username})`);
             res.cookie("session_id", session_id, {
                 maxAge: 28800000, // 8 Hours
                 path: "/",
