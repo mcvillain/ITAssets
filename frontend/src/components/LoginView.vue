@@ -60,7 +60,7 @@ export default {
                     {
                         username: this.input.username,
                         password: this.input.password,
-                    }
+                    }, { withCredentials: true }
                 );
                 if (loginReq.status == 200) {
                     //Success
