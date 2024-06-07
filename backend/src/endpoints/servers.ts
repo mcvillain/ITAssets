@@ -9,7 +9,7 @@ export async function post_servers(
     res: Response,
     dataMemcache: NodeCache,
     loginMemcache: NodeCache,
-    sizePriceCache: NodeCache,
+    sizePriceCache: NodeCache
 ) {
     const session_id = req.cookies["session_id"];
     if (session_id === undefined) {
@@ -17,7 +17,10 @@ export async function post_servers(
         return;
     }
     const username: string | undefined = loginMemcache.get(session_id);
-    if (username === undefined || username != "svc") res.sendStatus(401);
+    if (username === undefined || username != "svc") {
+        res.sendStatus(401);
+        return;
+    }
     console.log("Servers Incoming...");
     const incoming_servers: Server[] = req.body.Servers;
     res.sendStatus(202);
@@ -29,10 +32,14 @@ export async function post_servers(
     for (let i = 0; i < new_servers.length; i++) {
         let currSize: string | undefined = new_servers[i].Size;
         if (currSize !== undefined)
-            new_servers[i]["Cost"] = await getSizePrice(currSize, sizePriceCache);
-        console.log(`Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`);
+            new_servers[i]["Cost"] = await getSizePrice(
+                currSize,
+                sizePriceCache
+            );
+        console.log(
+            `Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`
+        );
     }
-    console.log(new_servers);
     dataMemcache.set(Servers, new_servers);
     console.log("Done processing servers...");
     return;
@@ -86,7 +93,11 @@ function update_server_list(
                 newserverlist.push(curServer);
             }
         } else {
-            if ((server.Cost === null || server.Cost === undefined) && server.Size !== undefined && server.Size !== null)
+            if (
+                (server.Cost === null || server.Cost === undefined) &&
+                server.Size !== undefined &&
+                server.Size !== null
+            )
                 server.Cost = 0;
             newserverlist.push(server);
         }
@@ -106,7 +117,7 @@ function extract_server_sizes(servers: Server[]): string[] {
 
 async function getSizePrice(
     size: string,
-    sizePriceCache: NodeCache,
+    sizePriceCache: NodeCache
 ): Promise<number> {
     const cachedPrice: number | undefined = sizePriceCache.get(size);
     if (cachedPrice !== undefined) {

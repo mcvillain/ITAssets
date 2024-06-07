@@ -10,6 +10,7 @@ import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserMe
 import { get_auth, post_login } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
 import { get_servers, post_servers } from "./endpoints/servers";
+import { get_localdb, post_localdb } from "./endpoints/local_dbs";
 
 dotenv.config();
 
@@ -79,6 +80,14 @@ app.get("/servers", async (req: Request, res: Response) => {
 
 app.post("/servers", async (req: Request, res: Response) => {
     await post_servers(req, res, dataCache, loginCache, sizePriceCache);
+});
+
+// LOCAL DATABASES
+app.get("/databases", async (req: Request, res: Response) => {
+    await get_localdb(req, res, dataCache, loginCache);
+});
+app.post("/databases", async (req: Request, res: Response) => {
+    await get_localdb(req, res, dataCache, loginCache);
 });
 
 const server = app.listen(port, () => {

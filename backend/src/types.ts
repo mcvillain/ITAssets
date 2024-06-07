@@ -15,6 +15,13 @@ export enum ServerStatus {
 export class LocalDatabase {
     name!: string;
     size!: number;
+    paths!: string[];
+    database_id!: number;
+    version: string | undefined;
+}
+export class IncomingLocalDB {
+    name!: string;
+    size!: number;
     path!: string;
     created!: string;
     database_id!: number;
