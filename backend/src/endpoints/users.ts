@@ -72,6 +72,8 @@ async function calc_dept_totals(
     let depts: { [dept_name: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
         if (user.department !== undefined && user.department !== null) {
+            if (depts[user.department]===undefined||depts[user.department]===null)
+                depts[user.department] = 0;
             depts[user.department]++;
         }
     });
@@ -84,6 +86,8 @@ async function calc_title_totals(
     let titles: { [title: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
         if (user.title !== undefined && user.title !== null) {
+            if (titles[user.title]===undefined||titles[user.title]===null)
+                titles[user.title] = 0;
             titles[user.title]++;
         }
     });
@@ -96,6 +100,8 @@ async function calc_manager_totals(
     let managers: { [manager_name: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
         if (user.manager !== undefined && user.manager !== null) {
+            if (managers[user.manager]===undefined||managers[user.manager]===null)
+                managers[user.manager] = 0;
             managers[user.manager]++;
         }
     });
