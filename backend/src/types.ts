@@ -44,10 +44,10 @@ export class Users {
     manager!: {};
 }
 export class Message {
-    constructor(data: string = "", timestamp: Date = new Date()) {
-        this.data = data;
+    constructor(msg: string = "", timestamp: Date = new Date()) {
+        this.msg = msg;
         this.timestamp = timestamp;
     };
-    data: string;
+    msg: string;
     timestamp: Date;
 }
