@@ -130,6 +130,10 @@ function sortBy(col) {
             return sorting.sorting_order == SortingOrder.Ascending
                 ? val1[0].localeCompare(val2[0])
                 : val2[0].localeCompare(val1[0]);
+        } else if (sorting.sorting_col === "created") {
+            let d1 = new Date(val1).getMilliseconds();
+            let d2 = new Date(val2).getMilliseconds();
+            return sorting.sorting_order == SortingOrder.Ascending?(d1<d2?1:-1):(d2<d1?1:-1);
         }
         if (typeof val1 === "string" && typeof val2 === "string")
             return sorting.sorting_order == SortingOrder.Ascending
