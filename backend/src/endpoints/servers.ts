@@ -8,7 +8,8 @@ export async function post_servers(
     req: Request,
     res: Response,
     dataMemcache: NodeCache,
-    loginMemcache: NodeCache
+    loginMemcache: NodeCache,
+    sizePriceCache: NodeCache,
 ) {
     const session_id = req.cookies["session_id"];
     if (session_id === undefined) {
@@ -25,12 +26,10 @@ export async function post_servers(
     if (_servers === undefined) servers = [];
     else servers = _servers;
     let new_servers: Server[] = update_server_list(incoming_servers, servers);
-    const sizes = extract_server_sizes(new_servers);
-    const size_price_map = await generate_size_price_map(sizes);
     for (let i = 0; i < new_servers.length; i++) {
         let currSize: string | undefined = new_servers[i].Size;
         if (currSize !== undefined)
-            new_servers[i]["Cost"] = size_price_map[currSize];
+            new_servers[i]["Cost"] = await getSizePrice(currSize, sizePriceCache);
         console.log(`Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`);
     }
     console.log(new_servers);
@@ -105,28 +104,30 @@ function extract_server_sizes(servers: Server[]): string[] {
     return sizes;
 }
 
-async function generate_size_price_map(
-    sizes: string[]
-): Promise<{ [size: string]: number }> {
-    const pricemap: { [size: string]: number } = {};
-    sizes.forEach(async (size) => {
-        const url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
-        const resp = await fetch(url);
-        if (!resp.ok) {
-            console.error(`Couldn't get price for size: ${size}`);
-            return;
-        }
-        const data = await resp.json();
-        const correctItem = data.Items.filter(
-            (i: any) =>
-                !i.meterName.toLowerCase().includes("spot") &&
-                !i.meterName.toLowerCase().includes("low") &&
-                i.productName.toLowerCase().includes("windows")
-        )[0];
-        const serverPriceHourly = correctItem.retailPrice;
-        const price = serverPriceHourly * 24 * 30;
-        console.log(`Size '${size}' is \$${Math.ceil(price * 100) / 100}`);
-        pricemap[size] = Math.ceil(price * 100) / 100;
-    });
-    return pricemap;
+async function getSizePrice(
+    size: string,
+    sizePriceCache: NodeCache,
+): Promise<number> {
+    const cachedPrice: number | undefined = sizePriceCache.get(size);
+    if (cachedPrice !== undefined) {
+        return cachedPrice;
+    }
+    const url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
+    const resp = await fetch(url);
+    if (!resp.ok) {
+        console.error(`Couldn't get price for size: ${size}`);
+        return -1;
+    }
+    const data = await resp.json();
+    const correctItem = data.Items.filter(
+        (i: any) =>
+            !i.meterName.toLowerCase().includes("spot") &&
+            !i.meterName.toLowerCase().includes("low") &&
+            i.productName.toLowerCase().includes("windows")
+    )[0];
+    return 0;
+    const serverPriceHourly = correctItem.retailPrice;
+    const price = serverPriceHourly * 24 * 30;
+    console.log(`Size '${size}' is \$${Math.ceil(price * 100) / 100}`);
+    return Math.ceil(price * 100) / 100;
 }

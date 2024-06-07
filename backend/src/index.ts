@@ -49,6 +49,10 @@ dataCache.set(ItarDatabases, []);
 dataCache.set(UserMeta, []);
 // let currentMessage: string = "";
 dataCache.set(CurrentMessage, new Message());
+let sizePriceCache = new NodeCache({
+    stdTTL: 24 * 3600,
+    deleteOnExpire: true,
+})
 
 // AUTH
 app.post("/login", async (req: Request, res: Response) => {
@@ -74,7 +78,7 @@ app.get("/servers", async (req: Request, res: Response) => {
 });
 
 app.post("/servers", async (req: Request, res: Response) => {
-    await post_servers(req, res, dataCache, loginCache);
+    await post_servers(req, res, dataCache, loginCache, sizePriceCache);
 });
 
 const server = app.listen(port, () => {
