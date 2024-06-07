@@ -30,10 +30,9 @@
                         <td>{{ database.name }}</td>
                         <td>{{ database.size }}</td>
                         <td class="pathWrap">
-                            <span v-for="path in database.paths" :key="path">{{
-                                path
-                            }}</span>
+                            <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
+                        <td>{{ database.version }}</td>
                     </tr>
                 </tbody>
             </table>
