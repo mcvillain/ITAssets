@@ -125,7 +125,6 @@ async function getSizePrice(
             !i.meterName.toLowerCase().includes("low") &&
             i.productName.toLowerCase().includes("windows")
     )[0];
-    return 0;
     const serverPriceHourly = correctItem.retailPrice;
     const price = serverPriceHourly * 24 * 30;
     console.log(`Size '${size}' is \$${Math.ceil(price * 100) / 100}`);
