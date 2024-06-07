@@ -35,7 +35,7 @@ docker build -t backend .
 
 # Frontend
 Write-Output "Building Frontend"
-Set-Location $PSScriptRoot/dev_frontend
+Set-Location $PSScriptRoot/frontend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
 docker build -t frontend .
 # docker image save -o frontend.tar frontend:latest
