@@ -13,16 +13,18 @@
                     <tr>
                         <!-- Add click events and icons for sorting -->
                         <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
-                        <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
+                        <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}
+                        </th>
                         <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
                         <th class="dPath" @click="sortBy('created')">Created {{ getSortingIcon('created') }}</th>
-                        <th class="dCost1" @click="sortBy('cost')" :key="update">Cost of Database {{ getSortingIcon('cost') }}</th>
+                        <th class="dCost1" @click="sortBy('cost')" :key="update">Cost of Database {{
+                            getSortingIcon('cost') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="database in filteredDatabases" :key="database.name">
                         <td>{{ database.name }}</td>
-                        <td>{{ (database.size==0 ? "<1" : database.size) }}</td>
+                        <td>{{ (database.size == 0 ? "<1" : database.size) }}</td>
                         <td class="pathWrap">
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
@@ -44,45 +46,46 @@ var databases = ref(null);
 
 var update = ref(0);
 
-//localStorages
-const ong = localStorage.getItem('brotha');
-const token = localStorage.getItem('jwt');
-const auth = localStorage.getItem('header');
+let auth_lvl = 0;
 
 const calculateCost = (sizeInGB) => {
     return (sizeInGB * 0.13).toFixed(2); // Multiply size by 0.13 and round to 2 decimal places
 };
 
-if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgNJfvZi8DO7pTghhHHTHkWdbyCvngkmXiY5ZXbsjl0XxnPGlwkVkgVo7kCgbknRN991FMdjeY6SeSf6ImylDy0DXIyfkKYclpvmWrCr2aiYaT0w6pVZAvxj1IDHKnuSMmUOQ4jHdE5qMKpvfepe5o2VDYDixXGMAYGpvNc7TdKyUUK7y3n0qiJ2AE8IGD5RdYKd2W0cpuOHwAeBZ44j1E75joAXoGl8UCaMGzLiZtMgcVvDlbCmLKfZnJEDc5tVTj0waoqYxTzzbXwCSo8QZLH2Aevt2rj' && auth === 'Bearer ' + token) {
-    //console.log('hello');
-    onMounted(() => {
-        fetch(import.meta.env.VITE_API_ENDPOINT+'/databases', {
-            headers: {
-                auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
-            },
+onMounted(() => {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+        credentials: "include",
+    })
+        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.auth_lvl <= 0) {
+                location.href = "/";
+            }
+            auth_lvl = resp.auth_lvl;
         })
-            .then(response => response.json())
-            .then(data => {
-                databases.value = data;
-            })
-            .then(() => {
-                sortBy("size");
-                update.value += 1;
-            })
-            .catch(error => {
-                console.error('Error fetching database data:', error);
-            });
-    });
-} else {
-    router.push('/');
-}
+        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/azure_dbs", {
+            credentials: "include",
+        }))
+        .then((response) => response.json())
+        .then((data) => {
+            databases.value = data;
+        })
+        .then(() => {
+            sortBy("size");
+            update.value += 1;
+        })
+        .catch((error) => {
+            console.error("Error fetching database data:", error);
+        });
+});
+
 
 const filteredDatabases = computed(() => {
     if (!databaseSearchKeyword.value) {
         return databases.value;
     }
     const keywordTwo = databaseSearchKeyword.value.toLowerCase();
-    return databases.value.filter(database => 
+    return databases.value.filter(database =>
         (database.name + database.paths.join('') + calculateCost(database.size)).toLowerCase().includes(keywordTwo)
     );
 });
@@ -106,12 +109,16 @@ function sortBy(col) {
     }
 
     databases.value.sort((a, b) => {
-        let val1 = a[sorting.sorting_col=="cost"?"size":sorting.sorting_col];
-        let val2 = b[sorting.sorting_col=="cost"?"size":sorting.sorting_col];
+        let val1 = a[sorting.sorting_col == "cost" ? "size" : sorting.sorting_col];
+        let val2 = b[sorting.sorting_col == "cost" ? "size" : sorting.sorting_col];
         if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
         if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
         if (sorting.sorting_col === 'paths') {
             return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
+        } else if (sorting.sorting_col === "created") {
+            let d1 = new Date(val1).getSeconds();
+            let d2 = new Date(val2).getSeconds();
+            return sorting.sorting_order == SortingOrder.Ascending ? (d1 < d2 ? 1 : -1) : (d2 < d1 ? 1 : -1);
         }
         if (typeof val1 === 'string' && typeof val2 === 'string')
             return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
@@ -175,12 +182,13 @@ input[type="text"] {
     margin-left: auto;
     margin-right: auto;
 }
+
 .pathWrap {
     display: flex;
     flex-direction: column;
     max-width: 600px;
 
-}  
+}
 
 .vm:hover {
     background-color: #af2525;
