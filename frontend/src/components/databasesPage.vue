@@ -20,8 +20,8 @@
                         <th class="dPath" @click="sortBy('paths')">
                             Path {{ getSortingIcon("paths") }}
                         </th>
-                        <th class="dPath" @click="sortBy('version')">
-                            Path {{ getSortingIcon("version") }}
+                        <th class="dVersion" @click="sortBy('version')">
+                            Version {{ getSortingIcon("version") }}
                         </th>
                     </tr>
                 </thead>
@@ -247,6 +247,11 @@ input[type="text"] {
 }
 
 .dPath:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+.dVersion:hover {
     background-color: #af2525;
     scale: 105%;
     transition: ease 0.5s;
