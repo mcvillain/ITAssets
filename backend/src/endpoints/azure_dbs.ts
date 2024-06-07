@@ -5,7 +5,7 @@ import { AzureDatabases } from "../const";
 import NodeCache from "node-cache";
 import { getAzDBPricePerGB } from "../util";
 
-export async function post_localdb(
+export async function post_azuredb(
     req: Request,
     res: Response,
     dataMemcache: NodeCache,

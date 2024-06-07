@@ -11,6 +11,7 @@ import { get_auth, post_login } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
 import { get_servers, post_servers } from "./endpoints/servers";
 import { get_localdb, post_localdb } from "./endpoints/local_dbs";
+import { get_azuredb, post_azuredb } from "./endpoints/azure_dbs";
 
 dotenv.config();
 
@@ -88,6 +89,14 @@ app.get("/databases", async (req: Request, res: Response) => {
 });
 app.post("/databases", async (req: Request, res: Response) => {
     await post_localdb(req, res, dataCache, loginCache);
+});
+
+// AZURE DATABASES
+app.get("/azure_dbs", async (req: Request, res: Response) => {
+    await get_azuredb(req, res, dataCache, loginCache);
+});
+app.post("/azure_dbs", async (req: Request, res: Response) => {
+    await post_azuredb(req, res, dataCache, loginCache, sizePriceCache);
 });
 
 const server = app.listen(port, () => {
