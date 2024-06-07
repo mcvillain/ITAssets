@@ -9,7 +9,6 @@ export async function post_localdb(
     res: Response,
     dataMemcache: NodeCache,
     loginMemcache: NodeCache,
-    sizePriceCache: NodeCache
 ) {
     const session_id = req.cookies["session_id"];
     if (session_id === undefined) {

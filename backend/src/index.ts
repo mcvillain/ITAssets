@@ -87,7 +87,7 @@ app.get("/databases", async (req: Request, res: Response) => {
     await get_localdb(req, res, dataCache, loginCache);
 });
 app.post("/databases", async (req: Request, res: Response) => {
-    await get_localdb(req, res, dataCache, loginCache);
+    await post_localdb(req, res, dataCache, loginCache);
 });
 
 const server = app.listen(port, () => {
