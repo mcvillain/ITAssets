@@ -6,7 +6,7 @@ Set-Alias -Name sed -Value C:\"Program Files"\Git\usr\bin\sed.exe
 Write-Output "Updating Repo"
 Set-Location $PSScriptRoot/../
 git fetch origin
-git reset --hard origin/main
+git reset --hard origin/pre_backend_rewrite
 git pull
 # Clear Old
 Write-Output "Clearing Old Images"
@@ -46,7 +46,7 @@ ssh jared@4.246.161.216 "docker rm frontend_ctr --force ; docker image rm fronte
 Write-Output "Reverting Dockerfile Changes"
 Set-Location $PSScriptRoot/..
 git fetch origin
-git reset --hard origin/main
+git reset --hard origin/pre_backend_rewrite
 git pull
 # Done
 Set-Location $PSScriptRoot
