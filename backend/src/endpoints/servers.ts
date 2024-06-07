@@ -112,7 +112,7 @@ async function getSizePrice(
     if (cachedPrice !== undefined) {
         return cachedPrice;
     }
-    const url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
+    let url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
     const resp = await fetch(url);
     if (!resp.ok) {
         console.error(`Couldn't get price for size: ${size}`);
