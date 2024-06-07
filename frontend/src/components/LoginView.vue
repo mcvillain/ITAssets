@@ -74,11 +74,11 @@ export default {
                     );
                     if (auth_lvl.status == 200) {
                         if (auth_lvl.data.auth_lvl == 3)
-                        router.push('/admin');
+                            location.href = "/admin";
                         else if (auth_lvl.data.auth_lvl == 1)
-                        router.push('/servers');
+                            location.href = "/servers";
                     }
-                    router.push('/');
+                    location.href = "/";
                 } else if (loginReq.status == 401) {
                     // Unauthorized
                     VueCookies.remove("session_id");

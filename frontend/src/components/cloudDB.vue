@@ -59,7 +59,7 @@ onMounted(() => {
         .then((resp) => resp.json())
         .then((resp) => {
             if (resp.auth_lvl <= 0) {
-                router.push('/');
+                location.href = "/";
             }
             auth_lvl = resp.auth_lvl;
         })

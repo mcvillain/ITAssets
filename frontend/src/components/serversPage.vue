@@ -62,12 +62,12 @@ let auth_lvl = 0;
 if (session_id != undefined && session_id != null) {
     axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
         if (resp.status == 200 && resp.data.auth_lvl < 1) {
-            router.push('/');
+            location.href = "/";
         }
         auth_lvl = resp.data.auth_lvl;
     });
 } else {
-    router.push('/');
+    location.href = "/";
 }
 
 function dateToString(old_date) {
