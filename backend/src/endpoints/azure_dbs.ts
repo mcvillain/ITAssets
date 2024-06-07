@@ -10,7 +10,7 @@ export async function post_azuredb(
     res: Response,
     dataMemcache: NodeCache,
     loginMemcache: NodeCache,
-    sizePriceCache: NodeCache,
+    sizePriceCache: NodeCache
 ) {
     const session_id = req.cookies["session_id"];
     if (session_id === undefined) {
@@ -22,7 +22,7 @@ export async function post_azuredb(
         res.sendStatus(401);
         return;
     }
-    console.log("Local DBs Incoming...");
+    console.log("Azure DBs Incoming...");
     const incoming_dbs: IncomingAzureDB[] = req.body;
     res.sendStatus(202);
     let _current_dbs: AzureDatabase[] | undefined =
@@ -31,9 +31,13 @@ export async function post_azuredb(
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
     let pricePerGig = await getAzDBPricePerGB(sizePriceCache);
-    let new_dbs: AzureDatabase[] = await update_db_list(incoming_dbs, current_dbs, pricePerGig);
+    let new_dbs: AzureDatabase[] = await update_db_list(
+        incoming_dbs,
+        current_dbs,
+        pricePerGig
+    );
     dataMemcache.set(AzureDatabases, new_dbs);
-    console.log("Done processing local databases...");
+    console.log("Done processing Azure databases...");
     return;
 }
 
@@ -59,25 +63,18 @@ export async function get_azuredb(
 function update_db_list(
     incoming_dbs: IncomingAzureDB[],
     current_dbs: AzureDatabase[],
-    pricePerGig: number,
+    pricePerGig: number
 ): AzureDatabase[] {
-    let new_db_list: AzureDatabase[] = [];
     incoming_dbs.forEach(async (db: IncomingAzureDB) => {
-        if (
-            current_dbs.some(
-                (existing_db) => existing_db.database_id === db.database_id
-            )
-        ) {
-            const matched_db = current_dbs.find(
-                (existing_db) => existing_db.database_id === db.database_id
-            );
-            if (matched_db === undefined) return;
+        const matched_db = current_dbs.find(
+            (existing_db) => existing_db.database_id === db.database_id
+        );
+        if (matched_db !== undefined) {
             matched_db.paths.push(db.path);
             matched_db.size += db.size;
-            new_db_list.push(matched_db);
         } else {
             let price = db.size * pricePerGig;
-            new_db_list.push({
+            current_dbs.push({
                 database_id: db.database_id,
                 name: db.name,
                 paths: [db.path],
@@ -88,5 +85,5 @@ function update_db_list(
             });
         }
     });
-    return new_db_list;
+    return current_dbs;
 }
