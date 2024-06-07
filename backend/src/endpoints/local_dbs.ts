@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { IncomingLocalDB, LocalDatabase, Message, Server } from "../types";
+import { IncomingLocalDB, LocalDatabase } from "../types";
 import { LocalDatabases } from "../const";
 import NodeCache from "node-cache";
 

@@ -29,13 +29,22 @@ export class IncomingLocalDB {
     LastCheckInTime!: string;
     version: string | undefined;
 }
+
 export class AzureDatabase {
     name!: string;
-    database_id!: number;
-    paths!: string[];
     size!: number;
+    paths!: string[];
     created!: string;
+    database_id!: number;
     cost!: number;
+}
+export class IncomingAzureDB {
+    name!: string;
+    size!: number;
+    path!: string;
+    created!: string;
+    database_id!: number;
+    LastCheckInTime!: Date;
 }
 export class Users {
     departments!: {};
