@@ -66,7 +66,7 @@ onMounted(() => {
             }
             auth_lvl = resp.auth_lvl;
         })
-        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/internalDB", {
+        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/databases", {
             credentials: "include",
         }))
         .then((response) => response.json())
