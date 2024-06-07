@@ -8,10 +8,7 @@ ENV VERSION = RANDOM_NUM
 ENV FRONTEND_ORIGIN="https://itassets.aiscorp.com/"   
 RUN git clone https://github.com/mcvillain/ITAssets.git
 WORKDIR /srv/ITAssets/backend/src
-COPY package.json ./
-RUN npm install cors --save
-RUN npm install jsonwebtoken --save
-RUN npm install express --save
-RUN npm install  
-CMD ["node", "backend.js"]
+RUN npm install
+RUN npm run tsc
+CMD ["node", "index.js"]
 

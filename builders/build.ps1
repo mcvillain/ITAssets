@@ -23,7 +23,6 @@ Remove-Item ./*.tar
 Write-Output "Building Backend"
 Set-Location $PSScriptRoot/backend
 sed -i ('s/ENV VERSION = RANDOM_NUM/ENV VERSION = ' + $random +  ' /g') Dockerfile
-Copy-Item $PSScriptRoot/../backend/src/package.json .
 docker build -t backend .
 docker image save -o backend.tar backend:latest
 Move-Item ./backend.tar ..
