@@ -13,8 +13,6 @@ export default {
       });
       if (resp.ok) {
         const data = await resp.json();
-        console.log(data);
-        console.log(data.msg.length);
         if (data.msg.length > 0) {
           messages.value = data.msg;
           messageTime.value = new Date(data.timestamp).toLocaleString();
