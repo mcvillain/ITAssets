@@ -18,6 +18,7 @@ export default {
         if (data.msg.length > 0) {
           messages.value = data.msg;
           messageTime.value = new Date(data.timestamp).toLocaleString();
+          messageCheck.value = true;
         }
       } else {
         console.error('Error fetching data:', error);
