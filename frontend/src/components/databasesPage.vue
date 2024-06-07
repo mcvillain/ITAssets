@@ -64,7 +64,7 @@ onMounted(() => {
             if (resp.auth_lvl <= 0) {
                 location.href = "/";
             }
-            auth_lvl = resp.data.auth_lvl;
+            auth_lvl = resp.auth_lvl;
         })
         .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/internalDB", {
             credentials: "include",
