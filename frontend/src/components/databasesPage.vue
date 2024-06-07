@@ -20,6 +20,9 @@
                         <th class="dPath" @click="sortBy('paths')">
                             Path {{ getSortingIcon("paths") }}
                         </th>
+                        <th class="dCreated" @click="sortBy('created')">
+                            Created {{ getSortingIcon("created") }}
+                        </th>
                         <th class="dVersion" @click="sortBy('version')">
                             Version {{ getSortingIcon("version") }}
                         </th>
@@ -32,6 +35,7 @@
                         <td class="pathWrap">
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
+                        <td>{{ database.created }}</td>
                         <td>{{ database.version }}</td>
                     </tr>
                 </tbody>
@@ -251,7 +255,14 @@ input[type="text"] {
     scale: 105%;
     transition: ease 0.5s;
 }
+
 .dVersion:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.dCreated:hover {
     background-color: #af2525;
     scale: 105%;
     transition: ease 0.5s;

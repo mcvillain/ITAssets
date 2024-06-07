@@ -18,6 +18,7 @@ export class LocalDatabase {
     paths!: string[];
     database_id!: number;
     version: string | undefined;
+    created!: string;
 }
 export class IncomingLocalDB {
     name!: string;

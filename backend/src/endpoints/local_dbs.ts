@@ -68,6 +68,7 @@ function update_db_list(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatab
                 paths: [db.path],
                 size: db.size,
                 version: db.version,
+                created: db.created,
             });
         }
     });
