@@ -68,19 +68,12 @@ function update_server_list(
     servers: Server[],
     oldserverlist: Server[]
 ): Server[] {
-    let newserverlist: Server[] = [];
     servers.forEach((server: Server) => {
-        //check if the VM is already in the list
-        if (
-            oldserverlist.some(
-                (existingServer) => existingServer.VMName === server.VMName
-            )
-        ) {
-            //check if the last check in time is newer
-            var curServer = oldserverlist.find(
-                (existingServer) => existingServer.VMName === server.VMName
-            );
-            if (curServer === undefined) return;
+        //check if the last check in time is newer
+        var curServer = oldserverlist.find(
+            (existingServer) => existingServer.VMName === server.VMName
+        );
+        if (curServer !== undefined) {
             if (server.LastCheckInTime > curServer.LastCheckInTime) {
                 //update masterServerList with newer attributes
                 curServer.LastCheckInTime = server.LastCheckInTime;
@@ -90,7 +83,6 @@ function update_server_list(
                 curServer.Status = server.Status;
                 curServer.Size = server.Size;
                 curServer.Cost = 0;
-                newserverlist.push(curServer);
             }
         } else {
             if (
@@ -99,7 +91,7 @@ function update_server_list(
                 server.Size !== null
             )
                 server.Cost = 0;
-            newserverlist.push(server);
+            oldserverlist.push(server);
         }
     });
     return servers;
