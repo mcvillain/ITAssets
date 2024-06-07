@@ -7,14 +7,22 @@
                 <input type="text" v-model="databaseSearchKeyword" placeholder="Search Databases" />
             </div>
 
-
             <table class="styled-table">
                 <thead>
                     <tr>
                         <!-- Add click events and icons for sorting -->
-                        <th class="dName" @click="sortBy('name')">Name {{ getSortingIcon('name') }}</th>
-                        <th class="dSize" @click="sortBy('size')" :key="update">Size in GB {{ getSortingIcon('size') }}</th>
-                        <th class="dPath" @click="sortBy('paths')">Path {{ getSortingIcon('paths') }}</th>
+                        <th class="dName" @click="sortBy('name')">
+                            Name {{ getSortingIcon("name") }}
+                        </th>
+                        <th class="dSize" @click="sortBy('size')" :key="update">
+                            Size in GB {{ getSortingIcon("size") }}
+                        </th>
+                        <th class="dPath" @click="sortBy('paths')">
+                            Path {{ getSortingIcon("paths") }}
+                        </th>
+                        <th class="dPath" @click="sortBy('version')">
+                            Path {{ getSortingIcon("version") }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,7 +30,9 @@
                         <td>{{ database.name }}</td>
                         <td>{{ database.size }}</td>
                         <td class="pathWrap">
-                            <span v-for="path in database.paths" :key="path">{{ path }}</span>
+                            <span v-for="path in database.paths" :key="path">{{
+                                path
+                            }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -32,70 +42,75 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import notification from './notification.vue';
-import router from './router/index.js';
-const databaseSearchKeyword = ref('');
+import { ref, onMounted, computed } from "vue";
+import notification from "./notification.vue";
+import router from "./router/index.js";
+const databaseSearchKeyword = ref("");
 var databases = ref(null);
 
 var update = ref(0);
 
-//localStorages
-const ong = localStorage.getItem('brotha');
-const token = localStorage.getItem('jwt');
-const auth = localStorage.getItem('header');
+let auth_lvl = 0;
 
 const calculateCost = (sizeInGB) => {
     return (sizeInGB * 0.13).toFixed(2); // Multiply size by 0.13 and round to 2 decimal places
 };
 
-if (ong === 'lnzJe2rnW3fssC2aGuOhkBWmukFGezDlk9yZaLtE0kdC5PZXp20EwVLU9UWibIiSFgNJfvZi8DO7pTghhHHTHkWdbyCvngkmXiY5ZXbsjl0XxnPGlwkVkgVo7kCgbknRN991FMdjeY6SeSf6ImylDy0DXIyfkKYclpvmWrCr2aiYaT0w6pVZAvxj1IDHKnuSMmUOQ4jHdE5qMKpvfepe5o2VDYDixXGMAYGpvNc7TdKyUUK7y3n0qiJ2AE8IGD5RdYKd2W0cpuOHwAeBZ44j1E75joAXoGl8UCaMGzLiZtMgcVvDlbCmLKfZnJEDc5tVTj0waoqYxTzzbXwCSo8QZLH2Aevt2rj' && auth === 'Bearer ' + token) {
-    console.log('hello');
-    onMounted(() => {
-        fetch(import.meta.env.VITE_API_ENDPOINT+'/internalDB', {
-            headers: {
-                auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
-            },
+onMounted(() => {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+        credentials: "include",
+    })
+        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.auth_lvl <= 0) {
+                location.href = "/";
+            }
+            auth_lvl = resp.data.auth_lvl;
         })
-            .then(response => response.json())
-            .then(data => {
-                databases.value = data;
-            })
-            .then(() => {
-                sortBy("size");
-                update.value += 1;
-            })
-            .catch(error => {
-                console.error('Error fetching database data:', error);
-            });
-    });
-} else {
-    router.push('/');
-}
+        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/internalDB", {
+            credentials: "include",
+        }))
+        .then((response) => response.json())
+        .then((data) => {
+            databases.value = data;
+        })
+        .then(() => {
+            sortBy("size");
+            update.value += 1;
+        })
+        .catch((error) => {
+            console.error("Error fetching database data:", error);
+        });
+});
 
 const filteredDatabases = computed(() => {
     if (!databaseSearchKeyword.value) {
         return databases.value;
     }
     const keywordTwo = databaseSearchKeyword.value.toLowerCase();
-    return databases.value.filter(database =>
-        (database.name + database.paths.join('') + calculateCost(database.size)).toLowerCase().includes(keywordTwo)
+    return databases.value.filter((database) =>
+        (database.name + database.paths.join("") + calculateCost(database.size))
+            .toLowerCase()
+            .includes(keywordTwo)
     );
 });
 
 const SortingOrder = {
     Ascending: 0,
-    Descending: 1
-}
+    Descending: 1,
+};
 
 let sorting = {
-    sorting_col: 'size',
-    sorting_order: SortingOrder.Ascending
-}
+    sorting_col: "size",
+    sorting_order: SortingOrder.Ascending,
+};
 
 function sortBy(col) {
     if (sorting.sorting_col == col) {
-        sorting.sorting_order = sorting.sorting_order == SortingOrder.Ascending ? SortingOrder.Descending : SortingOrder.Ascending;
+        sorting.sorting_order =
+            sorting.sorting_order == SortingOrder.Ascending
+                ? SortingOrder.Descending
+                : SortingOrder.Ascending;
     } else {
         sorting.sorting_col = col;
         sorting.sorting_order = SortingOrder.Ascending;
@@ -104,15 +119,23 @@ function sortBy(col) {
     databases.value.sort((a, b) => {
         let val1 = a[sorting.sorting_col];
         let val2 = b[sorting.sorting_col];
-        if (val1 == null || val1 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? -1 : 1;
-        if (val2 == null || val2 == undefined) return (sorting.sorting_order == SortingOrder.Ascending) ? 1 : -1;
-        if (sorting.sorting_col === 'paths') {
-            return sorting.sorting_order == SortingOrder.Ascending ? val1[0].localeCompare(val2[0]) : val2[0].localeCompare(val1[0]);
+        if (val1 == null || val1 == undefined)
+            return sorting.sorting_order == SortingOrder.Ascending ? -1 : 1;
+        if (val2 == null || val2 == undefined)
+            return sorting.sorting_order == SortingOrder.Ascending ? 1 : -1;
+        if (sorting.sorting_col === "paths") {
+            return sorting.sorting_order == SortingOrder.Ascending
+                ? val1[0].localeCompare(val2[0])
+                : val2[0].localeCompare(val1[0]);
         }
-        if (typeof val1 === 'string' && typeof val2 === 'string')
-            return sorting.sorting_order == SortingOrder.Ascending ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        if (typeof val1 === "string" && typeof val2 === "string")
+            return sorting.sorting_order == SortingOrder.Ascending
+                ? val1.localeCompare(val2)
+                : val2.localeCompare(val1);
         else
-            return sorting.sorting_order == SortingOrder.Ascending ? val1 - val2 : val2 - val1;
+            return sorting.sorting_order == SortingOrder.Ascending
+                ? val1 - val2
+                : val2 - val1;
     });
 }
 
@@ -120,12 +143,12 @@ const getSortingIcon = (column) => {
     // Return appropriate icon based on the sorting order
     if (sorting.sorting_col == column) {
         if (sorting.sorting_order === SortingOrder.Ascending) {
-            return '\u25B2'; // Upward-pointing triangle
+            return "\u25B2"; // Upward-pointing triangle
         } else {
-            return '\u25BC'; // Downward-pointing triangle
+            return "\u25BC"; // Downward-pointing triangle
         }
     } else {
-        return '';
+        return "";
     }
 };
 </script>
@@ -138,7 +161,6 @@ const getSortingIcon = (column) => {
     background-color: lime;
     /*border: 1px solid black;*/
     margin: auto;
-
 }
 
 .offline {
@@ -247,7 +269,6 @@ input[type="text"] {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     margin-left: auto;
     margin-right: auto;
-
 }
 
 .styled-table thead tr {
