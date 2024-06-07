@@ -53,16 +53,14 @@ export async function get_localdb(
 }
 
 function update_db_list(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
-    let new_db_list: LocalDatabase[] = [];
     incoming_dbs.forEach((db: IncomingLocalDB) => {
         if (current_dbs.some(existing_db => existing_db.database_id === db.database_id)) {
             const matched_db = current_dbs.find(existing_db => existing_db.database_id === db.database_id);
             if (matched_db === undefined) return;
             matched_db.paths.push(db.path);
             matched_db.size += db.size;
-            new_db_list.push(matched_db);
         } else {
-            new_db_list.push({
+            current_dbs.push({
                 database_id: db.database_id,
                 name: db.name,
                 paths: [db.path],
@@ -72,5 +70,5 @@ function update_db_list(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatab
             });
         }
     });
-    return new_db_list;
+    return current_dbs;
 }
