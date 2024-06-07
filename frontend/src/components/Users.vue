@@ -33,6 +33,7 @@ import doughnut from './doughnut.vue';
 import perManager from './perManager.vue';
 import jobTitles from './jobTitles.vue';
 import { onMounted, ref } from 'vue';
+import router from './router/index.js';
 
 const update = ref(0);
 
@@ -73,7 +74,7 @@ onMounted(() => {
         .then((resp) => resp.json())
         .then((resp) => {
             if (resp.auth_lvl <= 0) {
-                location.href = "/";
+              router.push('/');
             }
             auth_lvl = resp.auth_lvl;
         })

@@ -14,7 +14,7 @@ let auth_lvl = 0;
 if (session_id != undefined && session_id != null) {
     axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
         if (resp.status == 200 && resp.data.auth_lvl < 3) {
-            location.href = "/";
+            router.push('/');
         }
         auth_lvl = resp.data.auth_lvl;
     });
@@ -53,7 +53,7 @@ export default {
             this.sendMsg = resp.ok ? "Message Sent" : "Error sending message!";
         },
         async empty() {
-            if (auth_lvl != "2") {
+            if (auth_lvl != 3) {
                 router.push("/");
             }
             let resp = await fetch(
