@@ -66,6 +66,8 @@ if (session_id != undefined && session_id != null) {
         }
         auth_lvl = resp.data.auth_lvl;
     });
+} else {
+    location.href = "/";
 }
 
 function dateToString(old_date) {

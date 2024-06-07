@@ -31,6 +31,7 @@ export async function post_servers(
         let currSize: string | undefined = new_servers[i].Size;
         if (currSize !== undefined)
             new_servers[i]["Cost"] = size_price_map[currSize];
+        console.log(`Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`);
     }
     console.log(new_servers);
     dataMemcache.set(Servers, new_servers);

@@ -17,7 +17,7 @@ export default {
         messages.value = data.message;
         // Thu Jul 27 2023 09:57:48
         messageTime.value = new Date(data.timestamp).toLocaleString();
-        messageCheck.value = messages.value.length > 0;
+        messageCheck.value = data.message.length > 0;
       } else {
         console.error('Error fetching data:', error);
       }
