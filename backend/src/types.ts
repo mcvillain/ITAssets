@@ -47,11 +47,23 @@ export class IncomingAzureDB {
     LastCheckInTime!: Date;
 }
 export class Users {
-    departments!: {};
+    departments!: { [dept_name: string]: number };
     totalUsers!: number;
     serviceAccounts!: number;
-    title!: {};
-    manager!: {};
+    title!: { [title: string]: number };
+    manager!: { [manager_name: string]: number };
+}
+export class IncomingUser {
+    firstname!: string;
+    lastname!: string;
+    username!: string;
+    title!: string;
+    department!: string;
+    licensed!: boolean;
+    manager!: string;
+    managerEmail!: string;
+    enabled!: boolean;
+    ServiceAccount!: boolean;
 }
 export class Message {
     constructor(msg: string = "", timestamp: Date = new Date()) {

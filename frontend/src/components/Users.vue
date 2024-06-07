@@ -65,21 +65,31 @@ let data: UsersResponse = {
   manager: null
 };
 
-onMounted(async () => {
-  // Fetch data from the server
-  let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/users', {
-    headers: {
-      auth: '6rqfduihfwsesuhgfweiouyw3rtfs897byw4tgoiuwy4sro9uw34t0u94t'
-    },
-  });
-
-  if (resp.ok) {
-    data = (await resp.json() as UsersResponse);
-    forceRerender();
-  } else {
-    console.error('Error fetching data:');
-  }
+let auth_lvl = 0;
+onMounted(() => {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+        credentials: "include",
+    })
+        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.auth_lvl <= 0) {
+                location.href = "/";
+            }
+            auth_lvl = resp.auth_lvl;
+        })
+        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/users", {
+            credentials: "include",
+        }))
+        .then((response) => response.json())
+        .then((respData: UsersResponse) => {
+          data = respData;
+          forceRerender();
+        })
+        .catch((error) => {
+            console.error("Error fetching user data:", error);
+        });;
 });
+
 </script>
 <style scoped>
 .heading {
