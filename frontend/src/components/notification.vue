@@ -14,10 +14,10 @@ export default {
       if (resp.ok) {
         const data = await resp.json();
         console.log(data)
-        messages.value = data.message;
-        // Thu Jul 27 2023 09:57:48
-        messageTime.value = new Date(data.timestamp).toLocaleString();
-        messageCheck.value = data.message.length > 0;
+        if (data.data.length > 0) {
+          messages.value = data.data;
+          messageTime.value = new Date(data.timestamp).toLocaleString();
+        }
       } else {
         console.error('Error fetching data:', error);
       }
