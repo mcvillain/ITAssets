@@ -6,7 +6,7 @@ export class Server {
     HyperVisor!: string;
     Hostname!: string;
     Size: string | undefined;
-    Cost: number | undefined;
+    Cost: number | null | undefined;
 }
 export enum ServerStatus {
     Offline,

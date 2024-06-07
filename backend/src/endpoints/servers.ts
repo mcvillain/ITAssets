@@ -87,6 +87,8 @@ function update_server_list(
                 newserverlist.push(curServer);
             }
         } else {
+            if ((server.Cost === null || server.Cost === undefined) && server.Size !== undefined && server.Size !== null)
+                server.Cost = 0;
             newserverlist.push(server);
         }
     });
