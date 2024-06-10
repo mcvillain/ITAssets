@@ -44,7 +44,7 @@ docker build -t frontend .
 # Deploy
 Write-Output Deploying...
 Set-Location $PSScriptRoot
-docker run -d -p 3030:3000 --restart=always --name backend_ctr backend:latest
+docker run -d -p 3030:3000 -e NO_HTTPS=true --restart=always --name backend_ctr backend:latest
 docker run -d -p 8080:80 --restart=always --name frontend_ctr frontend:latest
 
 # ssh jared@4.246.161.216 "rm /tmp/*.tar"

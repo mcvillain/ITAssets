@@ -70,6 +70,7 @@ export async function post_login(
             res.cookie("session_id", session_id, {
                 maxAge: 28800000, // 8 Hours
                 path: "/",
+                secure: process.env.NO_HTTPS === undefined || process.env.NO_HTTPS != "true",
             });
             res.sendStatus(200);
             return;
