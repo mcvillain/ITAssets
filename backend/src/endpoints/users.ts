@@ -71,7 +71,7 @@ async function calc_dept_totals(
 ): Promise<{ [dept_name: string]: number }> {
     let depts: { [dept_name: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
-        if (user.department !== undefined && user.department !== null) {
+        if (user.enabled && user.ServiceAccount !== true && user.department !== undefined && user.department !== null) {
             if (depts[user.department]===undefined||depts[user.department]===null)
                 depts[user.department] = 0;
             depts[user.department]++;
@@ -85,7 +85,7 @@ async function calc_title_totals(
 ): Promise<{ [title: string]: number }> {
     let titles: { [title: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
-        if (user.title !== undefined && user.title !== null) {
+        if (user.enabled && user.ServiceAccount !== true && user.title !== undefined && user.title !== null) {
             if (titles[user.title]===undefined||titles[user.title]===null)
                 titles[user.title] = 0;
             titles[user.title]++;
@@ -99,7 +99,7 @@ async function calc_manager_totals(
 ): Promise<{ [manager_name: string]: number }> {
     let managers: { [manager_name: string]: number } = {};
     incoming_users.forEach((user: IncomingUser) => {
-        if (user.manager !== undefined && user.manager !== null) {
+        if (user.enabled && user.ServiceAccount !== true && user.manager !== undefined && user.manager !== null) {
             if (managers[user.manager]===undefined||managers[user.manager]===null)
                 managers[user.manager] = 0;
             managers[user.manager]++;
@@ -113,7 +113,7 @@ async function calc_user_total(
 ): Promise<number> {
     let users = 0;
     incoming_users.forEach((user: IncomingUser) => {
-        if (user.ServiceAccount !== true) {
+        if (user.enabled && user.ServiceAccount !== true) {
             users++;
         }
     });
@@ -125,7 +125,7 @@ async function calc_svc_acc_total(
 ): Promise<number> {
     let svcAccts = 0;
     incoming_users.forEach((user: IncomingUser) => {
-        if (user.ServiceAccount === true) {
+        if (user.enabled && user.ServiceAccount === true) {
             svcAccts++;
         }
     });
