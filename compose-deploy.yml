@@ -1,0 +1,21 @@
+services:
+  frontend:
+    image: itassets-frontend:latest
+    hostname: frontend
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - "./ssl/domain.crt:/srv/ssl/fullchain.pem:ro"
+      - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
+    networks:
+      - itassets
+
+  backend:
+    image: itassets-backend:latest
+    hostname: backend
+    networks:
+      - itassets
+
+networks:
+  itassets:

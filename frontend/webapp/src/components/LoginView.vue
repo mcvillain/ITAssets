@@ -20,15 +20,6 @@
 
 <script>
 import axios from "axios";
-import VueCookies from "vue-cookies";
-
-var strike = 1;
-var x = 0;
-var random = 0;
-var token = 0;
-localStorage.setItem("brotha", x);
-localStorage.setItem("jwt", token);
-localStorage.setItem("random", random);
 
 export default {
     name: "LoginView",
@@ -81,65 +72,12 @@ export default {
                     location.href = "/";
                 } else if (loginReq.status == 401) {
                     // Unauthorized
-                    VueCookies.remove("session_id");
                     this.output =
                         "Login failed. Check your username and password.";
                 }
             } else {
                 this.output = "Please specify your username and password.";
             }
-            // try {
-            //   if (this.input.username == 'aegis' && this.input.password == 'aegis') {
-            //     const response = await axios.post(import.meta.env.VITE_API_ENDPOINT+'/login', {
-            //       username: this.input.username,
-            //       password: this.input.password,
-            //     });
-
-            //     token = response.data.token;
-            //     const res = await axios.post(import.meta.env.VITE_API_ENDPOINT+'/auth', {});
-            //     const word = res.data.code;
-            //     const authHeader = `Bearer ${token}`;
-
-            //     //local storages
-            //     localStorage.setItem('brotha', word);
-            //     localStorage.setItem('jwt', token);
-            //     localStorage.setItem('header', authHeader);
-
-            //     ///eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJldXdpcmx3amVoZ2Z5a2FiayxjIiwicGFzc3dvcmQiOiJwYm9pZHRuamhlZ3ZkaGprZ2ZkIiwiaWF0IjoxNTE2MjM5MDIyfQ.zWXb9VM9Bxe-amtInmae7lJ7_1dx7pbfW3VONolyqsc
-            //     // Redirect or perform other actions after successful login
-            //     //this.$router.push('/servers')
-            //     window.location.href = "/servers";
-            //   } else if (this.input.username == 'admin' && this.input.password == 'Interns2023@Aegis') {
-            //     const response = await axios.post(import.meta.env.VITE_API_ENDPOINT+'/login', {
-            //       username: this.input.username,
-            //       password: this.input.password,
-            //     });
-
-            //     random = '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH';
-            //     const token = response.data.token;
-            //     const authHeader = `Bearer ${token}`;
-
-            //     //local storages
-            //     localStorage.setItem('jwt', token);
-            //     localStorage.setItem('header', authHeader);
-            //     localStorage.setItem('random', random);
-
-            //     ///eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJldXdpcmx3amVoZ2Z5a2FiayxjIiwicGFzc3dvcmQiOiJwYm9pZHRuamhlZ3ZkaGprZ2ZkIiwiaWF0IjoxNTE2MjM5MDIyfQ.zWXb9VM9Bxe-amtInmae7lJ7_1dx7pbfW3VONolyqsc
-            //     // Redirect or perform other actions after successful login
-            //     this.$router.push('/admin')
-            //   } else {
-            //     this.output = 'Put in valid username & password';
-            //     if (strike == 3) {
-            //       document.getElementsByClassName("user")[0].style.visibility = 'hidden';
-            //       document.getElementsByClassName("pass")[0].style.visibility = 'hidden';
-            //     } else {
-            //       strike = strike + 1;
-            //     }
-            //   }
-            // } catch (error) {
-            //   // Handle login error
-            //   //console.error('Error: ', error);
-            // }
         },
     },
 };

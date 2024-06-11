@@ -20,12 +20,12 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 
 // CORS
-var corsOptions: CorsOptions = {
-    origin: process.env.FRONTEND_ORIGIN,
-    credentials: true,
-    optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+// var corsOptions: CorsOptions = {
+//     origin: process.env.FRONTEND_ORIGIN,
+//     credentials: true,
+//     optionsSuccessStatus: 200,
+// };
+// app.use(cors(corsOptions));
 // Middleware
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
@@ -109,6 +109,8 @@ app.post("/users", async (req: Request, res: Response) => {
 });
 
 const server = app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+    let os = require("os");
+    const hostname = os.hostname();
+    console.log(`[server]: Server is running at http://${hostname}:${port}`);
 });
 server.keepAliveTimeout = 30000;
