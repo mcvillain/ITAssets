@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from "express";
 const cookieParser = require("cookie-parser");
 import dotenv from "dotenv";
-import cors, {CorsOptions} from "cors";
 import NodeCache from "node-cache";
 
 import { Message } from "./types";
