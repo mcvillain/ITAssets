@@ -28,8 +28,9 @@ export async function post_localdb(
     let current_dbs: LocalDatabase[];
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
-    let new_dbs: LocalDatabase[] = update_db_list(incoming_dbs, current_dbs);
-    dataMemcache.set(LocalDatabases, new_dbs);
+    current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
+    current_dbs = update_db_list(incoming_dbs, current_dbs);
+    dataMemcache.set(LocalDatabases, current_dbs);
     console.log("Done processing local databases...");
     return;
 }
@@ -51,6 +52,19 @@ export async function get_localdb(
         return;
     }
     res.sendStatus(401);
+}
+
+function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
+    incoming_dbs.forEach((db: IncomingLocalDB) => {
+        const matched_db = current_dbs.find((existing_db) => existing_db.database_id === db.database_id);
+        if (matched_db !== undefined) {
+            let idx = current_dbs.indexOf(matched_db);
+            if (idx >= 0) {
+                current_dbs.splice(idx, 1);
+            }
+        }
+    })
+    return current_dbs;
 }
 
 function update_db_list(

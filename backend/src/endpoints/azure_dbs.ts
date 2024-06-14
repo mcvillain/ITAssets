@@ -30,13 +30,14 @@ export async function post_azuredb(
     let current_dbs: AzureDatabase[];
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
+    current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
     let pricePerGig = await getAzDBPricePerGB(sizePriceCache);
-    let new_dbs: AzureDatabase[] = await update_db_list(
+    current_dbs = await update_db_list(
         incoming_dbs,
         current_dbs,
         pricePerGig
     );
-    dataMemcache.set(AzureDatabases, new_dbs);
+    dataMemcache.set(AzureDatabases, current_dbs);
     console.log("Done processing Azure databases...");
     return;
 }
@@ -60,6 +61,19 @@ export async function get_azuredb(
     res.sendStatus(401);
 }
 
+function delete_outdated_dbs(incoming_dbs: IncomingAzureDB[], current_dbs: AzureDatabase[]): AzureDatabase[] {
+    incoming_dbs.forEach((db: IncomingAzureDB) => {
+        const matched_db = current_dbs.find((existing_db) => existing_db.database_id === db.database_id);
+        if (matched_db !== undefined) {
+            let idx = current_dbs.indexOf(matched_db);
+            if (idx >= 0) {
+                current_dbs.splice(idx, 1);
+            }
+        }
+    })
+    return current_dbs;
+}
+
 function update_db_list(
     incoming_dbs: IncomingAzureDB[],
     current_dbs: AzureDatabase[],
@@ -70,8 +84,10 @@ function update_db_list(
             (existing_db) => existing_db.database_id === db.database_id
         );
         if (matched_db !== undefined) {
-            matched_db.paths.push(db.path);
-            matched_db.size += db.size;
+            if (matched_db.paths.indexOf(db.path) < 0) {
+                matched_db.paths.push(db.path);
+                matched_db.size += db.size;
+            }
         } else {
             let price = db.size * pricePerGig;
             current_dbs.push({
