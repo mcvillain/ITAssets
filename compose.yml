@@ -10,6 +10,11 @@ services:
       - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
     networks:
       - itassets
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
     build: 
       context: ./frontend
       tags:
@@ -20,6 +25,11 @@ services:
     hostname: backend
     networks:
       - itassets
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
     build: 
       context: ./backend
       tags:
