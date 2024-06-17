@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { Message, Server } from "../types";
-import { Message as CurrentMessage, Servers } from "../const";
+import { Server } from "../types";
+import { Servers } from "../const";
 import NodeCache from "node-cache";
 
 export async function post_servers(
@@ -94,17 +94,7 @@ function update_server_list(
             oldserverlist.push(server);
         }
     });
-    return servers;
-}
-
-function extract_server_sizes(servers: Server[]): string[] {
-    let sizes: string[] = [];
-    servers.forEach((server) => {
-        if (server.Size !== undefined && !sizes.includes(server.Size)) {
-            sizes.push(server.Size);
-        }
-    });
-    return sizes;
+    return oldserverlist;
 }
 
 async function getSizePrice(
