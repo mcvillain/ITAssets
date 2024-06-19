@@ -37,6 +37,10 @@ import { createWebHistory, createRouter } from "vue-router";
     path: "/help",
     component: () => import('../help.vue'),
   },
+  {
+    path: "/uploader",
+    component: () => import('../uploader.vue'),
+  },
 ]
 
 const router = createRouter({

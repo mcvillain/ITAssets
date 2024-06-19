@@ -23,6 +23,9 @@ export default {
         },
         redirectHelp() {
             window.location.href = "/help";
+        },
+        redirectUploader() {
+            window.location.href = "/uploader";
         }
     },
     setup() {
@@ -54,6 +57,10 @@ export default {
                     });
                 } else if (route == '/help') {
                     [...document.getElementsByClassName("help-icon")].forEach(element => {
+                        element.classList.add("active");
+                    });
+                } else if (route == '/uploader') {
+                    [...document.getElementsByClassName("uploader-icon")].forEach(element => {
                         element.classList.add("active");
                     });
                 }
@@ -106,6 +113,13 @@ export default {
             <i class="bi bi-person-circle user-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Users</p>
+            </span>
+        </div>
+        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectUploader"
+            style="display: flex; flex-direction: row;">
+            <i class="bi bi-chat-square-text-fill uploader-icon"></i>
+            <span v-if="!collapsed">
+                <p class="label-DONTBREAK">Uploader</p>
             </span>
         </div>
         <div class="item" :class="collapsed && 'item collapsed'" @click="redirectAbout"
@@ -175,6 +189,7 @@ export default {
 .database-icon.active {
     color: #ef3b32;
 }
+
 .cloud-database-icon {
     font-size: 3rem;
     color: #708490;
@@ -302,4 +317,5 @@ export default {
     text-decoration: none;
     vertical-align: -3rem;
     padding-left: 1rem;
-}</style>
+}
+</style>
