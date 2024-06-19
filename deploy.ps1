@@ -1,6 +1,13 @@
 Set-Location $PSScriptRoot
+
+Write-Output "Preparing Images for Building"
+Copy-Item .\environment\prod_frontend.env .\frontend\.env.production
+
 Write-Output "Building Images"
 docker compose build
+
+Write-Output "Cleaning Up Build"
+Remove-Item .\frontend\.env.production
 
 Write-Output "Exporting Compiled Images"
 docker image save -o frontend.tar itassets-frontend:latest
@@ -27,7 +34,7 @@ Write-Output "Copying compose.yml to Production Server"
 scp ./compose-deploy.yml agsheeran@74.235.254.31:~/itassets/compose.yml
 
 Write-Output "Loading New Images on Production Server"
-ssh agsheeran@74.235.254.31 "docker image rm itassets-frontend:latest ; docker load -i ~/tmp/backend.tar && docker image rm itassets-frontend:latest ; docker load -i ~/tmp/frontend.tar"
+ssh agsheeran@74.235.254.31 "docker image rm itassets-backend:latest ; docker load -i ~/tmp/backend.tar && docker image rm itassets-frontend:latest ; docker load -i ~/tmp/frontend.tar"
 
 Write-Output "Starting Production Server"
 ssh agsheeran@74.235.254.31 "rm -R ~/tmp && cd ~/itassets/ && docker compose up --detach"

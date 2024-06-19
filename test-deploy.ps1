@@ -1,8 +1,13 @@
 Set-Location $PSScriptRoot
-#jared@4.246.161.216:/tmp
+
+Write-Output "Preparing Images for Building"
+Copy-Item .\environment\dev_frontend.env .\frontend\.env.production
 
 Write-Output "Building Images"
 docker compose build
+
+Write-Output "Cleaning Up Build"
+Remove-Item .\frontend\.env.production
 
 Write-Output "Exporting Compiled Images"
 docker image save -o frontend.tar itassets-frontend:latest

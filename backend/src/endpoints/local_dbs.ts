@@ -15,8 +15,8 @@ export async function post_localdb(
         res.sendStatus(401);
         return;
     }
-    const username: string | undefined = loginMemcache.get(session_id);
-    if (username === undefined || username != "svc") {
+    let auth_lvl = await get_auth_lvl(session_id, dataMemcache);
+    if (auth_lvl !== 2) {
         res.sendStatus(401);
         return;
     }

@@ -55,21 +55,6 @@ import router from './router/index.js';
 const serverSearchKeyword = ref('');
 var servers = ref(null);
 
-import axios from "axios";
-import VueCookies from "vue-cookies";
-const session_id = VueCookies.get("session_id");
-let auth_lvl = 0;
-if (session_id != undefined && session_id != null) {
-    axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
-        if (resp.status == 200 && resp.data.auth_lvl < 1) {
-            location.href = "/";
-        }
-        auth_lvl = resp.data.auth_lvl;
-    });
-} else {
-    location.href = "/";
-}
-
 function dateToString(old_date) {
     let date = new Date(old_date);
     return `${(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12).toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} ${date.getHours() >= 12 ? "PM" : "AM"} ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;

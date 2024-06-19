@@ -2,16 +2,29 @@ import express, { Express, Request, Response } from "express";
 const cookieParser = require("cookie-parser");
 import dotenv from "dotenv";
 import NodeCache from "node-cache";
+import {
+    AuthenticationResult,
+    ConfidentialClientApplication,
+} from "@azure/msal-node";
 
 import { Message } from "./types";
-import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserMeta, Message as CurrentMessage } from "./const";
+import {
+    AzureDatabases,
+    ItarDatabases,
+    LocalDatabases,
+    Servers,
+    Users as UserMeta,
+    Message as CurrentMessage,
+} from "./const";
 
-import { get_auth, post_login } from "./endpoints/auth";
+import { get_auth, get_auth_redirect, get_logout_redirect, get_ms_auth } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
 import { get_servers, post_servers } from "./endpoints/servers";
 import { get_localdb, post_localdb } from "./endpoints/local_dbs";
 import { get_azuredb, post_azuredb } from "./endpoints/azure_dbs";
 import { get_users, post_users } from "./endpoints/users";
+import session from "express-session";
+import { clientConfig, config } from "./msauth_config";
 
 dotenv.config();
 
@@ -25,10 +38,30 @@ const port = process.env.PORT || 3000;
 //     optionsSuccessStatus: 200,
 // };
 // app.use(cors(corsOptions));
+
+// Setup Session Config
+const session_config: session.SessionOptions = {
+    secret:
+        process.env.SESSION_SECRET !== undefined
+            ? process.env.SESSION_SECRET
+            : "DEVELOPMENT_SECRED_DO_NOT_USE",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure:
+            process.env.NO_HTTPS === undefined ||
+            process.env.NO_HTTPS != "true",
+    },
+};
+
 // Middleware
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 app.use(cookieParser());
+app.use(session(session_config));
+
+// Setup MSAuth
+const pca = new ConfidentialClientApplication(clientConfig);
 
 // Setup Cache
 let loginCache = new NodeCache({
@@ -54,11 +87,19 @@ dataCache.set(CurrentMessage, new Message());
 let sizePriceCache = new NodeCache({
     stdTTL: 24 * 3600,
     deleteOnExpire: true,
-})
+});
 
 // AUTH
-app.post("/login", async (req: Request, res: Response) => {
-    await post_login(req, res, loginCache);
+app.get("/ms_auth", (req: Request, res: Response) => {
+    get_ms_auth(req, res, pca);
+});
+
+app.get("/auth_redirect", (req: Request, res: Response) => {
+    get_auth_redirect(req, res, pca, loginCache);
+});
+
+app.get("/logout_redirect", (req: Request, res: Response) => {
+    get_logout_redirect(req, res, loginCache);
 });
 
 app.get("/auth", async (req: Request, res: Response) => {

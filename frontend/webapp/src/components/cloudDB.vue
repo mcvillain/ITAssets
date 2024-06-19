@@ -53,19 +53,9 @@ const calculateCost = (sizeInGB) => {
 };
 
 onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/azure_dbs", {
         credentials: "include",
     })
-        .then((resp) => resp.json())
-        .then((resp) => {
-            if (resp.auth_lvl <= 0) {
-                location.href = "/";
-            }
-            auth_lvl = resp.auth_lvl;
-        })
-        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/azure_dbs", {
-            credentials: "include",
-        }))
         .then((response) => response.json())
         .then((data) => {
             databases.value = data;

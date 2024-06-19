@@ -1,11 +1,6 @@
 <script>
 import { ref } from "vue";
 import router from "./router/index.js";
-// const random = localStorage.getItem('random');
-
-// if(random != '5nj28T9cktIUoB6cq3nPK8aPDBWoYr8pc5ERQAoH'){
-//     router.push('/');
-// }
 
 import axios from "axios";
 import VueCookies from "vue-cookies";
@@ -13,7 +8,7 @@ const session_id = VueCookies.get("session_id");
 let auth_lvl = 0;
 if (session_id != undefined && session_id != null) {
     axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
-        if (resp.status == 200 && resp.data.auth_lvl < 3) {
+        if (resp.status == 200 && resp.data.auth_lvl != 3) {
             location.href = "/";
         }
         auth_lvl = resp.data.auth_lvl;
@@ -53,10 +48,10 @@ export default {
             this.sendMsg = resp.ok ? "Message Sent" : "Error sending message!";
         },
         async empty() {
-            if (auth_lvl != "2") {
+            if (auth_lvl != 3) {
                 router.push("/");
             }
-            let resp = await fetch(
+            await fetch(
                 import.meta.env.VITE_API_ENDPOINT + "/messages",
                 {
                     method: "post",

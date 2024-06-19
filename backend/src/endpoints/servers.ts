@@ -16,8 +16,8 @@ export async function post_servers(
         res.sendStatus(401);
         return;
     }
-    const username: string | undefined = loginMemcache.get(session_id);
-    if (username === undefined || username != "svc") {
+    let auth_lvl = await get_auth_lvl(session_id, dataMemcache);
+    if (auth_lvl !== 2) {
         res.sendStatus(401);
         return;
     }
@@ -36,9 +36,9 @@ export async function post_servers(
                 currSize,
                 sizePriceCache
             );
-        console.log(
-            `Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`
-        );
+        // console.log(
+        //     `Server ${i} with size '${currSize}' is \$${new_servers[i].Cost}`
+        // );
     }
     dataMemcache.set(Servers, new_servers);
     console.log("Done processing servers...");

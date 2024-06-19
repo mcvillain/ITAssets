@@ -71,7 +71,7 @@ onMounted(async () => {
             "#ff9494",
             "#ffbaba",
             "#ffd6d6",
-            "lime"
+            "#FAF9F6"
          ]
       }]
    }

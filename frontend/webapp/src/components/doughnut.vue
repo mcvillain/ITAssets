@@ -18,8 +18,8 @@ const chartOptions = {
     responsive: true
 }
 const chartData = ref<ChartData<'doughnut'>>({
-    labels: ["hooray", "yipee"],
-    datasets: [{ data: [15, 20], backgroundColor: ["#00ffff", "#ff0000"] }]
+    labels: [],
+    datasets: [{ data: [], backgroundColor: [] }]
 });
 
 type UsersResponse = {
@@ -62,6 +62,7 @@ onMounted(async () => {
         labels: [],
         datasets: [{
             data: [], backgroundColor: [
+                "#a50000",
                 "#a70000",
                 "#ca0000",
                 "#ff0000",
@@ -72,7 +73,7 @@ onMounted(async () => {
                 "#ff9494",
                 "#ffbaba",
                 "#ffd6d6",
-                "lime"
+                "#FAF9F6"
             ]
         }]
     }

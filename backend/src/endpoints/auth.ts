@@ -1,97 +1,39 @@
+import {
+    AuthenticationResult,
+    ConfidentialClientApplication,
+} from "@azure/msal-node";
 import { Request, Response } from "express";
-import { createHash } from "crypto";
 import NodeCache from "node-cache";
-
-function hash_pwd(pwd: string, salt: string): string {
-    const hash = createHash("sha256");
-    hash.update(pwd + salt);
-    return hash.digest("hex");
-}
-
-class Account {
-    constructor(username: string, pass: string, auth_level: number) {
-        this.username = username;
-        const decode = new TextDecoder();
-        this.salt = decode.decode(crypto.getRandomValues(new Uint8Array(32)));
-        this.pass_hash = hash_pwd(pass, this.salt);
-        this.auth_level = auth_level;
-    }
-    username!: string;
-    pass_hash!: string;
-    salt!: string;
-    auth_level!: number;
-}
-
-const valid_accounts: { [name: string]: Account } = {};
-function create_account(
-    username: string,
-    password: string,
-    auth_level: number
-) {
-    if (
-        valid_accounts[username] == undefined ||
-        valid_accounts[username] == null
-    )
-        valid_accounts[username] = new Account(username, password, auth_level);
-}
-function populate_accounts() {
-    create_account("aegis", "aegis", 1);
-    create_account("svc", "", 2);
-    create_account("admin", "Interns2023@Aegis", 3);
-}
-
-async function create_session(
-    username: string,
-    memcache: NodeCache
-): Promise<string> {
-    const session_id = crypto.randomUUID();
-    await memcache.set(session_id, username);
-    return session_id;
-}
-
-export async function post_login(
-    req: Request,
-    res: Response,
-    memcache: NodeCache
-) {
-    populate_accounts();
-    const username = req.body.username;
-    const password = req.body.password;
-    console.log(`User attempting login with username '${username}'`);
-    if (
-        valid_accounts[username] != undefined &&
-        valid_accounts[username] != null
-    ) {
-        const account: Account = valid_accounts[username];
-        const pass_hash = await hash_pwd(password, account.salt);
-        if (pass_hash == account.pass_hash) {
-            const session_id = await create_session(username, memcache);
-            console.log(`Created session for user (${username})`);
-            res.cookie("session_id", session_id, {
-                maxAge: 28800000, // 8 Hours
-                path: "/",
-                secure: process.env.NO_HTTPS === undefined || process.env.NO_HTTPS != "true",
-            });
-            res.sendStatus(200);
-            return;
-        }
-    }
-    res.sendStatus(401);
-}
+import { config } from "../msauth_config";
 
 export async function get_auth_lvl(
     session_id: string,
     memcache: NodeCache
 ): Promise<number> {
-    const username: string | undefined = await memcache.get(session_id);
-    if (username != undefined) {
-        const user: Account | undefined = valid_accounts[username];
-        if (user === undefined)
-            return 0;
-        const auth_level = user.auth_level;
-        return auth_level;
+    if (session_id === "b71516c0-90ec-4ff6-9fa6-591b2fc8d781") return 2;
+    const val: string | AuthenticationResult | undefined = await memcache.get(
+        session_id
+    );
+    if (val === undefined) {
+        return 0;
+    } else if (typeof val === "string") {
+        if (val === "svc") return -1;
+        return 0;
+    } else {
+        const jwt: AuthenticationResult = val;
+        if (jwt.expiresOn !== null && jwt.expiresOn > new Date()) {
+            if (jwt.account?.idTokenClaims?.roles !== null) {
+                if (jwt.account?.idTokenClaims?.roles?.includes("admin")) {
+                    return 3
+                }
+                else if (jwt.account?.idTokenClaims?.roles?.includes("itar")) {
+                    return 2;
+                }
+            }
+            return 1;
+        }
+        return 0;
     }
-    return 0;
 }
 
 export async function get_auth(
@@ -99,14 +41,80 @@ export async function get_auth(
     res: Response,
     memcache: NodeCache
 ) {
-    console.log(`User requesting auth with session (${req.cookies['session_id']})`);
     const session_id = req.cookies["session_id"];
     if (session_id == undefined) {
         res.status(200);
-        res.send(JSON.stringify({auth_lvl: 0}));
+        res.send(JSON.stringify({ auth_lvl: 0 }));
         return;
     }
     const auth_lvl = await get_auth_lvl(session_id, memcache);
     res.status(200);
-    res.send(JSON.stringify({auth_lvl}));
+    res.send(JSON.stringify({ auth_lvl }));
+}
+
+// MS Auth
+export function get_ms_auth(
+    req: Request,
+    res: Response,
+    pca: ConfidentialClientApplication
+) {
+    const authCodeUrlParameters = config.request.authCodeUrlParameters;
+    pca.getAuthCodeUrl(authCodeUrlParameters)
+        .then((response) => {
+            res.redirect(response);
+        })
+        .catch((error) => console.log(JSON.stringify(error)));
+}
+
+export function get_auth_redirect(
+    req: Request,
+    res: Response,
+    pca: ConfidentialClientApplication,
+    loginCache: NodeCache
+) {
+    const code = req.query.code;
+    if (typeof code === "string") {
+        const tokenRequest = {
+            code,
+            scopes: config.request.tokenRequest.scopes,
+            redirectUri: config.request.tokenRequest.redirectUri,
+        };
+        pca.acquireTokenByCode(tokenRequest)
+            .then((response: AuthenticationResult) => {
+                let expires = response.expiresOn
+                    ? response.expiresOn.getMilliseconds()
+                    : 0;
+                loginCache.set(
+                    response.accessToken,
+                    response,
+                    (expires - Date.now()) / 1000
+                ); 
+                res.cookie("session_id", response.accessToken, {
+                    expires: response.expiresOn
+                        ? response.expiresOn
+                        : undefined,
+                    path: "/",
+                    secure:
+                        process.env.NO_HTTPS === undefined ||
+                        process.env.NO_HTTPS != "true",
+                    httpOnly: true,
+                });
+                res.redirect(`${process.env.BASE_URI}/servers`);
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send(error);
+            });
+    } else {
+        res.redirect(`${process.env.BASE_URI}/api/ms_auth`);
+    }
+}
+
+export function get_logout_redirect(req: Request, res: Response, loginCache: NodeCache) {
+    const session_id = req.cookies["session_id"];
+    if (session_id !== undefined) {
+        loginCache.del(session_id);
+    }
+    res.clearCookie("session_id");
+    res.redirect(`${process.env.BASE_URI}`);
 }

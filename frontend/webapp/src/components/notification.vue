@@ -1,32 +1,34 @@
 <script>
 import { onMounted, ref } from 'vue';
+import axios from "axios";
 
 export default {
   setup() {
-    const messages = ref("Hello, Vue!");
+    const messages = ref("");
     const messageTime = ref("");
     var messageCheck = ref(false);
-
-    onMounted(async () => {
-      let resp = await fetch(import.meta.env.VITE_API_ENDPOINT+'/messages', {
-        credentials: "include",
-      });
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.msg.length > 0) {
-          messages.value = data.msg;
-          messageTime.value = new Date(data.timestamp).toLocaleString();
-          messageCheck.value = true;
-        }
-      } else {
-        console.error('Error fetching data:', error);
-      }
-    });
     return {
       messages,
       messageTime,
       messageCheck,
     };
+  },
+  async mounted() {
+    await axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
+      const auth_lvl = resp.data.auth_lvl;
+      console.log(resp);
+      if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) {
+        location.href = "/";
+      }
+    });
+    await axios.get(import.meta.env.VITE_API_ENDPOINT + "/messages", {withCredentials: true}).then((resp) => {
+      const data = resp.data;
+      if (data.msg.length > 0) {
+        this.messages.value = data.msg;
+        this.messageTime.value = new Date(data.timestamp).toLocaleString();
+        this.messageCheck.value = true;
+      }
+    })
   },
   methods: {
     hideMessage() {
@@ -71,4 +73,5 @@ export default {
 .body {
   flex-grow: 10;
   text-align: left;
-}</style>
+}
+</style>

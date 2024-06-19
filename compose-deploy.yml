@@ -21,6 +21,7 @@ services:
     hostname: backend
     networks:
       - itassets
+    env_file: "./environment/prod_backend.env"
     logging: 
       driver: json-file
       options:

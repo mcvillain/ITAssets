@@ -60,19 +60,9 @@ const calculateCost = (sizeInGB) => {
 };
 
 onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/databases", {
         credentials: "include",
     })
-        .then((resp) => resp.json())
-        .then((resp) => {
-            if (resp.auth_lvl <= 0) {
-                location.href = "/";
-            }
-            auth_lvl = resp.auth_lvl;
-        })
-        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/databases", {
-            credentials: "include",
-        }))
         .then((response) => response.json())
         .then((data) => {
             databases.value = data;
@@ -133,7 +123,7 @@ function sortBy(col) {
         } else if (sorting.sorting_col === "created") {
             let d1 = new Date(val1).getSeconds();
             let d2 = new Date(val2).getSeconds();
-            return sorting.sorting_order == SortingOrder.Ascending?(d1<d2?1:-1):(d2<d1?1:-1);
+            return sorting.sorting_order == SortingOrder.Ascending ? (d1 < d2 ? 1 : -1) : (d2 < d1 ? 1 : -1);
         }
         if (typeof val1 === "string" && typeof val2 === "string")
             return sorting.sorting_order == SortingOrder.Ascending
