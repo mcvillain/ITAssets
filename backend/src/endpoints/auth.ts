@@ -24,9 +24,10 @@ export async function get_auth_lvl(
         if (jwt.expiresOn !== null && jwt.expiresOn > new Date()) {
             if (jwt.account?.idTokenClaims?.roles !== null) {
                 if (jwt.account?.idTokenClaims?.roles?.includes("admin")) {
-                    return 3
-                }
-                else if (jwt.account?.idTokenClaims?.roles?.includes("itar")) {
+                    return 3;
+                } else if (
+                    jwt.account?.idTokenClaims?.roles?.includes("itar")
+                ) {
                     return 2;
                 }
             }
@@ -47,9 +48,16 @@ export async function get_auth(
         res.send(JSON.stringify({ auth_lvl: 0 }));
         return;
     }
+    const user_id: AuthenticationResult | undefined =
+        await memcache.get(session_id);
+    if (user_id == undefined) {
+        res.status(200);
+        res.send(JSON.stringify({ auth_lvl: 0 }));
+        return;
+    }
     const auth_lvl = await get_auth_lvl(session_id, memcache);
     res.status(200);
-    res.send(JSON.stringify({ auth_lvl }));
+    res.send(JSON.stringify({ username: user_id.account?.username, auth_lvl }));
 }
 
 // MS Auth
@@ -88,7 +96,7 @@ export function get_auth_redirect(
                     response.accessToken,
                     response,
                     (expires - Date.now()) / 1000
-                ); 
+                );
                 res.cookie("session_id", response.accessToken, {
                     expires: response.expiresOn
                         ? response.expiresOn
@@ -110,7 +118,11 @@ export function get_auth_redirect(
     }
 }
 
-export function get_logout_redirect(req: Request, res: Response, loginCache: NodeCache) {
+export function get_logout_redirect(
+    req: Request,
+    res: Response,
+    loginCache: NodeCache
+) {
     const session_id = req.cookies["session_id"];
     if (session_id !== undefined) {
         loginCache.del(session_id);

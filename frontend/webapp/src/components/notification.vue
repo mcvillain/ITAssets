@@ -1,5 +1,5 @@
 <script>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import axios from "axios";
 
 export default {
@@ -14,13 +14,13 @@ export default {
     };
   },
   async mounted() {
-    await axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
-      const auth_lvl = resp.data.auth_lvl;
-      console.log(resp);
-      if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) {
-        location.href = "/";
-      }
-    });
+    // await axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
+    //   const auth_lvl = resp.data.auth_lvl;
+    //   console.log(resp);
+    //   if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) {
+    //     location.href = "/";
+    //   }
+    // });
     await axios.get(import.meta.env.VITE_API_ENDPOINT + "/messages", {withCredentials: true}).then((resp) => {
       const data = resp.data;
       if (data.msg.length > 0) {

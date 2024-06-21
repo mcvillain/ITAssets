@@ -1,116 +1,44 @@
-<script>
-import { provide } from 'vue';
-import { collapsed, toggleSidebar, sidebarWidth, } from './state';
-import toggleDataTable from './state';
-import { useRouter } from 'vue-router';
-export default {
-    props: {},
-    methods: {
-        redirectServers() {
-            window.location.href = "/servers";
-        },
-        redirectDatabases() {
-            window.location.href = "/databases";
-        },
-        redirectCldDatabases() {
-            window.location.href = "/clddatabases";
-        },
-        redirectAbout() {
-            window.location.href = "/about";
-        },
-        redirectUsers() {
-            window.location.href = "/users";
-        },
-        redirectHelp() {
-            window.location.href = "/help";
-        }
-    },
-    setup() {
-        const router = useRouter();
-        setTimeout(() => {
-            const route = router.currentRoute.value.fullPath;
-            console.log(route)
-            function updateIcons() {
-                //change on route
-                if (route == '/servers') {
-                    [...document.getElementsByClassName("server-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                } else if (route == '/databases') {
-                    [...document.getElementsByClassName("database-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                } else if (route == '/clddatabases') {
-                    [...document.getElementsByClassName("cloud-database-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                } else if (route == '/users') {
-                    [...document.getElementsByClassName("user-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                } else if (route == '/about') {
-                    [...document.getElementsByClassName("about-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                } else if (route == '/help') {
-                    [...document.getElementsByClassName("help-icon")].forEach(element => {
-                        element.classList.add("active");
-                    });
-                }
-            }
-            updateIcons();
-        }, 50);
-        provide('toggleDataTable', toggleDataTable);
-        return {
-            collapsed,
-            toggleSidebar,
-            sidebarWidth,
-        };
-    }
-};
-
-</script>
-
 <template>
+    <div v-if="route !== '/'" id="username_float">Logged in as: {{ username }}</div>
     <div class="sidebar" :style="{ width: sidebarWidth }">
-        <div class="collapse-icon" @click="redirectServers" style="display: flex; flex-direction: row;">
-            <a href="/servers"><img class="pic" src="/src/assets/Aegis-Logo-Transparent-Backgrounds.png"></a>
+        <div class="collapse-icon" @click="goto('/')" style="display: flex; flex-direction: row;">
+            <img class="pic" src="/src/assets/Aegis-Logo-Transparent-Backgrounds.png">
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK0">IT Assets</p>
             </span>
         </div>
         <div class="spacer"></div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectServers"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/servers')"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-pc-display server-icon"></i>
+            <i class="bi bi-pc-display nav-icon" id="servers-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Servers</p>
             </span>
         </div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectDatabases"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/databases')"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-database-fill database-icon"></i>
+            <i class="bi bi-database-fill nav-icon" id="internal_dbs-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Internal DB</p>
             </span>
         </div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectCldDatabases"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/clddatabases')"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-cloud cloud-database-icon"></i>
+            <i class="bi bi-cloud nav-icon" id="azure_dbs-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Azure DB</p>
             </span>
         </div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectUsers"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/users')"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-person-circle user-icon"></i>
+            <i class="bi bi-person-circle nav-icon" id="users-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Users</p>
             </span>
         </div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="redirectAbout"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/about')"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-chat-square-text-fill about-icon"></i>
+            <i class="bi bi-chat-square-text-fill nav-icon" id="about-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">About</p>
             </span>
@@ -119,17 +47,21 @@ export default {
 
         <div class="item" :class="collapsed && 'item collapsed'" style="display: flex; flex-direction: row;">
             <a href="mailto:helpdesk@aiscorp.com?subject=IT Support" id="help-icon" class="label-DONTBREAK"><i
-                    class="bi bi-envelope help-icon"></i></a>
+                    class="bi bi-envelope nav-icon"></i></a>
             <span v-if="!collapsed">
                 <a href="mailto:helpdesk@aiscorp.com?subject=IT Support" id="help-link"> Support</a>
             </span>
         </div>
-        <!--<div class="item" :class="collapsed && 'item collapsed'" @click="redirectHelp" style="display: flex; flex-direction: row;">
-            <i class="bi bi-question-circle-fill help-icon"></i>
+        <div class="item" :class="collapsed && 'item collapsed'" style="display: flex; flex-direction: row;">
+            <a href="/api/logout_redirect">
+                <i class="bi bi-box-arrow-left nav-icon"></i></a>
             <span v-if="!collapsed">
-                <p class="label-DONTBREAK">Help</p>
+                <a href="/api/logout_redirect">
+                    <p class="label-DONTBREAK">Logout</p>
+                </a>
             </span>
-        </div>-->
+
+        </div>
         <div class="item" :class="collapsed && 'item collapsed'" @click="toggleSidebar"
             style="display: flex; flex-direction: row;">
             <i class="bi bi-layout-sidebar sidebar-toggler"></i>
@@ -140,75 +72,70 @@ export default {
     </div>
 </template>
 
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue';
+import { collapsed, toggleSidebar, sidebarWidth, } from './state';
+import toggleDataTable from './state';
+
+const route = location.pathname;
+
+function goto(path: string) {
+    location.href = path;
+}
+
+const username = ref("");
+if (route !== '/') {
+    // Get username & make sure the user is authed
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", { credentials: 'include' }).then((resp) => { if (resp.status === 401) { location.href = '/'; } return resp.json() }).then((body) => { let auth_lvl = body.auth_lvl; if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) { location.href = '/'; } username.value = body.username; });
+}
+
+onMounted(() => {
+    switch (route) {
+        case '/servers':
+            document.getElementById("servers-icon")?.classList.add("active");
+            break;
+        case '/databases':
+            document.getElementById("internal_dbs-icon")?.classList.add("active");
+            break;
+        case '/clddatabases':
+            document.getElementById("azure_dbs-icon")?.classList.add("active");
+            break;
+        case '/users':
+            document.getElementById("users-icon")?.classList.add("active");
+            break;
+        case '/about':
+            document.getElementById("about-icon")?.classList.add("active");
+            break;
+        default:
+            break;
+    }
+})
+</script>
+
 <style>
 :root {
     --sidebar-bg-color: #27272d;
+    --sidebar-icon-color: #708490;
     --sidebar-item-hover: white;
     --sidebar-item-active: #ef3b32;
 }
 </style>
 
 <style scoped>
-.sidebar-toggler {
+#username_float {
+    display: block;
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+}
+
+.nav-icon {
     font-size: 3rem;
-    color: #708490;
+    color: var(--sidebar-icon-color);
 }
 
-.item {
-    padding-left: 0.75rem;
-}
-
-.server-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.server-icon.active {
-    color: #ef3b32;
-}
-
-.database-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.database-icon.active {
-    color: #ef3b32;
-}
-.cloud-database-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.cloud-database-icon.active {
-    color: #ef3b32;
-}
-
-.about-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.about-icon.active {
-    color: #ef3b32;
-}
-
-.user-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.user-icon.active {
-    color: #ef3b32;
-}
-
-.help-icon {
-    font-size: 3rem;
-    color: #708490;
-}
-
-.help-icon.active {
-    color: #ef3b32;
+.nav-icon.active {
+    color: var(--sidebar-item-active);
 }
 
 .spacer {
@@ -256,6 +183,16 @@ export default {
     }
 }
 
+.sidebar-toggler {
+    font-size: 3rem;
+    color: #708490;
+}
+
+.item {
+    padding-left: 0.75rem;
+}
+
+
 .collapse-icon {
     position: absolute;
     top: 0;
@@ -302,4 +239,5 @@ export default {
     text-decoration: none;
     vertical-align: -3rem;
     padding-left: 1rem;
-}</style>
+}
+</style>

@@ -1,5 +1,6 @@
 #!/bin/env powershell
 Set-Location $PSScriptRoot
+docker compose kill
 docker compose down
 Copy-Item .\environment\dev_frontend.env .\frontend\.env.production
 docker compose build
