@@ -27,6 +27,18 @@ services:
       options:
         max-size: "12m"
         max-file: "5"
+  
+  upload_coordinator:
+    image: uploader-coordinator:latest
+    hostname: coordinator
+    networks:
+      - itassets
+    env_file: "./environment/dev_coordinator.env"
+    logging:
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
 
 networks:
   itassets:

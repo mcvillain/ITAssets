@@ -35,6 +35,22 @@ services:
       context: ./backend
       tags:
         - "itassets-backend:latest"
+  
+  upload_coordinator:
+    image: uploader-coordinator:latest
+    hostname: coordinator
+    networks:
+      - itassets
+    env_file: "./environment/dev_coordinator.env"
+    logging:
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+    build: 
+      context: ./upload_coordinator
+      tags:
+        - "upload-coordinator:latest"
 
 networks:
   itassets:
