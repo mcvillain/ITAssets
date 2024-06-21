@@ -10,7 +10,6 @@ WORKDIR /srv/
 COPY ./src /srv/ITAssets
 WORKDIR /srv/ITAssets
 RUN npm install
-RUN npm install -D
-RUN npm run tsc
+RUN npx tsc
 CMD ["node", "index.js"]
 
