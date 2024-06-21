@@ -6,9 +6,20 @@ import dotenv from "dotenv";
 //     ConfidentialClientApplication,
 // } from "@azure/msal-node";
 
-// import { get_auth, get_auth_redirect, get_logout_redirect, get_ms_auth } from "./endpoints/auth";
+import { post_support_request_upload_url } from "./endpoints/support_request_upload_url";
+import { get_support_get_current_cases_pages } from "./endpoints/support_get_current_cases_page";
+import { get_support_get_all_cases_page } from "./endpoints/support_get_all_cases_page";
+import { delete_support_delete_all_cases_files_case_uuid } from "./endpoints/support_delete_all_cases_files_caase_uuid";
+import { get_support_get_case_files_case_uuid } from "./endpoints/support_get_case_files_case_uuid"
+import { post_uploader_register_uploader } from "./endpoints/uploader_register_uploader";
+import { get_uploader_validate_case_uuid } from "./endpoints/uploader_validate_case_uuid";
+import { post_uploader_checkin_new_file } from "./endpoints/uploader_checkin_new_file";
+import { post_uploader_update_file_progress } from "./endpoints/uploader_update_file_progress";
 import session from "express-session";
 // import { clientConfig, config } from "./msauth_config";
+
+import { backend_loop } from "./daemon_service";
+backend_loop();
 
 dotenv.config();
 
@@ -39,11 +50,44 @@ app.use(session(session_config));
 // Setup MSAuth
 // const pca = new ConfidentialClientApplication(clientConfig);
 
-
-// AUTH
-app.get("/auth", async (req: Request, res: Response) => {
-    // await get_auth(req, res, loginCache);
+// Support 
+app.post("/support/request_upload_url", async (req: Request, res: Response) => {
+    await post_support_request_upload_url(req, res);
 });
+
+app.get("/support/get_current_user_cases/:page", async (req: Request, res: Response) => {
+    await get_support_get_current_cases_pages(req, res);
+});
+
+app.get("/support/get_all_cases/:page", async (req: Request, res: Response) => {
+    await get_support_get_all_cases_page(req, res);
+});
+
+app.get("/support/get_case_files/:case_uuid", async (req: Request, res: Response) => {
+    await get_support_get_case_files_case_uuid(req, res);
+});
+
+app.delete("/support/delete_all_case_files/:case_uuid", async (req: Request, res: Response) => {
+    await delete_support_delete_all_cases_files_case_uuid(req, res);
+});
+
+// Uploader 
+app.post("/uploader/register_uploader", async (req: Request, res: Response) => {
+    await post_uploader_register_uploader(req, res);
+});
+
+app.get("/uploader/validate_case_uuid", async (req: Request, res: Response) => {
+    await get_uploader_validate_case_uuid(req, res);
+});
+
+app.post("/uploader/checkin_new_file", async (req: Request, res: Response) => {
+    await post_uploader_checkin_new_file(req, res);
+});
+
+app.post("/uploader/update_file_progress", async (req: Request, res: Response) => {
+    await post_uploader_update_file_progress(req, res);
+});
+
 
 const server = app.listen(port, () => {
     let os = require("os");
