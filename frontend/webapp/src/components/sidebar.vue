@@ -117,7 +117,7 @@ export default {
         </div>
         <div class="item" :class="collapsed && 'item collapsed'" @click="redirectUploader"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-chat-square-text-fill uploader-icon"></i>
+            <i class="bi bi-cloud-upload uploader-icon"></i>
             <span v-if="!collapsed">
                 <p class="label-DONTBREAK">Uploader</p>
             </span>
@@ -214,6 +214,15 @@ export default {
 }
 
 .user-icon.active {
+    color: #ef3b32;
+}
+
+.uploader-icon {
+    font-size: 3rem;
+    color: #708490;
+}
+
+.uploader-icon.active {
     color: #ef3b32;
 }
 
