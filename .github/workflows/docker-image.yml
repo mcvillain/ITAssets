@@ -8,19 +8,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-backend:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      working-directory: ./backend
-      run: docker build . --file Dockerfile --tag itassets-backend:$(date +%s)
-  build-frontend:
+  build-compose:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Copy .env files
       run: cp ./environment/prod_frontend.env ./frontend/.env.production
-    - name: Build the Docker image
-      working-directory: ./frontend
-      run: docker build . --file Dockerfile --tag itassets-frontend:$(date +%s)
+    - name: Build the Docker Compose
+      working-directory: ./backend
+      run: docker compose build
