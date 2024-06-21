@@ -10,6 +10,7 @@ WORKDIR /srv/
 COPY ./src /srv/ITAssets
 WORKDIR /srv/ITAssets
 RUN npm install
-RUN npm run tsc
+RUN npm install -D typescript
+RUN npx tsc
 CMD ["node", "index.js"]
 
