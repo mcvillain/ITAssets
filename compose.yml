@@ -10,6 +10,9 @@ services:
       - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
     networks:
       - itassets
+    depends_on: 
+      - backend
+      - upload_coordinator
     logging: 
       driver: json-file
       options:
@@ -25,6 +28,8 @@ services:
     hostname: backend
     networks:
       - itassets
+    depends_on: 
+      - upload_coordinator
     env_file: "./environment/dev_backend.env"
     logging: 
       driver: json-file
@@ -41,6 +46,8 @@ services:
     hostname: coordinator
     networks:
       - itassets
+    depends_on: 
+      - mssql
     env_file: "./environment/dev_coordinator.env"
     logging:
       driver: json-file

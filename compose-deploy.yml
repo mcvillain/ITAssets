@@ -10,6 +10,9 @@ services:
       - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
     networks:
       - itassets
+    depends_on: 
+      - backend
+      - upload_coordinator
     logging: 
       driver: json-file
       options:
@@ -21,6 +24,8 @@ services:
     hostname: backend
     networks:
       - itassets
+    depends_on: 
+      - upload_coordinator
     env_file: "./environment/prod_backend.env"
     logging: 
       driver: json-file
@@ -33,8 +38,32 @@ services:
     hostname: coordinator
     networks:
       - itassets
+    depends_on: 
+      - mssql
     env_file: "./environment/dev_coordinator.env"
     logging:
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    hostname: mssql
+    networks:
+      - itassets
+    container_name: mssql
+    restart: unless-stopped
+    volumes:
+      - ./sql:/mnt/mssql_data:rw
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Test1234
+      - MSSQL_PID=Express
+      - MSSQL_DATA_DIR=/mnt/mssql_data
+    logging: 
       driver: json-file
       options:
         max-size: "12m"
