@@ -52,5 +52,27 @@ services:
       tags:
         - "upload-coordinator:latest"
 
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    hostname: mssql
+    networks:
+      - itassets
+    container_name: mssql
+    restart: unless-stopped
+    volumes:
+      - ./sql:/mnt/mssql_data:rw
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Test1234
+      - MSSQL_PID=Express
+      - MSSQL_DATA_DIR=/mnt/mssql_data
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+
 networks:
   itassets:
