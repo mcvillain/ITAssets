@@ -1,8 +1,8 @@
 # Choose the Image which has Node installed already
-FROM node:latest
+FROM node:alpine
 EXPOSE 3000
-RUN apt-get -qq update && apt-get install sudo -y
-RUN sudo apt-get -q -y install git npm
+# RUN apt-get -qq update && apt-get install sudo -y
+# RUN sudo apt-get -q -y install git npm
 WORKDIR /srv/
 # ENV VERSION = RANDOM_NUM
 # ENV FRONTEND_ORIGIN="https://itassets.aiscorp.com/"   
@@ -10,6 +10,6 @@ WORKDIR /srv/
 COPY ./src /srv/ITAssets
 WORKDIR /srv/ITAssets
 RUN npm install
-RUN npm run tsc
+RUN npx tsc
 CMD ["node", "index.js"]
 

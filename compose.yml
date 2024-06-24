@@ -13,6 +13,14 @@ services:
     depends_on: 
       - backend
       - upload_coordinator
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging: 
       driver: json-file
       options:
@@ -31,6 +39,14 @@ services:
     depends_on: 
       - upload_coordinator
     env_file: "./environment/dev_backend.env"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/auth"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging: 
       driver: json-file
       options:
@@ -49,6 +65,14 @@ services:
     depends_on: 
       - mssql
     env_file: "./environment/dev_coordinator.env"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging:
       driver: json-file
       options:
@@ -65,7 +89,6 @@ services:
     networks:
       - itassets
     container_name: mssql
-    restart: unless-stopped
     volumes:
       - ./sql:/mnt/mssql_data:rw
     ports:
@@ -75,6 +98,14 @@ services:
       - MSSQL_SA_PASSWORD=Test1234
       - MSSQL_PID=Express
       - MSSQL_DATA_DIR=/mnt/mssql_data
+    restart: always
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S localhost", "-U", "sa", '-P', 'Test1234']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging: 
       driver: json-file
       options:
