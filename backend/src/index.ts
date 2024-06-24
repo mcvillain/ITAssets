@@ -66,12 +66,13 @@ const pca = new ConfidentialClientApplication(clientConfig);
 // Setup Cache
 let loginCache = new NodeCache({
     stdTTL: 8 * 3600, // 8 Hours
-    maxKeys: 100,
+    maxKeys: 512,
     deleteOnExpire: true,
 });
 loginCache.set("b71516c0-90ec-4ff6-9fa6-591b2fc8d781", "svc", 0);
 let dataCache = new NodeCache({
     stdTTL: 0,
+    maxKeys: 256,
 });
 dataCache.set(Servers, []);
 // const localDatabases: LocalDatabase[] = [];
@@ -85,8 +86,9 @@ dataCache.set(UserMeta, []);
 // let currentMessage: string = "";
 dataCache.set(CurrentMessage, new Message());
 let sizePriceCache = new NodeCache({
-    stdTTL: 24 * 3600,
+    stdTTL: 86400, // 24 Hours
     deleteOnExpire: true,
+    maxKeys: 256,
 });
 
 // AUTH

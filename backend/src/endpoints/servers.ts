@@ -1,3 +1,4 @@
+import request from "then-request";
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
 import { Server } from "../types";
@@ -97,6 +98,10 @@ function update_server_list(
     return oldserverlist;
 }
 
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function getSizePrice(
     size: string,
     sizePriceCache: NodeCache
@@ -105,13 +110,15 @@ async function getSizePrice(
     if (cachedPrice !== undefined) {
         return cachedPrice;
     }
+    await sleep(1000); // Wait 1 second to avoid rate limiting
     let url = `https://prices.azure.com/api/retail/prices?$filter=serviceFamily eq 'Compute' and location eq 'US East' and armSkuName eq '${size}' and pricetype eq 'Consumption'`;
-    const resp = await fetch(url);
-    if (!resp.ok) {
+    // const resp = await fetch(url);
+    const resp: any = await request('GET', url);
+    if (resp.isError() || resp.statusCode !== 200) {
         console.error(`Couldn't get price for size: ${size}`);
         return -1;
     }
-    const data = await resp.json();
+    const data = JSON.parse(resp.body);
     const correctItem = data.Items.filter(
         (i: any) =>
             !i.meterName.toLowerCase().includes("spot") &&
@@ -121,5 +128,7 @@ async function getSizePrice(
     const serverPriceHourly = correctItem.retailPrice;
     const price = serverPriceHourly * 24 * 30;
     console.log(`Size '${size}' is \$${Math.ceil(price * 100) / 100}`);
-    return Math.ceil(price * 100) / 100;
+    const size_price = Math.ceil(price*100)/100;
+    sizePriceCache.set(size, size_price);
+    return size_price;
 }
