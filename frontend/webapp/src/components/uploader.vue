@@ -24,26 +24,28 @@
     <div
       style="background-color: black; width: 75%; height: .1rem; margin-left: auto; margin-right: auto; margin-top: 1rem;">
     </div>
+    <mainTable />
     <div class="grid-container">
       <div class="header">Header 1:</div>
       <div class="header">Header 2:</div>
-      <div class="grid-item" id="1">1</div>
-      <div class="grid-item" id="2">2</div>
-      <div class="grid-item" id="3">3</div>
-      <div class="grid-item" id="4">4</div>
-      <div class="grid-item" id="5">5</div>
-      <div class="grid-item" id="6">6</div>
-      <div class="grid-item" id="7">7</div>
-      <div class="grid-item" id="8">8</div>
-      <div class="grid-item" id="9">9</div>
-      <div class="grid-item" id="9">10</div>
+      <div class="grid-item1" id="1">1</div><div class="grid-item2" id="1">1</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="2">2</div><div class="grid-item2" id="2">2</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="3">3</div><div class="grid-item2" id="3">3</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="4">4</div><div class="grid-item2" id="4">4</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="5">5</div><div class="grid-item2" id="5">5</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="6">6</div><div class="grid-item2" id="6">6</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="7">7</div><div class="grid-item2" id="7">7</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="8">8</div><div class="grid-item2" id="8">8</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="9">9</div><div class="grid-item2" id="9">9</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
+      <div class="grid-item1" id="10">10</div><div class="grid-item2" id="10">10</div> <button class="subitem1" style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
     </div>
-    <div class="center"></div>
+    <div></div>
   </div>
 </template>
 
 <script setup lang="ts">
 import notification from './notification.vue';
+import mainTable from './uploader/mainTable.vue';
 //import { ref, Ref} from 'vue'
 //const search: Ref<string> = ref('')
 
@@ -79,9 +81,9 @@ async function copyMyText() {
 
 <style scoped>
 .grid-container {
-  margin-top: 3rem;
+  margin-top: 2rem;
   display: inline-grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto 100px;
   background-color: #e92e2e;
   padding: 10px;
   max-width: 100%;
@@ -90,21 +92,53 @@ async function copyMyText() {
   border-radius: 1rem;
 }
 
+.subitem1 {
+  grid-column: 3/3;
+}
+
+.subitem2 {
+  grid-column: 3/3;
+  grid-row: 3/3; 
+}
+
+.subitem1:hover {
+  background-color: crimson;
+  scale: 105%;
+  transition: ease 0.5s; 
+}
+
+.subitem2:hover {
+  background-color: crimson;
+  scale: 105%;
+  transition: ease 0.5s; 
+}
+
 .header {
   background-color:#e92e2e;
-  
   padding: 20px;
   font-size: 20px;
   text-align: center;
   Color: white;
 }
 
-.grid-item {
+.grid-item1 {
   background-color: #f3f3f3;
   border: 1px solid #adadad;
   padding: 20px;
   font-size: 20px;
   text-align: center;
+  grid-column: 1;
+  grid-template-columns: subgrid;
+}
+
+.grid-item2 {
+  background-color: #f3f3f3;
+  border: 1px solid #adadad;
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+  grid-column: 2;
+  grid-template-columns: subgrid;
 }
 
 .text1 {
@@ -119,12 +153,16 @@ async function copyMyText() {
   transition: ease 0.5s;
 }
 
+.delete {
+  margin: 2rem;
+}
+
 .center {
-  margin-top: 50rem;
+  margin-top: 5rem;
   align-self: center;
   height: 600px;
   /* max-height: 600px; */
-  width: 1000px;
+  width: 2000px;
   background-color: hsla(200,40%,30%,.4);
   background-image:   
     url('https://78.media.tumblr.com/cae86e76225a25b17332dfc9cf8b1121/tumblr_p7n8kqHMuD1uy4lhuo1_540.png'), 
