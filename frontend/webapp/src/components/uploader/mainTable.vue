@@ -35,8 +35,8 @@
       style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
   </div> -->
   <div class="grid-container">
-    <div class="header" style="font-size:x-large;">CaseID:</div>
-    <div class="header" style="font-size: x-large;">GUID:</div>
+    <div class="header" >CaseID:</div>
+    <div class="header" >GUID:</div>
     <mainTableRow :case_id="row.caseID" :guid="row.guid" v-for="row in rows" />
   </div>
 </template>
@@ -67,12 +67,11 @@ onMounted(() => {
 .grid-container {
   margin-top: 2rem;
   display: inline-grid;
-  grid-template-columns: auto auto 100px;
+  grid-template-columns: 500px 500px 100px;
   background-color: #e92e2e;
   padding: 10px;
   max-width: 100%;
   align-self: center;
-  width: 100rem;
   border-radius: 1rem;
 }
 
@@ -83,4 +82,5 @@ onMounted(() => {
   text-align: center;
   Color: white;
 }
+
 </style>

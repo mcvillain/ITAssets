@@ -39,8 +39,9 @@ import mainTable from './uploader/mainTable.vue';
 
 
 function postCaseID() {
-    let caseID = (document.getElementById("caseID") as HTMLInputElement).value;
-    alert(caseID);
+    let cases = (document.getElementById("caseID") as HTMLInputElement).value;
+    alert(cases);
+    
 }
 
 async function copyMyText() {
@@ -76,65 +77,12 @@ async function copyMyText() {
     margin-top: 1rem;
 }
 
-.grid-container {
-    margin-top: 2rem;
-    display: inline-grid;
-    grid-template-columns: auto auto 100px;
-    background-color: #e92e2e;
-    padding: 10px;
-    max-width: 100%;
-    align-self: center;
-    width: 100rem;
-    border-radius: 1rem;
-}
-
-.subitem1 {
-    grid-column: 3/3;
-}
-
-.subitem2 {
-    grid-column: 3/3;
-    grid-row: 3/3;
-}
-
-.subitem1:hover {
-    background-color: crimson;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.subitem2:hover {
-    background-color: crimson;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
 .header {
     background-color: #e92e2e;
     padding: 20px;
     font-size: 20px;
     text-align: center;
     Color: white;
-}
-
-.grid-item1 {
-    background-color: #f3f3f3;
-    border: 1px solid #adadad;
-    padding: 20px;
-    font-size: 20px;
-    text-align: center;
-    grid-column: 1;
-    grid-template-columns: subgrid;
-}
-
-.grid-item2 {
-    background-color: #f3f3f3;
-    border: 1px solid #adadad;
-    padding: 20px;
-    font-size: 20px;
-    text-align: center;
-    grid-column: 2;
-    grid-template-columns: subgrid;
 }
 
 .text1 {
