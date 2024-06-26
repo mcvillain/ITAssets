@@ -50,6 +50,10 @@ app.use(session(session_config));
 // Setup MSAuth
 // const pca = new ConfidentialClientApplication(clientConfig);
 
+app.get('/healthcheck', (req: Request, res: Response) => {
+    res.sendStatus(200);
+});
+
 // Support 
 app.post("/support/request_upload_url", async (req: Request, res: Response) => {
     await post_support_request_upload_url(req, res);
