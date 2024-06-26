@@ -32,7 +32,6 @@ const props = defineProps(['case_id', 'guid']);
 
 .grid-item1 {
     background-color: #f3f3f3;
-    /* border: 1px solid #adadad; */
     padding: 20px;
     font-size: 20px;
     text-align: center;
@@ -49,7 +48,6 @@ const props = defineProps(['case_id', 'guid']);
 
 .grid-item2 {
     background-color: #f3f3f3;
-    /* border: 1px solid #adadad; */
     padding: 20px;
     font-size: 20px;
     text-align: center;

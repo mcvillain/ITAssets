@@ -1,39 +1,4 @@
 <template>
-  <!-- Table Code Here -->
-  <!-- <div class="grid-container">
-    <div class="header">Header 1:</div>
-    <div class="header">Header 2:</div>
-    <div class="grid-item1" id="1">1</div>
-    <div class="grid-item2" id="1">1</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="2">2</div>
-    <div class="grid-item2" id="2">2</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="3">3</div>
-    <div class="grid-item2" id="3">3</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="4">4</div>
-    <div class="grid-item2" id="4">4</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="5">5</div>
-    <div class="grid-item2" id="5">5</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="6">6</div>
-    <div class="grid-item2" id="6">6</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="7">7</div>
-    <div class="grid-item2" id="7">7</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="8">8</div>
-    <div class="grid-item2" id="8">8</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="9">9</div>
-    <div class="grid-item2" id="9">9</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-    <div class="grid-item1" id="10">10</div>
-    <div class="grid-item2" id="10">10</div> <button class="subitem1"
-      style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke; font-size:large;">Delete</button>
-  </div> -->
   <div class="grid-container">
     <div class="header" >CaseID:</div>
     <div class="header" >GUID:</div>
@@ -66,6 +31,7 @@ onMounted(() => {
 <style scoped>
 .grid-container {
   margin-top: 2rem;
+  margin-bottom: 1rem;
   display: inline-grid;
   grid-template-columns: 500px 500px 100px;
   background-color: #e92e2e;

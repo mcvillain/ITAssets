@@ -8,18 +8,14 @@
                 style="border: 1px black solid; border-radius: 1rem; padding:.25rem; text-align: center;" />
         </div>
         <div>
-            <button class="postBtn" id="postBtn" @click="postCaseID()"
-                style="border: 1px #e92e2e solid; border-radius: 1rem; padding: .25rem; background-color: crimson; color: whitesmoke;">Jared
-                Button</button>
+            <button class="postBtn" id="postBtn" @click="postCaseID()">Jared Button</button>
         </div>
         <div>
             <input id="url" type="text" placeholder="URL To Be Posted Here:"
                 style="border: 1px black solid;  padding:.25rem; text-align: center; margin: 1rem; border-radius: 1rem;" />
         </div>
         <div>
-            <button @click="copyMyText()" class="postBtn"
-                style="border: 1px #e92e2e solid; padding: .25rem; background-color: #dc143c; color: whitesmoke; border-radius: 1rem;">Copy
-                To Clipboard</button>
+            <button @click="copyMyText()" class="postBtn">Copy To Clipboard</button>
         </div>
         <div class="spacer">
         </div>
@@ -41,7 +37,7 @@ import mainTable from './uploader/mainTable.vue';
 function postCaseID() {
     let cases = (document.getElementById("caseID") as HTMLInputElement).value;
     alert(cases);
-    
+
 }
 
 async function copyMyText() {
@@ -49,21 +45,6 @@ async function copyMyText() {
     urlbox.select();
     await navigator.clipboard.writeText(urlbox.value);
 }
-
-// fetch()
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     return response.json();
-//   })
-//   .then(userData => {
-//     // Process the retrieved user data
-//     console.log('User Data:', userData);
-//   })
-//   .catch(error => {
-//     console.error('Error:', error);
-//   });
 
 </script>
 
@@ -91,8 +72,16 @@ async function copyMyText() {
     margin: 1rem
 }
 
-.postBtn:hover {
+.postBtn {
+    border: 1px #e92e2e solid;
+    border-radius: 1rem;
+    padding: .25rem;
     background-color: crimson;
+    color: whitesmoke;
+}
+
+.postBtn:hover {
+    background-color: rgb(182, 15, 49);
     scale: 105%;
     transition: ease 0.5s;
 }
