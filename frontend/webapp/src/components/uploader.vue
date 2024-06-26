@@ -1,18 +1,17 @@
-<template>
+<template >
     <notification />
-    <div id="server-bar" class="d-flex flex-column w-100"
-        style="justify-content: center; align-content: center; margin: 4rem;">
-        <h2 style="align-content: center; margin: .5rem; font-size: xx-large;">Case ID Uploader</h2>
+    <div class="" style="background-color: #E4E3E3; justify-content: center; align-content: center; ;">
+        <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large; color: #27272D;">Case ID Uploader</h2>
         <div class="my-2">
             <input id="caseID" name="caseID" type="text" placeholder="Case ID:"
-                style="border: 1px black solid; border-radius: 1rem; padding:.25rem; text-align: center;" />
+                style="background-color: white; border: 1px black solid; border-radius: 1rem; padding:.25rem; text-align: center;" />
         </div>
         <div>
             <button class="postBtn" id="postBtn" @click="postCaseID()">Jared Button</button>
         </div>
         <div>
             <input id="url" type="text" placeholder="URL To Be Posted Here:"
-                style="border: 1px black solid;  padding:.25rem; text-align: center; margin: 1rem; border-radius: 1rem;" />
+                style="background-color: white; border: 1px black solid;  padding:.25rem; text-align: center; margin: 1rem; border-radius: 1rem;" />
         </div>
         <div>
             <button @click="copyMyText()" class="postBtn">Copy To Clipboard</button>
@@ -37,7 +36,6 @@ import mainTable from './uploader/mainTable.vue';
 function postCaseID() {
     let cases = (document.getElementById("caseID") as HTMLInputElement).value;
     alert(cases);
-
 }
 
 async function copyMyText() {
@@ -76,12 +74,11 @@ async function copyMyText() {
     border: 1px #e92e2e solid;
     border-radius: 1rem;
     padding: .25rem;
-    background-color: crimson;
+    background-color: #ef3b32;
     color: whitesmoke;
 }
 
 .postBtn:hover {
-    background-color: rgb(182, 15, 49);
     scale: 105%;
     transition: ease 0.5s;
 }

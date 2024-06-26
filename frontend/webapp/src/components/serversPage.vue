@@ -8,7 +8,7 @@
             </div>
 
 
-            <table class="styled-table">
+            <table class="styled-table" >
                 <thead>
                     <tr>
                         <!-- Add click events and icons for sorting -->
