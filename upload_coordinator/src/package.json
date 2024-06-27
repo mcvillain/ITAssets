@@ -11,7 +11,6 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
-    "@types/tedious": "^4.0.14",
     "typescript": "^5.5.2"
   },
   "dependencies": {
@@ -20,6 +19,6 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "tedious": "^18.2.1"
+    "mariadb": "^3.3.1"
   }
 }

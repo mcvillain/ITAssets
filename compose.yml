@@ -63,7 +63,7 @@ services:
     networks:
       - itassets
     depends_on: 
-      - mssql
+      - mariadb
     env_file: "./environment/dev_coordinator.env"
     restart: always
     healthcheck:
@@ -83,29 +83,36 @@ services:
       tags:
         - "upload-coordinator:latest"
 
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    hostname: mssql
+  mariadb:
+    image: mariadb:11.4-ubi
+    hostname: mariadb
     networks:
       - itassets
-    container_name: mssql
     volumes:
-      - ./sql:/mnt/mssql_data:rw
+      - ./sql:/var/lib/mysql:rw
     ports:
-      - 1433:1433
+      - 3306:3306
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Test1234
-      - MSSQL_PID=Express
-      - MSSQL_DATA_DIR=/mnt/mssql_data
+      MARIADB_ROOT_PASSWORD: Test1234
     restart: always
-    healthcheck:
-      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S localhost", "-U", "sa", '-P', 'Test1234']
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-      start_interval: 5s
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    networks:
+      - itassets
+    restart: unless-stopped
+    ports:
+      - "9090:80"
+    environment:
+      - PMA_ARBITRARY=0
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
     logging: 
       driver: json-file
       options:

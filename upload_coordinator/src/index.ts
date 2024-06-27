@@ -18,8 +18,8 @@ import { post_uploader_update_file_progress } from "./endpoints/uploader_update_
 import session from "express-session";
 // import { clientConfig, config } from "./msauth_config";
 
-import { backend_loop } from "./daemon_service";
-backend_loop();
+import { startup_backend_loop } from "./daemon_service";
+startup_backend_loop();
 
 dotenv.config();
 
