@@ -24,6 +24,10 @@ const props = defineProps(['case_id', 'guid']);
     font-size:x-large;
 }
 
+.subitem1:nth-of-type(2n+1) {
+    background-color: #E4E3E3;
+}
+
 .subitem1:hover {
   background-color: rgb(182, 15, 49);
   color: whitesmoke;
@@ -39,9 +43,18 @@ const props = defineProps(['case_id', 'guid']);
     grid-column: 1;   
 }
 
-.grid-item1:hover, .grid-item2:hover {
-  background-color: #E4E3E3;
+.grid-item1:nth-of-type(4n-1) {
+    background-color: #E4E3E3;
 }
+
+.grid-item2:nth-of-type(4n) {
+    background-color: #E4E3E3;
+}
+
+.grid-item1:hover, .grid-item2:hover {
+  background-color: #d6d6d6;
+}
+
 
 .grid-item2 {
     background-color: #f1f1f1;
