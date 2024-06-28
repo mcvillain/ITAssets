@@ -168,6 +168,10 @@ export default {
     color: #708490;
 }
 
+.sidebar-toggler:hover {
+    color:#15779f;
+}
+
 .item {
     padding-left: 0.75rem;
 }
@@ -181,6 +185,10 @@ export default {
     color: #ef3b32;
 }
 
+.server-icon:hover {
+    color:#15779f;
+}
+
 .database-icon {
     font-size: 3rem;
     color: #708490;
@@ -188,6 +196,10 @@ export default {
 
 .database-icon.active {
     color: #ef3b32;
+}
+
+.database-icon:hover {
+    color:#15779f;
 }
 
 .cloud-database-icon {
@@ -199,6 +211,10 @@ export default {
     color: #ef3b32;
 }
 
+.cloud-database-icon:hover {
+    color: #15779f;
+}
+
 .about-icon {
     font-size: 3rem;
     color: #708490;
@@ -206,6 +222,10 @@ export default {
 
 .about-icon.active {
     color: #ef3b32;
+}
+
+.about-icon:hover {
+    color: #15779f;
 }
 
 .user-icon {
@@ -217,6 +237,10 @@ export default {
     color: #ef3b32;
 }
 
+.user-icon:hover {
+    color:#15779f;
+}
+
 .uploader-icon {
     font-size: 3rem;
     color: #708490;
@@ -226,6 +250,10 @@ export default {
     color: #ef3b32;
 }
 
+.uploader-icon:hover {
+    color:#15779f;
+}
+
 .help-icon {
     font-size: 3rem;
     color: #708490;
@@ -233,6 +261,10 @@ export default {
 
 .help-icon.active {
     color: #ef3b32;
+}
+
+.help-icon:hover {
+    color:#15779f;
 }
 
 .spacer {

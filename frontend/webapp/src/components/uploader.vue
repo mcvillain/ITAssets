@@ -70,7 +70,7 @@ async function copyMyText() {
 }
 
 .postBtn {
-    border: 1px #e92e2e solid;
+    border: 1px #ef3b32 solid;
     border-radius: 1rem;
     padding: .25rem;
     background-color: #ef3b32;
