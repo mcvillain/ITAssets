@@ -1,14 +1,26 @@
-import mariadb from 'mariadb';
+import mariadb from "mariadb";
+
 let _pool: mariadb.Pool | undefined;
+
 function getPool(): mariadb.Pool {
     if (!_pool) {
-        _pool = mariadb.createPool({host: process.env.DB_HOST, user: process.env.DB_USER, password: process.env.DB_PASS, connectionLimit: 10, database: 'uploader_db'});
+        _pool = mariadb.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            connectionLimit: 10,
+            database: "uploader_db",
+        });
     }
     return _pool;
-} 
+}
 
 export async function ensure_uploaderdb() {
-    const _conn = await mariadb.createConnection({host: process.env.DB_HOST, user: process.env.DB_USER, password: process.env.DB_PASS});
+    const _conn = await mariadb.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+    });
     await _conn.query("CREATE DATABASE IF NOT EXISTS uploader_db;");
     await _conn.end();
     const conn = await getPool().getConnection();

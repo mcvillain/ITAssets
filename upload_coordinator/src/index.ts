@@ -19,7 +19,8 @@ import session from "express-session";
 // import { clientConfig, config } from "./msauth_config";
 
 import { startup_backend_loop } from "./daemon_service";
-startup_backend_loop();
+setTimeout(startup_backend_loop,1000);
+
 
 dotenv.config();
 

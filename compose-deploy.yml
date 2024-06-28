@@ -55,7 +55,7 @@ services:
     networks:
       - itassets
     depends_on: 
-      - mssql
+      - mariadb
     env_file: "./environment/dev_coordinator.env"
     restart: always
     healthcheck:
