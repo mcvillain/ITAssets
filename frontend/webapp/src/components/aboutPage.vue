@@ -66,7 +66,7 @@
                 <img id="groupPhoto" class="picture2024" src="/src/components/router/cheese.gif"
                     @click="resizePhoto()" />
                 <div class="textA2024">
-                    <p id="heading" style="color: white;">2024 IT Asset Project</p>
+                    <p id="heading" style="color: white;">2024 IT Asset Project (Coming Soon)</p>
                     Designed by La Salle College High School Class of 2024 Summer Interns:
                     <div class="textB2024">
                         Ethan Pakuris, Jared Werts, Ian Whitaker, Evan
