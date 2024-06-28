@@ -1,7 +1,8 @@
-<template >
+<template>
     <notification />
-    <div class="" style="justify-content: center; align-content: center; ;">
-        <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader</h2>
+    <div class="" style=" justify-content: center; align-content: center; ;">
+        <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader
+        </h2>
         <div class="my-2">
             <input id="caseID" name="caseID" type="text" placeholder="Case ID:"
                 style="background-color: white; border: 1px black solid; border-radius: 1rem; padding:.25rem; text-align: center;" />
@@ -120,4 +121,5 @@ async function copyMyText() {
             400px 0;
     }
 }
+
 </style>

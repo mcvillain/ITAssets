@@ -32,12 +32,12 @@ const props = defineProps(['case_id', 'guid']);
   background-color: rgb(182, 15, 49);
   color: whitesmoke;
   scale: 105%;
-  transition: ease 0.5s;
+  transition: ease 0.25s;
 }
 
 .grid-item1 {
     background-color: #f1f1f1;
-    padding: 20px;
+    padding: 15px;
     font-size: 20px;
     text-align: center;
     grid-column: 1;   
@@ -58,7 +58,7 @@ const props = defineProps(['case_id', 'guid']);
 
 .grid-item2 {
     background-color: #f1f1f1;
-    padding: 20px;
+    padding: 15px;
     font-size: 20px;
     text-align: center;
     grid-column: 2;
