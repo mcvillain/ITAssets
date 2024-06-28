@@ -60,6 +60,8 @@ services:
   upload_coordinator:
     image: uploader-coordinator:latest
     hostname: coordinator
+    ports: 
+      - 3030:3000/tcp
     networks:
       - itassets
     depends_on: 
