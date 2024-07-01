@@ -81,7 +81,7 @@ app.post("/uploader/register_uploader", async (req: Request, res: Response) => {
     await post_uploader_register_uploader(req, res);
 });
 
-app.get("/uploader/validate_case_uuid", async (req: Request, res: Response) => {
+app.get("/uploader/validate/:case_uuid", async (req: Request, res: Response) => {
     await get_uploader_validate_case_uuid(req, res);
 });
 

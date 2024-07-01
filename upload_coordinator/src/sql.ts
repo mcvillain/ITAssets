@@ -28,6 +28,7 @@ export async function ensure_uploaderdb() {
         CREATE TABLE IF NOT EXISTS cases (
             guid CHAR(36) PRIMARY KEY,
             case_id INT,
+            owner VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `);
@@ -38,6 +39,7 @@ export async function ensure_uploaderdb() {
             case_guid CHAR(36),
             file_size FLOAT,
             uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            upload_complete BOOLEAN DEFAULT FALSE,
             FOREIGN KEY (case_guid) REFERENCES cases(guid)
         );
     `);
