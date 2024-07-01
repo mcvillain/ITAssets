@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { Users, IncomingUser } from "../types";
-import { Users as UserStore } from "../const";
+import { Users, IncomingUser, OutOfDate } from "../types";
+import { Users as UserStore, OutOfDate as OutOfDateCache } from "../const";
 import NodeCache from "node-cache";
+import { execute_sql } from "../sql";
 
 export async function post_users(
     req: Request,
@@ -25,6 +26,10 @@ export async function post_users(
     res.sendStatus(202);
     let new_user_meta = await calculate_user_stats(incoming_users);
     dataMemcache.set(UserStore, new_user_meta);
+    let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
+    ood.users = false;
+    dataMemcache.set(OutOfDateCache, ood);
+    await update_users_sql(new_user_meta);
     console.log("Done processing Users...");
     return;
 }
@@ -42,10 +47,30 @@ export async function get_users(
     }
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (auth_lvl > 0) {
-        res.json(dataMemcache.get(UserStore));
+        let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
+        let resp = {
+            data: dataMemcache.get(UserStore),
+            ood: ood.users
+        };
+        res.json(resp);
         return;
     }
     res.sendStatus(401);
+}
+
+async function update_users_sql(users: Users) {
+    await execute_sql(`DELETE FROM users WHERE 1`);
+    await execute_sql(`INSERT INTO users (totalUsers, value) VALUES (TRUE, ${users.totalUsers})`);
+    await execute_sql(`INSERT INTO users (serviceAccounts, value) VALUES (TRUE, ${users.serviceAccounts})`);
+    Object.keys(users.departments).forEach(async (dept_name: string) => {
+        await execute_sql(`INSERT INTO users (department, name, value) VALUES (TRUE, '${dept_name}', ${users.departments[dept_name]})`);
+    });
+    Object.keys(users.manager).forEach(async (manager_name: string) => {
+        await execute_sql(`INSERT INTO users (manager, name, value) VALUES (TRUE, '${manager_name}', ${users.manager[manager_name]})`);
+    });
+    Object.keys(users.title).forEach(async (title_name: string) => {
+        await execute_sql(`INSERT INTO users (title, name, value) VALUES (TRUE, '${title_name}', ${users.title[title_name]})`);
+    });
 }
 
 async function calculate_user_stats(

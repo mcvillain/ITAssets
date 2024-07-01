@@ -2,6 +2,7 @@
     <div class="card text-center m-3">
         <div class="card-body">
             <notification />
+            <ood_notify v-if="ood" />
             <h1 class="header">Servers</h1>
             <div id="server-bar">
                 <input type="text" v-model="serverSearchKeyword" placeholder="Search Servers" />
@@ -51,9 +52,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import notification from './notification.vue';
+import ood_notify from './ood_notify.vue';
 import router from './router/index.js';
 const serverSearchKeyword = ref('');
 var servers = ref(null);
+var ood = false;
 
 function dateToString(old_date) {
     let date = new Date(old_date);
@@ -66,7 +69,8 @@ onMounted(() => {
     })
         .then(response => response.json())
         .then(data => {
-            servers.value = data;
+            servers.value = data.data;
+            ood = data.ood;
         })
         .then(() => {
             sortBy("VMName");

@@ -1,5 +1,6 @@
 <template>
   <notification />
+  <ood_notify v-if="ood" />
   <h2 class=heading>Total Accounts</h2>
   <div class="userNumbers" :key="update">
     <p><span class="b">Total Users: </span>{{ data.totalUsers }}</p>
@@ -29,6 +30,7 @@
 
 <script setup lang="ts">
 import notification from './notification.vue';
+import ood_notify from './ood_notify.vue';
 import doughnut from './doughnut.vue';
 import perManager from './perManager.vue';
 import jobTitles from './jobTitles.vue';
@@ -64,6 +66,7 @@ let data: UsersResponse = {
   title: null,
   manager: null
 };
+let ood = false;
 
 let auth_lvl = 0;
 onMounted(() => {
@@ -81,8 +84,9 @@ onMounted(() => {
             credentials: "include",
         }))
         .then((response) => response.json())
-        .then((respData: UsersResponse) => {
-          data = respData;
+        .then((respData: {data:UsersResponse,ood:boolean}) => {
+            data = respData.data;
+            ood = respData.ood;
           forceRerender();
         })
         .catch((error) => {
