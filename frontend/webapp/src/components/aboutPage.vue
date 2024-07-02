@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div style="margin: 3rem;"></div>
+        <div style="margin: 6rem;"></div>
         <div class="p">
             <div class="innerP">Backend</div>
         </div>
@@ -25,10 +25,11 @@
                 Gathers data from a series of automated Powershell scripts that
                 collect the data and send it to a set host in json format. <br>
                 The host runs a series of programs that compile each set of data
-                into separate lists, checking for outdated information <br>
+                into separate lists, checking for outdated information <br> 
                 and deleting it. The backend then utilizes the get and post APIs in
                 order to store and transmit the data to the frontend.
                 <div class="name">- Jared, Fahd, and Ethan</div>
+                <div class="symbols"><i class="bi bi-body-text"></i></div>
         </div>
         <div class="p">
             <div class="innerP">Authentication</div>
@@ -40,6 +41,7 @@
                 API. If the token is valid, the auth API allows the page to
                 load.
                 <div class="name" style="left: 400px;">- Stephen</div>
+                <div class="symbols"><i class="bi bi-lock"></i></div>
         </div>
         <div class="p">
             <div class="innerP">Frontend</div>
@@ -50,6 +52,7 @@
                 can be filtered through the collapsible sidebar and searched as
                 desired.
                 <div class="name" style="left: 330px;">- Evan, Ian, Stephen, and Ethan</div>
+                <div class="symbols"><i class="bi bi-code-slash"></i></div>
         </div>
         <div class="p">
             <div class="innerP">Distribution</div>
@@ -59,6 +62,7 @@
                 and stored on a virtual server in Azure to ensure the programs <br>
                 can run constantly and be accessed as needed.
                 <div class="name" style="left: 405px;">- Jared</div>
+                <div class="symbols"><i class="bi bi-pc-display"></i></div>
         </div>
 
         <div class="frame">
@@ -78,7 +82,7 @@
             </div>
         </div>
 
-        <div style="margin: 3rem"></div>
+        <div style="margin: 3rem;"></div>
 
         <p id="heading">Old Page (with some tweaks):</p>
 
@@ -180,15 +184,23 @@ export default {
 </script>
 
 <style scoped>
+.symbols {
+    display: inline-flex;
+    position:relative;
+    left: 1275px;
+    font-size: 50px;
+    bottom: 100px;
+    color: #15779f
+}
+
 .textA2023 {
     color: white;
     position: relative;
-    right: -50px;
-    top: 100px;
+    right: -130px;
+    top: 150px;
     grid-column: 2;
     font-size: large;
     font: bold;
-
 }
 
 .textB2023 {
@@ -241,6 +253,7 @@ export default {
 }
 
 .p {
+    margin-top: -3rem;
     width: 1000px;
     height: 50px;
     transform: skew(-20deg);

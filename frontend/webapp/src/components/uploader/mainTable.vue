@@ -7,16 +7,17 @@
 </template>
 
 <script lang="ts" setup>
-
 import { onMounted } from 'vue';
 import mainTableRow from './mainTableRow.vue';
+
 let rows = [
   { caseID: "12345", guid: "HEHUIWEFHUI" },
   { caseID: "45678", guid: "HEHIGUHOFGF" },
-  { caseID: "91011", guid: "HIUIHOASDDF" },
-  { caseID: "32167", guid: "HUISDSHDYUY"},
-  { caseID: "37829", guid: "HUFHUWHHEH"}
+  { caseID: "91011", guid: "HIUIHOASDDFA" },
+  { caseID: "32167", guid: "HUISDSHDYUY" },
+  { caseID: "37829", guid: "HUFHUWHHEH" }
 ];
+
 const props = defineProps(['table_data_endpoint']);
 
 onMounted(() => {
@@ -31,6 +32,8 @@ onMounted(() => {
       console.error('Error fetching server data:', error);
     });
 });
+
+
 </script>
 
 
@@ -53,4 +56,5 @@ onMounted(() => {
   text-align: center;
   Color: white;
 }
+
 </style>
