@@ -183,7 +183,7 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     max-width: 32rem;
-
+    word-break: break-all;
 }
 
 .vm:hover {
