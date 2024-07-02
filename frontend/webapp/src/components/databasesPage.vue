@@ -2,6 +2,7 @@
     <div class="card text-center m-3">
         <div class="card-body">
             <notification />
+            <ood_notify v-if="ood" />
             <h1 class="header">Internal Databases</h1>
             <div id="database-bar">
                 <input type="text" v-model="databaseSearchKeyword" placeholder="Search Databases" />
@@ -36,7 +37,7 @@
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
                         <td>{{ database.created }}</td>
-                        <td>{{ database.version }}</td>
+                        <td>{{ database.version=='null'?'':database.version }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -47,9 +48,11 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import notification from "./notification.vue";
+import ood_notify from './ood_notify.vue';
 import router from "./router/index.js";
 const databaseSearchKeyword = ref("");
 var databases = ref(null);
+var ood = false;
 
 var update = ref(0);
 
@@ -65,7 +68,8 @@ onMounted(() => {
     })
         .then((response) => response.json())
         .then((data) => {
-            databases.value = data;
+            databases.value = data.data;
+            ood = data.ood;
         })
         .then(() => {
             sortBy("size");
@@ -194,6 +198,8 @@ input[type="text"] {
 .pathWrap {
     display: flex;
     flex-direction: column;
+    max-width: 48rem;
+    word-break: break-all;
 }
 
 .vm:hover {

@@ -38,7 +38,9 @@ services:
       - itassets
     depends_on: 
       - upload_coordinator
-    env_file: "./environment/dev_backend.env"
+    env_file: 
+      - "./environment/dev_backend.env"
+      - "./environment/database.env"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/auth"]
@@ -66,7 +68,9 @@ services:
       - itassets
     depends_on: 
       - mariadb
-    env_file: "./environment/dev_coordinator.env"
+    env_file: 
+      - "./environment/dev_coordinator.env"
+      - "./environment/database.env"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
@@ -94,8 +98,8 @@ services:
       - ./sql:/var/lib/mysql:rw
     ports:
       - 3306:3306
-    environment:
-      MARIADB_ROOT_PASSWORD: Test1234
+    env_file: 
+      - "./environment/database.env"
     restart: always
     logging: 
       driver: json-file
@@ -115,6 +119,8 @@ services:
       - PMA_ARBITRARY=0
       - PMA_HOST=mariadb
       - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=Test1234
     logging: 
       driver: json-file
       options:
