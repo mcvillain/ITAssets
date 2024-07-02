@@ -37,7 +37,7 @@
                                 <div class="status_text">{{ server.Status }}</div>
                             </div>
                         </td>
-                        <td>{{ server.IP }}</td>
+                        <td>{{ server.IP=='null'?'':server.IP }}</td>
                         <td>{{ dateToString(server.LastCheckInTime) }}</td>
                         <td>{{ server.HyperVisor }}</td>
                         <td>{{ server.Hostname }}</td>
