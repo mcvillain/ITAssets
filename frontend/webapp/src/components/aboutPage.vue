@@ -1,6 +1,6 @@
 <template>
     <notification />
-    <div style="background-color: #f1f1f1;">
+    <div style="background: #f1f1f1; color: white;">
         <div class="frame">
             <div class="innerFrame">
                 <img id="groupPhoto" class="picture2023" src="/src/assets/Intern-Group-Photo-Good.png"
@@ -21,20 +21,23 @@
         <div class="p">
             <div class="innerP">Backend</div>
         </div>
-        <div class="textp" style="margin: 3rem;">
+        <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
+            <div class="shapes">
                 Gathers data from a series of automated Powershell scripts that
                 collect the data and send it to a set host in json format. <br>
                 The host runs a series of programs that compile each set of data
-                into separate lists, checking for outdated information <br> 
+                into separate lists, checking for outdated information <br>
                 and deleting it. The backend then utilizes the get and post APIs in
                 order to store and transmit the data to the frontend.
                 <div class="name">- Jared, Fahd, and Ethan</div>
                 <div class="symbols"><i class="bi bi-body-text"></i></div>
+            </div>
         </div>
         <div class="p">
             <div class="innerP">Authentication</div>
         </div>
-        <div class="textp" style="margin: 3rem">
+        <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
+            <div class="shapes">
                 Upon frontend fetch request, the login API checks the provided
                 username and password. If they are valid, the API will return a <br>
                 token that is stored in a cookie and passed to authentication
@@ -42,27 +45,32 @@
                 load.
                 <div class="name" style="left: 400px;">- Stephen</div>
                 <div class="symbols"><i class="bi bi-lock"></i></div>
+            </div>
         </div>
         <div class="p">
             <div class="innerP">Frontend</div>
         </div>
-        <div class="textp" style="margin: 3rem;">
+        <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
+            <div class="shapes">
                 Utilizes Vue3 and fetch APIs to retrieve the data from the set
                 host. The data is then displayed in a series of tables which <br>
                 can be filtered through the collapsible sidebar and searched as
                 desired.
                 <div class="name" style="left: 330px;">- Evan, Ian, Stephen, and Ethan</div>
                 <div class="symbols"><i class="bi bi-code-slash"></i></div>
+            </div>
         </div>
         <div class="p">
             <div class="innerP">Distribution</div>
         </div>
-        <div class="textp" style="margin: 3rem;">
+        <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
+            <div class="shapes">
                 The code is all compiled in Docker containers that are hosted
                 and stored on a virtual server in Azure to ensure the programs <br>
                 can run constantly and be accessed as needed.
                 <div class="name" style="left: 405px;">- Jared</div>
                 <div class="symbols"><i class="bi bi-pc-display"></i></div>
+            </div>
         </div>
 
         <div class="frame">
@@ -76,7 +84,7 @@
                         Ethan Pakuris, Jared Werts, Ian Whitaker, Evan
                         Comiciotto, Fahd Khan, and
                         <a style="color: white;" id="stName" href="partymode=true">Stephen Trezza</a> <br>
-                        
+
                     </div>
                 </div>
             </div>
@@ -184,13 +192,43 @@ export default {
 </script>
 
 <style scoped>
+.shapes {
+    position: relative;
+    left: -1350px;
+    background-color: #27272d;
+    padding: 2rem;
+    align-content: center;
+    height: 160px;
+    width: 1400px;
+    border-radius: 1rem;
+    animation: slide .75s forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes slide {
+    100% {
+        left: 0;
+    }
+}
+
+
+/* .shapes:hover {
+    transition: ease 1s;
+    left: 0;
+    
+} */
+
 .symbols {
+    background-color: #27272d;
+    border-radius: 1rem;
+    padding: 1rem;
     display: inline-flex;
-    position:relative;
+    position: relative;
     left: 1275px;
     font-size: 50px;
     bottom: 100px;
     color: #15779f
+
 }
 
 .textA2023 {
@@ -223,7 +261,10 @@ export default {
 
 .frame {
     background: linear-gradient(to right, #27272d, #34343b, #5d5d6d);
-    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 1rem;
+    /* padding-left: 1rem; */
 }
 
 .innerFrame {

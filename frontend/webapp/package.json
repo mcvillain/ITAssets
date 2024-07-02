@@ -17,11 +17,12 @@
     "promise": "^8.3.0",
     "promises": "^0.2.5",
     "roboto-fontface": "*",
+    "v-tables-3": "^0.4.7",
     "vue": "^3.2.0",
     "vue-chartjs": "^5.2.0",
     "vue-cookies": "^1.8.4",
     "vue-router": "*",
-    "vuetify": "^3.3.6",
+    "vuetify": "^3.6.10",
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {

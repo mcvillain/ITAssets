@@ -1,6 +1,6 @@
 <template>
     <notification />
-    <!-- <div class="" style=" justify-content: center; align-content: center; ;">
+    <div class="" style=" justify-content: center; align-content: center; ;">
         <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader
         </h2>
         <div class="my-2">
@@ -23,55 +23,46 @@
         <div class="spacer">
         </div>
         <mainTable table_data_endpoint="uploader/all_cases" />
-    </div> -->
-
-    <div id="people">
-        <v-client-table :columns="columns" :data="data" @input="e=>data=e"></v-client-table>
     </div>
+
+    <!-- <div id="people">
+        <v-client-table v-if="data_loaded" :columns="columns" :data="table_data" :options="options" />
+    </div> -->
 
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import notification from './notification.vue';
-import {ServerTable, ClientTable, EventBus} from 'v-tables-3';
-import { createApp } from 'vue';
+// import { ClientTable } from 'v-tables-3';
 
-const app = createApp(App);
+// const el = "#people";
 
-app.use(ClientTable, {}, 'bootstrap4')
+// let data_loaded = true;
+// let table_data = [
+//         { id: 1, name: "John", age: "20" },
+//         { id: 2, name: "Jane", age: "24" },
+//         { id: 3, name: "Susan", age: "16" },
+//         { id: 4, name: "Chris", age: "55" },
+//         { id: 5, name: "Dan", age: "40" }
+//     ];
+// let columns = ['id', 'name', 'age'];
+// let options = {}
 
 
-// import mainTable from './uploader/mainTable.vue';
-//import { ref, Ref} from 'vue'
-//const search: Ref<string> = ref('')
+import mainTable from './uploader/mainTable.vue';
+import { ref, Ref} from 'vue'
+const search: Ref<string> = ref('');
 
-// function postCaseID() {
-//     let cases = (document.getElementById("caseID") as HTMLInputElement).value;
-//     alert(cases);
-// }
+function postCaseID() {
+    let cases = (document.getElementById("caseID") as HTMLInputElement).value;
+    alert(cases);
+}
 
-// async function copyMyText() {
-//     let urlbox = document.getElementById("url") as HTMLInputElement;
-//     urlbox.select();
-//     await navigator.clipboard.writeText(urlbox.value);
-// }
-
-new Vue({
-    el: "#people",
-    data: {
-        columns: ['id', 'name', 'age'],
-        tableData: [
-            { id: 1, name: "John", age: "20" },
-            { id: 2, name: "Jane", age: "24" },
-            { id: 3, name: "Susan", age: "16" },
-            { id: 4, name: "Chris", age: "55" },
-            { id: 5, name: "Dan", age: "40" }
-        ],
-        options: {
-            // see the options API
-        }
-    }
-});
+async function copyMyText() {
+    let urlbox = document.getElementById("url") as HTMLInputElement;
+    urlbox.select();
+    await navigator.clipboard.writeText(urlbox.value);
+}
 
 </script>
 

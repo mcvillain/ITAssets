@@ -5,21 +5,33 @@
  */
 
 // Components
-import App from './App.vue'
+import App from "./App.vue";
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 
 // Routers
-import router from './components/router/index.js'
+import router from "./components/router/index.js";
 
-const app = createApp(App)
+// import "vuetify/styles";
+// import { createVuetify } from "vuetify";
+// import * as components from "vuetify/components";
+// import * as directives from "vuetify/directives";
 
-app.use(router)
+const app = createApp(App);
 
-registerPlugins(app)
+app.use(router);
 
-app.mount('#app')
+// const vuetify = createVuetify({
+//     components,
+//     directives,
+// });
+
+// createApp(App).use(vuetify).mount("#app");
+
+registerPlugins(app);
+
+app.mount("#app");
