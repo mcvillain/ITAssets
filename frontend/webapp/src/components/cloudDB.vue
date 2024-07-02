@@ -182,7 +182,7 @@ input[type="text"] {
 .pathWrap {
     display: flex;
     flex-direction: column;
-    max-width: 32rem;
+    max-width: 48rem;
     word-break: break-all;
 }
 
