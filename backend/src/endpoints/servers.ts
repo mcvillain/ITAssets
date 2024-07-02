@@ -33,7 +33,7 @@ export async function post_servers(
     let new_servers: Server[] = update_server_list(incoming_servers, servers);
     for (let i = 0; i < new_servers.length; i++) {
         let currSize: string | undefined = new_servers[i].Size;
-        if (currSize !== undefined)
+        if (currSize !== undefined && currSize !== null && currSize !== 'null')
             new_servers[i]["Cost"] = await getSizePrice(
                 currSize,
                 sizePriceCache
