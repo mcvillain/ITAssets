@@ -7,6 +7,7 @@
                     @click="resizePhoto()" />
                 <div class="textA2023">
                     <p id="heading" style="color: white;">2023 IT Asset Project</p>
+                    <p style="font-size: 2rem;">{{ version }}</p>
                     Designed by La Salle College High School Class of 2024 Summer Interns:
                     <div class="textB2023">
                         Ethan Pakuris, Jared Werts, Ian Whitaker, Evan
@@ -209,8 +210,10 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import notification from "./notification.vue";
-
-
+const version = ref("");
+onMounted(() => {
+    version.value = import.meta.env.VITE_APP_VERSION;
+});
 </script>
 
 <script>
