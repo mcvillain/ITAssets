@@ -3,8 +3,6 @@
   <div class="main-app" :style="{ 'margin-left': sidebarWidth }">
     <v-app>
       <v-main>
-        <!--<notification/>-->
-        <!--<dare/>-->
         <RouterView />
       </v-main>
     </v-app>
@@ -12,7 +10,6 @@
 </template>
 
 <script setup lang="js">
-//import dare from './components/open.vue'
 import sidebar from './components/sidebar.vue'
 import { sidebarWidth } from './components/state.js'
 </script>
@@ -24,7 +21,6 @@ import { sidebarWidth } from './components/state.js'
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /* margin-top: 60px; */
 }
 
 @media print {

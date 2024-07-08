@@ -1,5 +1,5 @@
 <template>
-    <div v-if="route !== '/'" id="username_float">Logged in as: {{ username }}</div>
+    
     <div class="sidebar" :style="{ width: sidebarWidth }">
         <div class="collapse-icon" @click="goto('/')" style="display: flex; flex-direction: row;">
             <img class="pic" src="/src/assets/Aegis-Logo-Transparent-Backgrounds.png">
@@ -7,6 +7,7 @@
                 <p class="label-DONTBREAK0">IT Assets</p>
             </span>
         </div>
+        <div class="shred" v-if="route !== '/'">Logged in as:<br/>{{ username }}</div>
         <div class="spacer"></div>
         <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/servers')"
             style="display: flex; flex-direction: row;">
@@ -122,6 +123,11 @@ onMounted(() => {
 </style>
 
 <style scoped>
+.shred {
+    line-break: anywhere;
+    word-break: break-all;
+}
+
 #username_float {
     display: block;
     position: absolute;
@@ -194,8 +200,8 @@ onMounted(() => {
 
 
 .collapse-icon {
-    position: absolute;
-    top: 0;
+    /* position: absolute;
+    top: 0; */
     padding: 0.75em;
 }
 

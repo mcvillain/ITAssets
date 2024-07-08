@@ -37,7 +37,7 @@
                             <span v-for="path in database.paths" :key="path">{{ path }}</span>
                         </td>
                         <td>{{ database.created }}</td>
-                        <td>{{ database.version=='null'?'':database.version }}</td>
+                        <td>{{ database.version == 'null' ? '' : database.version }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -155,6 +155,10 @@ const getSortingIcon = (column) => {
 </script>
 
 <style scoped>
+.card {
+    padding: 1rem;
+}
+
 .running {
     width: 1rem;
     height: 1rem;

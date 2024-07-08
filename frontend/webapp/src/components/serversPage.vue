@@ -37,7 +37,7 @@
                                 <div class="status_text">{{ server.Status }}</div>
                             </div>
                         </td>
-                        <td>{{ server.IP=='null'?'':server.IP }}</td>
+                        <td>{{ server.IP == 'null' ? '' : server.IP }}</td>
                         <td>{{ dateToString(server.LastCheckInTime) }}</td>
                         <td>{{ server.HyperVisor }}</td>
                         <td>{{ server.Hostname }}</td>
@@ -143,6 +143,10 @@ const getSortingIcon = (column) => {
 </script>
 
 <style scoped>
+.card {
+    padding: 1rem;
+}
+
 .running {
     width: 1rem;
     height: 1rem;
