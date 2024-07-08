@@ -1,0 +1,40 @@
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      working-directory: ./backend
+      run: docker build . --file Dockerfile --tag AISCORP/itassets-backend:$(date +%s)
+    - name: Dockerize
+      if: success()
+      uses: manusa/actions-publish-docker@v1.1.2
+      with:
+        name: AISCORP/itassets-backend
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        registry: ${{ sercets.DOCKER_REGISTRY_URL }}
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Copy .env files
+      run: cp ./environment/prod_frontend.env ./frontend/.env.production
+    - name: Build the Docker image
+      working-directory: ./frontend
+      run: docker build . --file Dockerfile --tag AISCORP/itassets-frontend:$(date +%s)
+    - name: Dockerize
+      if: success()
+      uses: manusa/actions-publish-docker@v1.1.2
+      with:
+        name: AISCORP/itassets-frontend
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        registry: ${{ sercets.DOCKER_REGISTRY_URL }}
+      

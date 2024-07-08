@@ -1,6 +1,6 @@
 {
   "name": "vuetify-front-end",
-  "version": "0.0.0",
+  "version": "3.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -22,7 +22,7 @@
     "vue-chartjs": "^5.2.0",
     "vue-cookies": "^1.8.4",
     "vue-router": "*",
-    "vuetify": "^3.6.10",
+    "vuetify": "^3.6.11",
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {

@@ -34,10 +34,6 @@ import { createWebHistory, createRouter } from "vue-router";
     component: () => import('../aboutPage.vue'),
   },
   {
-    path: "/help",
-    component: () => import('../help.vue'),
-  },
-  {
     path: "/uploader",
     component: () => import('../uploader.vue'),
   },

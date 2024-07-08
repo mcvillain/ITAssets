@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { IncomingAzureDB, AzureDatabase } from "../types";
-import { AzureDatabases } from "../const";
+import { IncomingAzureDB, AzureDatabase, OutOfDate } from "../types";
+import { AzureDatabases, OutOfDate as OutOfDateCache } from "../const";
 import NodeCache from "node-cache";
 import { getAzDBPricePerGB } from "../util";
+import { execute_sql } from "../sql";
 
 export async function post_azuredb(
     req: Request,
@@ -30,6 +31,7 @@ export async function post_azuredb(
     let current_dbs: AzureDatabase[];
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
+    const sqldel = delete_outdated_dbs_sql(incoming_dbs);
     current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
     let pricePerGig = await getAzDBPricePerGB(sizePriceCache);
     current_dbs = await update_db_list(
@@ -38,6 +40,11 @@ export async function post_azuredb(
         pricePerGig
     );
     dataMemcache.set(AzureDatabases, current_dbs);
+    let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
+    ood.azureDatabases = false;
+    dataMemcache.set(OutOfDateCache, ood);
+    await sqldel;
+    await update_dbs_sql(current_dbs);
     console.log("Done processing Azure databases...");
     return;
 }
@@ -55,7 +62,12 @@ export async function get_azuredb(
     }
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (auth_lvl > 0) {
-        res.json(dataMemcache.get(AzureDatabases));
+        let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
+        let resp = {
+            data: dataMemcache.get(AzureDatabases),
+            ood: ood.azureDatabases
+        };
+        res.json(resp);
         return;
     }
     res.sendStatus(401);
@@ -72,6 +84,12 @@ function delete_outdated_dbs(incoming_dbs: IncomingAzureDB[], current_dbs: Azure
         }
     })
     return current_dbs;
+}
+
+function delete_outdated_dbs_sql(incoming_dbs: IncomingAzureDB[]) {
+    incoming_dbs.forEach((db: IncomingAzureDB) => {
+        execute_sql(`DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND itar = FALSE`);
+    })
 }
 
 function update_db_list(
@@ -95,11 +113,17 @@ function update_db_list(
                 name: db.name,
                 paths: [db.path],
                 size: db.size,
-                // version: db.version,
+                version: db.version,
                 created: db.created,
                 cost: price,
             });
         }
     });
     return current_dbs;
+}
+
+function update_dbs_sql(current_dbs: AzureDatabase[]) {
+    current_dbs.forEach((db: AzureDatabase) => {
+        execute_sql(`INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version===undefined||db.version==='null'?'':', version'}, itar) VALUES ('${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version===undefined?'':', \''+db.version+'\''}, FALSE)`);
+    });
 }

@@ -1,6 +1,7 @@
 <template>
     <div>
         <notification />
+        <ood_notify v-if="ood" />
         <img id="spin" src="/src/assets/parent.webp" />
     </div>
     <div class="card text-center m-3">
@@ -84,11 +85,13 @@ import { ref, onMounted, computed } from "vue";
 import toggleDataTable from "./state.js";
 import aboutPage from "./aboutPage.vue";
 import notification from "./notification.vue";
+import ood_notify from './ood_notify.vue';
 import router from "./router/index.js";
 const searchKeyword = ref("");
 var servers = ref(null);
 var databases = ref(null);
 console.log(toggleDataTable.value);
+var ood = false;
 
 
 onMounted(() => {
@@ -97,7 +100,8 @@ onMounted(() => {
     })
         .then((response) => response.json())
         .then((data) => {
-            servers.value = data;
+            servers.value = data.data;
+            ood = data.ood;
         })
         .catch((error) => {
             console.error("Error fetching server data:", error);

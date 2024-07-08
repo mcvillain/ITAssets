@@ -1,27 +1,30 @@
 <template>
-  <notification />
-  <h2 class=heading>Total Accounts</h2>
-  <div class="userNumbers" :key="update">
-    <p><span class="b">Total Users: </span>{{ data.totalUsers }}</p>
-    <p><span class="b">Service Accounts: </span>{{ data.serviceAccounts }}</p>
-  </div>
-  <div class="divider2"></div>
-  <h2 class=heading>Users by Department</h2>
-  <div class="chart-container">
-    <div class="doughnut-container">
-      <div class="doughnut">
-        <doughnut :userdata="data" :key="update" />
-      </div>
+  <div class="card text-center m-3">
+    <notification />
+    <ood_notify v-if="ood" />
+    <h2 class=heading>Total Accounts</h2>
+    <div class="userNumbers" :key="update">
+      <p><span class="b">Total Users: </span>{{ data.totalUsers }}</p>
+      <p><span class="b">Service Accounts: </span>{{ data.serviceAccounts }}</p>
     </div>
-    <div class="divider"></div>
-    <div class="bargraphs">
-      <div class="bg upm">
-        <b class=heading>Users per Manager</b>
-        <perManager :userdata="data" :key="update" />
+    <div class="divider2"></div>
+    <h2 class=heading>Users by Department</h2>
+    <div class="chart-container">
+      <div class="doughnut-container">
+        <div class="doughnut">
+          <doughnut :userdata="data" :key="update" />
+        </div>
       </div>
-      <div class="bg upjt">
-        <b class=heading>Users per Job Title</b>
-        <jobTitles :userdata="data" :key="update" />
+      <div class="divider"></div>
+      <div class="bargraphs">
+        <div class="bg upm">
+          <b class=heading>Users per Manager</b>
+          <perManager :userdata="data" :key="update" />
+        </div>
+        <div class="bg upjt">
+          <b class=heading>Users per Job Title</b>
+          <jobTitles :userdata="data" :key="update" />
+        </div>
       </div>
     </div>
   </div>
@@ -29,6 +32,7 @@
 
 <script setup lang="ts">
 import notification from './notification.vue';
+import ood_notify from './ood_notify.vue';
 import doughnut from './doughnut.vue';
 import perManager from './perManager.vue';
 import jobTitles from './jobTitles.vue';
@@ -64,34 +68,40 @@ let data: UsersResponse = {
   title: null,
   manager: null
 };
+let ood = false;
 
 let auth_lvl = 0;
 onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
-        credentials: "include",
+  fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", {
+    credentials: "include",
+  })
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.auth_lvl <= 0) {
+        location.href = "/";
+      }
+      auth_lvl = resp.auth_lvl;
     })
-        .then((resp) => resp.json())
-        .then((resp) => {
-            if (resp.auth_lvl <= 0) {
-                location.href = "/";
-            }
-            auth_lvl = resp.auth_lvl;
-        })
-        .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/users", {
-            credentials: "include",
-        }))
-        .then((response) => response.json())
-        .then((respData: UsersResponse) => {
-          data = respData;
-          forceRerender();
-        })
-        .catch((error) => {
-            console.error("Error fetching user data:", error);
-        });;
+    .then(() => fetch(import.meta.env.VITE_API_ENDPOINT + "/users", {
+      credentials: "include",
+    }))
+    .then((response) => response.json())
+    .then((respData: { data: UsersResponse, ood: boolean }) => {
+      data = respData.data;
+      ood = respData.ood;
+      forceRerender();
+    })
+    .catch((error) => {
+      console.error("Error fetching user data:", error);
+    });;
 });
 
 </script>
 <style scoped>
+.card {
+  padding: 1rem;
+}
+
 .heading {
   font-size: xx-large;
 }

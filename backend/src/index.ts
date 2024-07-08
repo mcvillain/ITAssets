@@ -7,7 +7,7 @@ import {
     ConfidentialClientApplication,
 } from "@azure/msal-node";
 
-import { Message } from "./types";
+import { Message, OutOfDate, Users } from "./types";
 import {
     AzureDatabases,
     ItarDatabases,
@@ -15,7 +15,9 @@ import {
     Servers,
     Users as UserMeta,
     Message as CurrentMessage,
+    OutOfDate as OutOfDateCache,
 } from "./const";
+import { ensure_db_structure, restore_state } from "./sql";
 
 import { get_auth, get_auth_redirect, get_logout_redirect, get_ms_auth } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
@@ -24,20 +26,12 @@ import { get_localdb, post_localdb } from "./endpoints/local_dbs";
 import { get_azuredb, post_azuredb } from "./endpoints/azure_dbs";
 import { get_users, post_users } from "./endpoints/users";
 import session from "express-session";
-import { clientConfig, config } from "./msauth_config";
+import { clientConfig, } from "./msauth_config";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
-
-// CORS
-// var corsOptions: CorsOptions = {
-//     origin: process.env.FRONTEND_ORIGIN,
-//     credentials: true,
-//     optionsSuccessStatus: 200,
-// };
-// app.use(cors(corsOptions));
 
 // Setup Session Config
 const session_config: session.SessionOptions = {
@@ -66,28 +60,31 @@ const pca = new ConfidentialClientApplication(clientConfig);
 // Setup Cache
 let loginCache = new NodeCache({
     stdTTL: 8 * 3600, // 8 Hours
-    maxKeys: 100,
+    maxKeys: 512,
     deleteOnExpire: true,
 });
 loginCache.set("b71516c0-90ec-4ff6-9fa6-591b2fc8d781", "svc", 0);
 let dataCache = new NodeCache({
     stdTTL: 0,
+    maxKeys: 256,
 });
 dataCache.set(Servers, []);
-// const localDatabases: LocalDatabase[] = [];
 dataCache.set(LocalDatabases, []);
-// const azureDatabases: AzureDatabase[] = [];
 dataCache.set(AzureDatabases, []);
-// const itarDatabases: AzureDatabase[] = [];
 dataCache.set(ItarDatabases, []);
-// const users: Users[] = [];
-dataCache.set(UserMeta, []);
-// let currentMessage: string = "";
+dataCache.set(UserMeta, new Users());
 dataCache.set(CurrentMessage, new Message());
+dataCache.set(OutOfDateCache, new OutOfDate());
+
 let sizePriceCache = new NodeCache({
-    stdTTL: 24 * 3600,
+    stdTTL: 86400, // 24 Hours
     deleteOnExpire: true,
+    maxKeys: 256,
 });
+
+
+// Setup SQL
+ensure_db_structure().then(()=>restore_state(dataCache));
 
 // AUTH
 app.get("/ms_auth", (req: Request, res: Response) => {

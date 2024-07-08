@@ -10,6 +10,17 @@ services:
       - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
     networks:
       - itassets
+    depends_on: 
+      - backend
+      - upload_coordinator
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging: 
       driver: json-file
       options:
@@ -25,7 +36,19 @@ services:
     hostname: backend
     networks:
       - itassets
-    env_file: "./environment/dev_backend.env"
+    depends_on: 
+      - upload_coordinator
+    env_file: 
+      - "./environment/dev_backend.env"
+      - "./environment/database.env"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/auth"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
     logging: 
       driver: json-file
       options:
@@ -35,6 +58,74 @@ services:
       context: ./backend
       tags:
         - "itassets-backend:latest"
+  
+  upload_coordinator:
+    image: uploader-coordinator:latest
+    hostname: coordinator
+    ports: 
+      - 3030:3000/tcp
+    networks:
+      - itassets
+    depends_on: 
+      - mariadb
+    env_file: 
+      - "./environment/dev_coordinator.env"
+      - "./environment/database.env"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+    build: 
+      context: ./upload_coordinator
+      tags:
+        - "upload-coordinator:latest"
+
+  mariadb:
+    image: mariadb:11.4-ubi
+    hostname: mariadb
+    networks:
+      - itassets
+    volumes:
+      - ./sql:/var/lib/mysql:rw
+    ports:
+      - 3306:3306
+    env_file: 
+      - "./environment/database.env"
+    restart: always
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    networks:
+      - itassets
+    restart: unless-stopped
+    ports:
+      - "9090:80"
+    environment:
+      - PMA_ARBITRARY=0
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=Test1234
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
 
 networks:
   itassets:
