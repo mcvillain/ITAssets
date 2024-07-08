@@ -22,7 +22,7 @@
             <div class="innerP">Backend</div>
         </div>
         <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
-            <div class="shapes">
+            <div class="shapes" id="shapeOne">
                 Gathers data from a series of automated Powershell scripts that
                 collect the data and send it to a set host in json format. <br>
                 The host runs a series of programs that compile each set of data
@@ -37,7 +37,7 @@
             <div class="innerP">Authentication</div>
         </div>
         <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
-            <div class="shapes">
+            <div class="shapes" id="shapeTwo">
                 Upon frontend fetch request, the login API checks the provided
                 username and password. If they are valid, the API will return a <br>
                 token that is stored in a cookie and passed to authentication
@@ -51,7 +51,7 @@
             <div class="innerP">Frontend</div>
         </div>
         <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
-            <div class="shapes">
+            <div class="shapes" id="shapeThree">
                 Utilizes Vue3 and fetch APIs to retrieve the data from the set
                 host. The data is then displayed in a series of tables which <br>
                 can be filtered through the collapsible sidebar and searched as
@@ -64,7 +64,7 @@
             <div class="innerP">Distribution</div>
         </div>
         <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
-            <div class="shapes">
+            <div class="shapes" id="shapeFour">
                 The code is all compiled in Docker containers that are hosted
                 and stored on a virtual server in Azure to ensure the programs <br>
                 can run constantly and be accessed as needed.
@@ -75,8 +75,7 @@
 
         <div class="frame">
             <div class="innerFrame">
-                <img id="groupPhoto" class="picture2024" src="/src/components/router/cheese.gif"
-                    @click="resizePhoto()" />
+                <img id="groupPhoto" class="picture2024" src="/src/components/router/cheese.gif" />
                 <div class="textA2024">
                     <p id="heading" style="color: white;">2024 IT Asset Project (Coming Soon)</p>
                     Designed by La Salle College High School Class of 2024 Summer Interns:
@@ -90,11 +89,51 @@
             </div>
         </div>
 
+
+
+        <div class="collegeGrid" style="background: linear-gradient(to right, #f26522, #ef3b32);">
+            <div class="aidenTeam" style="font-size: 50px;"> Team Aiden
+                <div>
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Jared About Page pic.png" />
+                    <img class="collegePic1" src="/src/assets/Temple Logo.png">
+                </div>
+                <div>
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Stephen About Page Pic.png" />
+                    <img class="collegePic1" src="/src/assets/Villanova Logo.png">
+                </div>
+                <div>
+                    <div class="slider">
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Fahd About Page Pic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                    </div>
+                    <img class="collegePic1" src="/src/assets/Northeastern Logo.png">
+                    <div class="picFrame"></div>
+                    <div class="picFrame2"></div>
+                   
+                </div>
+            </div>
+            <div class="breyTeam" style="font-size: 50px;"> Team Brey
+                <div>
+                    <img class="collegePic1" src="/src/assets/Pitt Logo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Evan About Page Pic.png" />
+                </div>
+                <div>
+                    <img class="collegePic1" src="/src/assets/Pitt Logo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Ian About Page Pic.png" />
+                </div>
+                <div>
+                    <img class="collegePic1" src="/src/assets/BC Logo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Ethan About Page Pic.png" />
+                </div>
+            </div>
+        </div>
+
         <div style="margin: 3rem;"></div>
 
         <p id="heading">Old Page (with some tweaks):</p>
 
-        <table id="descriptions">
+        <table id="descriptions" style="color: black;">
             <tr>
                 <th id="tableHeading" colspan="4">
                     Core functionality: Gathers server and database information from
@@ -169,7 +208,10 @@
 
 <script setup>
 import notification from "./notification.vue";
+
+
 </script>
+
 <script>
 export default {
     methods: {
@@ -192,6 +234,8 @@ export default {
 </script>
 
 <style scoped>
+/* Entry Animation */
+
 .shapes {
     position: relative;
     left: -1350px;
@@ -201,8 +245,26 @@ export default {
     height: 160px;
     width: 1400px;
     border-radius: 1rem;
+}
+
+#shapeOne {
     animation: slide .75s forwards;
     animation-delay: 0.5s;
+}
+
+#shapeTwo {
+    animation: slide .75s forwards;
+    animation-delay: 1s;
+}
+
+#shapeThree {
+    animation: slide .75s forwards;
+    animation-delay: 1.5s;
+}
+
+#shapeFour {
+    animation: slide .75s forwards;
+    animation-delay: 2s;
 }
 
 @keyframes slide {
@@ -212,11 +274,7 @@ export default {
 }
 
 
-/* .shapes:hover {
-    transition: ease 1s;
-    left: 0;
-    
-} */
+/* Bootstrap symbol placement */
 
 .symbols {
     background-color: #27272d;
@@ -228,8 +286,9 @@ export default {
     font-size: 50px;
     bottom: 100px;
     color: #15779f
-
 }
+
+/* The Frames and Text for the Titles */
 
 .textA2023 {
     color: white;
@@ -275,6 +334,8 @@ export default {
     padding: .5rem;
 }
 
+/* The 2023 and 2024 title pictures */
+
 .picture2023 {
     border-radius: 5rem;
     position: relative;
@@ -292,6 +353,80 @@ export default {
     width: 10% !important;
     grid-column: 1;
 }
+
+/* All of the College related stuff */
+
+.collegeGrid {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+}
+
+.collegePic1 {
+    width: 10% !important;
+    position: relative;
+    margin: 2rem;
+}
+
+.collegePic2 {
+    position: relative;
+    width: 10% !important;
+    align-content: right;
+    margin-left: 1rem;
+    left: -100px;
+}
+
+.picFrame { 
+    display: inline-flex;
+    width: 200px;
+    height: 300px;
+    background-color: #27272d;
+    position: relative;
+    top: -300px;
+    left: -120px;
+}
+
+.picFrame2 {
+    display: inline-flex;
+    width: 200px;
+    height: 300px;
+    background-color: #27272d;
+    position: relative;
+    top: -300px;
+    left: -10px;
+}
+
+/* Slideshow Animation Code */
+
+.slider {
+    position: relative;
+    animation: slideshow 20s ease infinite;
+}
+
+@keyframes slideshow {
+
+    20% {
+        left: 0px;
+    }
+
+    40% {
+        left: 100px;
+    }
+
+    60% {
+        left: 200px;
+    }
+
+    80% {
+        left: 100px;
+    }
+
+    100% {
+        left: 0px;
+    }
+
+}
+
+/* All of the Newer 2023 project */
 
 .p {
     margin-top: -3rem;
