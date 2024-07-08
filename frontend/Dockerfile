@@ -13,7 +13,7 @@ WORKDIR /srv/
 COPY ./webapp /srv/ITAssets
 WORKDIR /srv/ITAssets/
 COPY .env.production* /srv/ITAssets/
-RUN printf "\nVITE_APP_VERSION='$(npm version patch)'" >> /srv/ITAssets/.env.production*
+RUN printf "\nVITE_APP_VERSION='$(npm version patch)'" >> /srv/ITAssets/.env.production
 # COPY .env.production.local /srv/ITAssets/frontend/.env.production.local
 RUN npm install && npm install axios && npm install vue-router@4 && npm install vue-router && npm run build
 RUN mv /srv/ITAssets/dist/* /usr/local/apache2/htdocs/

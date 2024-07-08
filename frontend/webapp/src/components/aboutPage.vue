@@ -1,6 +1,7 @@
 <template>
     <notification />
     <p id="heading">2023 IT Asset Project</p>
+    <p style="font-size: 2rem;">{{ version }}</p>
     <div></div>
     <table id="descriptions">
         <tr>
@@ -82,7 +83,12 @@
 </template>
 
 <script setup>
+import {ref, onMounted} from 'vue';
 import notification from "./notification.vue";
+const version = ref("");
+onMounted(() => {
+    version.value = import.meta.env.VITE_APP_VERSION;
+});
 </script>
 <script>
 export default {
