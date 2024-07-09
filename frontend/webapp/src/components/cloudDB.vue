@@ -2,7 +2,7 @@
     <div class="card text-center m-3">
         <div class="card-body">
             <notification />
-            <v-data-table theme="dark" class="rounded-xl" v-model:sort-by="sortBy" v-model:expanded="expanded"
+            <v-data-table class="rounded-xl" v-model:sort-by="sortBy" v-model:expanded="expanded"
                 show-expand :headers="headers" :items="databases" v-model:items-per-page="itemsPerPage"
                 item-value="name" item-key="name" :search="search" :loading="loading">
                 <template v-slot:top>
@@ -28,7 +28,8 @@
                         </td>
                     </tr>
                 </template>
-                <template v-slot:item.cost="{item}">
+                <template v-slot:item.paths="{ item }"></template>
+                <template v-slot:item.cost="{ item }">
                     ${{ item.cost.toFixed(2) }}/month
                 </template>
             </v-data-table>
@@ -49,7 +50,7 @@ var search = ref("");
 const headers = [
     { title: "Name", value: "name", sortable: true, filterable: true },
     { title: "Size", value: "size", sortable: true, filterable: false },
-    // {title: "Paths", value: "paths", sortable: false, filterable: true}, 
+    { title: "", value: "paths", sortable: false, filterable: true },
     { title: "Created", value: "created", sortable: true, filterable: true },
     { title: "Version", value: "version", sortable: true, filterable: true },
     { title: "Cost", value: "cost", sortable: true, filterable: false },
@@ -67,10 +68,6 @@ onMounted(() => {
             ood = data.ood;
             loading.value = false;
         })
-        // .then(() => {
-        //     sortBy("size");
-        //     update.value += 1;
-        // })
         .catch((error) => {
             console.error("Error fetching database data:", error);
         });

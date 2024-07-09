@@ -3,17 +3,13 @@ import { ref } from "vue";
 import router from "./router/index.js";
 
 import axios from "axios";
-import VueCookies from "vue-cookies";
-const session_id = VueCookies.get("session_id");
 let auth_lvl = 0;
-if (session_id != undefined && session_id != null) {
-    axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
-        if (resp.status == 200 && resp.data.auth_lvl != 3) {
-            location.href = "/";
-        }
-        auth_lvl = resp.data.auth_lvl;
-    });
-}
+axios.get(import.meta.env.VITE_API_ENDPOINT + "/auth", { withCredentials: true }).then((resp) => {
+    if (resp.status != 200 || resp.data.auth_lvl != 3) {
+        location.href = "/";
+    }
+    auth_lvl = resp.data.auth_lvl;
+});
 
 export default {
     data() {

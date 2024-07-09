@@ -70,25 +70,63 @@
             </span>
 
         </div>
-        <div class="item" :class="collapsed && 'item collapsed'" @click="toggleSidebar"
+        <div class="item" :class="collapsed && 'item collapsed'" @click="toggleTheme"
             style="display: flex; flex-direction: row;">
-            <i class="bi bi-layout-sidebar sidebar-toggler"></i>
+            <div style="max-width: 3rem; max-height: 3rem;"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24" role="img" aria-hidden="true">
+                    <path
+                        d="M7.5,2C5.71,3.15 4.5,5.18 4.5,7.5C4.5,9.82 5.71,11.85 7.53,13C4.46,13 2,10.54 2,7.5A5.5,5.5 0 0,1 7.5,2M19.07,3.5L20.5,4.93L4.93,20.5L3.5,19.07L19.07,3.5M12.89,5.93L11.41,5L9.97,6L10.39,4.3L9,3.24L10.75,3.12L11.33,1.47L12,3.1L13.73,3.13L12.38,4.26L12.89,5.93M9.59,9.54L8.43,8.81L7.31,9.59L7.65,8.27L6.56,7.44L7.92,7.35L8.37,6.06L8.88,7.33L10.24,7.36L9.19,8.23L9.59,9.54M19,13.5A5.5,5.5 0 0,1 13.5,19C12.28,19 11.15,18.6 10.24,17.93L17.93,10.24C18.6,11.15 19,12.28 19,13.5M14.6,20.08L17.37,18.93L17.13,22.28L14.6,20.08M18.93,17.38L20.08,14.61L22.28,17.15L18.93,17.38M20.08,12.42L18.94,9.64L22.28,9.88L20.08,12.42M9.63,18.93L12.4,20.08L9.87,22.27L9.63,18.93Z">
+                    </path>
+                </svg></div>
+            <!-- <i class="bi bi-layout-sidebar sidebar-toggler"></i> -->
             <span v-if="!collapsed">
-                <p class="label-DONTBREAK2">Collapse</p>
+                <p class="label-DONTBREAK2" style="padding-top: 0;">Toggle<br />Theme</p>
             </span>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import { collapsed, toggleSidebar, sidebarWidth, } from './state';
 import toggleDataTable from './state';
+import { useTheme } from 'vuetify';
 
+const theme = useTheme();
 const route = location.pathname;
+
+function getCookie(cookieName:string): string {
+    let name = cookieName + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function setCookie(cookieName: string, cookieValue: string) {
+    let secureFlag = ";secure";
+    let path = ";path=/";
+    let expires = ";expires=Fri, 31 Dec 9999 23:59:59 GMT"; // Set the expiry date to a far future date so the cookie never expires
+    document.cookie = cookieName + "=" + cookieValue + expires + path + secureFlag;
+}
+
+
 
 function goto(path: string) {
     location.href = path;
+}
+
+function toggleTheme() {
+    const newTheme = theme.global.current.value.dark ? 'light' : 'dark';
+    theme.global.name.value = newTheme;
+    setCookie("theme", newTheme);
 }
 
 const username = ref("");
@@ -120,6 +158,9 @@ onMounted(() => {
         default:
             break;
     }
+    const cached_theme = getCookie('theme');
+    if (cached_theme.length > 0)
+        theme.global.name.value = cached_theme;
 })
 </script>
 
