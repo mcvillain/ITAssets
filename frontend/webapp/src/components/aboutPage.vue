@@ -97,31 +97,31 @@
                 
                 <div>
                     <div class="slider">
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Jared About Page pic.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/JaredAboutPagePic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvenMoreFahd.png" />
                     </div>
-                    <img class="collegePic1" src="/src/assets/Temple Logo.png">
+                    <img class="collegePic1" src="/src/assets/TempleLogo.png">
                     <div class="picFrame"></div>
                     <div class="picFrame2"></div>
                 </div>
                 <div>
                     <div class="slider">
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Stephen About Page Pic.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/StephenAboutPagePic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvenMoreFahd.png" />
                     </div>
-                    <img class="collegePic1" src="/src/assets/Villanova Logo.png">
+                    <img class="collegePic1" src="/src/assets/VillanovaLogo.png">
                     <div class="picFrame"></div>
                     <div class="picFrame2"></div>
                 </div>
                 <div>
                     <div class="slider">
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Fahd About Page Pic.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/FahdAboutPagePic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvenMoreFahd.png" />
                     </div>
-                    <img class="collegePic1" src="/src/assets/Northeastern Logo.png">
+                    <img class="collegePic1" src="/src/assets/NortheasternLogo.png">
                     <div class="picFrame"></div>
                     <div class="picFrame2"></div>
                    
@@ -129,16 +129,16 @@
             </div>
             <div class="breyTeam" style="font-size: 50px;"> Team Brey
                 <div>
-                    <img class="collegePic1" src="/src/assets/Pitt Logo.png">
-                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Evan About Page Pic.png" />
+                    <img class="collegePic1" src="/src/assets/PittLogo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/EvanAboutPagePic.png" />
                 </div>
                 <div>
-                    <img class="collegePic1" src="/src/assets/Pitt Logo.png">
-                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Ian About Page Pic.png" />
+                    <img class="collegePic1" src="/src/assets/PittLogo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/IanAboutPagePic.png" />
                 </div>
                 <div>
-                    <img class="collegePic1" src="/src/assets/BC Logo.png">
-                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Ethan About Page Pic.png" />
+                    <img class="collegePic1" src="/src/assets/BC-Logo.png">
+                    <img id="groupPhoto" class="collegePic2" src="/src/assets/EthanAboutPagePic.png" />
                 </div>
             </div>
         </div>
