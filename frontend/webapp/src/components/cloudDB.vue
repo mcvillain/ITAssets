@@ -28,7 +28,8 @@
                         </td>
                     </tr>
                 </template>
-                <template v-slot:item.cost="{item}">
+                <template v-slot:item.paths="{ item }"></template>
+                <template v-slot:item.cost="{ item }">
                     ${{ item.cost.toFixed(2) }}/month
                 </template>
             </v-data-table>
@@ -49,7 +50,7 @@ var search = ref("");
 const headers = [
     { title: "Name", value: "name", sortable: true, filterable: true },
     { title: "Size", value: "size", sortable: true, filterable: false },
-    // {title: "Paths", value: "paths", sortable: false, filterable: true}, 
+    { title: "", value: "paths", sortable: false, filterable: true },
     { title: "Created", value: "created", sortable: true, filterable: true },
     { title: "Version", value: "version", sortable: true, filterable: true },
     { title: "Cost", value: "cost", sortable: true, filterable: false },
