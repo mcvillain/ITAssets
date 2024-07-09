@@ -94,13 +94,26 @@
 
         <div class="collegeGrid" style="background: linear-gradient(to right, #f26522, #ef3b32);">
             <div class="aidenTeam" style="font-size: 50px;"> Team Aiden
+                
                 <div>
-                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Jared About Page pic.png" />
+                    <div class="slider">
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Jared About Page pic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                    </div>
                     <img class="collegePic1" src="/src/assets/Temple Logo.png">
+                    <div class="picFrame"></div>
+                    <div class="picFrame2"></div>
                 </div>
                 <div>
-                    <img id="groupPhoto" class="collegePic2" src="/src/assets/Stephen About Page Pic.png" />
+                    <div class="slider">
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Stephen About Page Pic.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/More Fahd.png" />
+                        <img id="groupPhoto" class="collegePic2" src="/src/assets/Even More Fahd.png" />
+                    </div>
                     <img class="collegePic1" src="/src/assets/Villanova Logo.png">
+                    <div class="picFrame"></div>
+                    <div class="picFrame2"></div>
                 </div>
                 <div>
                     <div class="slider">
@@ -375,18 +388,19 @@ export default {
     position: relative;
     width: 10% !important;
     align-content: right;
-    margin-left: 1rem;
+    margin-left: 2rem;
     left: -100px;
 }
 
 .picFrame { 
     display: inline-flex;
-    width: 200px;
+    width: 500px;
     height: 300px;
     background-color: #27272d;
     position: relative;
     top: -300px;
-    left: -120px;
+    left: -340px;
+    transform: skew(10deg);
 }
 
 .picFrame2 {
@@ -396,7 +410,8 @@ export default {
     background-color: #27272d;
     position: relative;
     top: -300px;
-    left: -10px;
+    left: -150px;
+    transform: skew(10deg);
 }
 
 /* Slideshow Animation Code */
