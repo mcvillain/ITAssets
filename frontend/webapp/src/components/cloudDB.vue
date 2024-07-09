@@ -2,7 +2,7 @@
     <div class="card text-center m-3">
         <div class="card-body">
             <notification />
-            <v-data-table theme="dark" class="rounded-xl" v-model:sort-by="sortBy" v-model:expanded="expanded"
+            <v-data-table class="rounded-xl" v-model:sort-by="sortBy" v-model:expanded="expanded"
                 show-expand :headers="headers" :items="databases" v-model:items-per-page="itemsPerPage"
                 item-value="name" item-key="name" :search="search" :loading="loading">
                 <template v-slot:top>
@@ -68,10 +68,6 @@ onMounted(() => {
             ood = data.ood;
             loading.value = false;
         })
-        // .then(() => {
-        //     sortBy("size");
-        //     update.value += 1;
-        // })
         .catch((error) => {
             console.error("Error fetching database data:", error);
         });
