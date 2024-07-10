@@ -66,6 +66,35 @@ export async function get_localdb(
     res.sendStatus(401);
 }
 
+export async function get_localdb_csv(
+    req: Request,
+    res: Response,
+    dataMemcache: NodeCache,
+    loginMemcache: NodeCache
+) {
+    // Check authentication level
+    const session_id = req.cookies["session_id"];
+    if (session_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
+    const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
+    if (auth_lvl > 0) {
+        const _data: LocalDatabase[] | undefined =
+            dataMemcache.get(LocalDatabases);
+        if (_data === undefined) res.sendStatus(500);
+        // Send Databases to Client
+        const data: LocalDatabase[] = _data as LocalDatabase[];
+        let filedata = 'Name, Size, Created, Version, File Paths\n';
+        data.forEach((db:LocalDatabase) => {
+            filedata+=`${db.name}, ${db.size}, ${db.created}, ${db.version}, ${db.paths.join('|')}\n`;
+        });
+        res.status(200).contentType('text/csv').send(filedata);
+        return;
+    }
+    res.sendStatus(401);
+}
+
 function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
         const matched_db = current_dbs.find((existing_db) => existing_db.database_id === db.database_id);

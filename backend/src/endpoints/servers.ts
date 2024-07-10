@@ -82,6 +82,35 @@ export async function get_servers(
     res.sendStatus(401);
 }
 
+export async function get_servers_csv(
+    req: Request,
+    res: Response,
+    dataMemcache: NodeCache,
+    loginMemcache: NodeCache
+) {
+    // Check authentication level
+    const session_id = req.cookies["session_id"];
+    if (session_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
+    const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
+    if (auth_lvl > 0) {
+        const _data: Server[] | undefined =
+            dataMemcache.get(Servers);
+        if (_data === undefined) res.sendStatus(500);
+        // Send Databases to Client
+        const data: Server[] = _data as Server[];
+        let filedata = 'VM Name, Status, IP, Last Check-In, Hypervisor, Hostname, Size, Cost\n';
+        data.forEach((db:Server) => {
+            filedata+=`${db.VMName}, ${db.Status}, ${db.IP}, ${db.LastCheckInTime}, ${db.HyperVisor}, ${db.Hostname}, ${db.Size}, ${db.Cost}\n`;
+        });
+        res.status(200).contentType('text/csv').send(filedata);
+        return;
+    }
+    res.sendStatus(401);
+}
+
 function update_server_list(
     servers: Server[],
     oldserverlist: Server[]

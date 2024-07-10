@@ -21,9 +21,9 @@ import { ensure_db_structure, restore_state } from "./sql";
 
 import { get_auth, get_auth_redirect, get_logout_redirect, get_ms_auth } from "./endpoints/auth";
 import { get_messages, post_messages } from "./endpoints/messages";
-import { get_servers, post_servers } from "./endpoints/servers";
-import { get_localdb, post_localdb } from "./endpoints/local_dbs";
-import { get_azuredb, post_azuredb } from "./endpoints/azure_dbs";
+import { get_servers, get_servers_csv, post_servers } from "./endpoints/servers";
+import { get_localdb, get_localdb_csv, post_localdb } from "./endpoints/local_dbs";
+import { get_azuredb, get_azuredb_csv, post_azuredb } from "./endpoints/azure_dbs";
 import { get_users, post_users } from "./endpoints/users";
 import session from "express-session";
 import { clientConfig, } from "./msauth_config";
@@ -116,7 +116,9 @@ app.post("/messages", async (req: Request, res: Response) => {
 app.get("/servers", async (req: Request, res: Response) => {
     await get_servers(req, res, dataCache, loginCache);
 });
-
+app.get("/Servers.csv", async (req: Request, res: Response) => {
+    await get_servers_csv(req, res, dataCache, loginCache);
+});
 app.post("/servers", async (req: Request, res: Response) => {
     await post_servers(req, res, dataCache, loginCache, sizePriceCache);
 });
@@ -125,6 +127,9 @@ app.post("/servers", async (req: Request, res: Response) => {
 app.get("/databases", async (req: Request, res: Response) => {
     await get_localdb(req, res, dataCache, loginCache);
 });
+app.get("/LocalDatabases.csv", async (req: Request, res: Response) => {
+    await get_localdb_csv(req, res, dataCache, loginCache);
+});
 app.post("/databases", async (req: Request, res: Response) => {
     await post_localdb(req, res, dataCache, loginCache);
 });
@@ -132,6 +137,9 @@ app.post("/databases", async (req: Request, res: Response) => {
 // AZURE DATABASES
 app.get("/azure_dbs", async (req: Request, res: Response) => {
     await get_azuredb(req, res, dataCache, loginCache);
+});
+app.get("/AzureDatabases.csv", async (req: Request, res: Response) => {
+    await get_azuredb_csv(req, res, dataCache, loginCache);
 });
 app.post("/azure_dbs", async (req: Request, res: Response) => {
     await post_azuredb(req, res, dataCache, loginCache, sizePriceCache);

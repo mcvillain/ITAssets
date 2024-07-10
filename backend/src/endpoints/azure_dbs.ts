@@ -5,6 +5,7 @@ import { AzureDatabases, OutOfDate as OutOfDateCache } from "../const";
 import NodeCache from "node-cache";
 import { getAzDBPricePerGB } from "../util";
 import { execute_sql } from "../sql";
+import { Stream } from "stream";
 
 export async function post_azuredb(
     req: Request,
@@ -34,11 +35,7 @@ export async function post_azuredb(
     const sqldel = delete_outdated_dbs_sql(incoming_dbs);
     current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
     let pricePerGig = await getAzDBPricePerGB(sizePriceCache);
-    current_dbs = await update_db_list(
-        incoming_dbs,
-        current_dbs,
-        pricePerGig
-    );
+    current_dbs = await update_db_list(incoming_dbs, current_dbs, pricePerGig);
     dataMemcache.set(AzureDatabases, current_dbs);
     let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
     ood.azureDatabases = false;
@@ -65,7 +62,7 @@ export async function get_azuredb(
         let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
         let resp = {
             data: dataMemcache.get(AzureDatabases),
-            ood: ood.azureDatabases
+            ood: ood.azureDatabases,
         };
         res.json(resp);
         return;
@@ -73,23 +70,59 @@ export async function get_azuredb(
     res.sendStatus(401);
 }
 
-function delete_outdated_dbs(incoming_dbs: IncomingAzureDB[], current_dbs: AzureDatabase[]): AzureDatabase[] {
+export async function get_azuredb_csv(
+    req: Request,
+    res: Response,
+    dataMemcache: NodeCache,
+    loginMemcache: NodeCache
+) {
+    // Check authentication level
+    const session_id = req.cookies["session_id"];
+    if (session_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
+    const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
+    if (auth_lvl > 0) {
+        const _data: AzureDatabase[] | undefined =
+            dataMemcache.get(AzureDatabases);
+        if (_data === undefined) res.sendStatus(500);
+        // Send Databases to Client
+        const data: AzureDatabase[] = _data as AzureDatabase[];
+        let filedata = 'Name, Size, Created, Version, Cost, File Paths\n';
+        data.forEach((db:AzureDatabase) => {
+            filedata+=`${db.name}, ${db.size}, ${db.created}, ${db.version}, ${db.cost}, ${db.paths.join('|')}\n`;
+        });
+        res.status(200).contentType('text/csv').send(filedata);
+        return;
+    }
+    res.sendStatus(401);
+}
+
+function delete_outdated_dbs(
+    incoming_dbs: IncomingAzureDB[],
+    current_dbs: AzureDatabase[]
+): AzureDatabase[] {
     incoming_dbs.forEach((db: IncomingAzureDB) => {
-        const matched_db = current_dbs.find((existing_db) => existing_db.database_id === db.database_id);
+        const matched_db = current_dbs.find(
+            (existing_db) => existing_db.database_id === db.database_id
+        );
         if (matched_db !== undefined) {
             let idx = current_dbs.indexOf(matched_db);
             if (idx >= 0) {
                 current_dbs.splice(idx, 1);
             }
         }
-    })
+    });
     return current_dbs;
 }
 
 function delete_outdated_dbs_sql(incoming_dbs: IncomingAzureDB[]) {
     incoming_dbs.forEach((db: IncomingAzureDB) => {
-        execute_sql(`DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND itar = FALSE`);
-    })
+        execute_sql(
+            `DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND itar = FALSE`
+        );
+    });
 }
 
 function update_db_list(
@@ -124,6 +157,18 @@ function update_db_list(
 
 function update_dbs_sql(current_dbs: AzureDatabase[]) {
     current_dbs.forEach((db: AzureDatabase) => {
-        execute_sql(`INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version===undefined||db.version==='null'?'':', version'}, itar) VALUES ('${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version===undefined?'':', \''+db.version+'\''}, FALSE)`);
+        execute_sql(
+            `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${
+                db.version === undefined || db.version === "null"
+                    ? ""
+                    : ", version"
+            }, itar) VALUES ('${db.name}', '${db.size}', '${db.paths.join(
+                "|"
+            )}', '${db.created}', ${db.database_id}, ${db.cost}${
+                db.database_id
+            }${
+                db.version === undefined ? "" : ", '" + db.version + "'"
+            }, FALSE)`
+        );
     });
 }
