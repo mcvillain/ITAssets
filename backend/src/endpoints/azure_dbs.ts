@@ -120,7 +120,7 @@ function delete_outdated_dbs(
 function delete_outdated_dbs_sql(incoming_dbs: IncomingAzureDB[]) {
     incoming_dbs.forEach((db: IncomingAzureDB) => {
         execute_sql(
-            `DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND itar = FALSE`
+            `DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND name = '${db.name}' AND itar = FALSE`
         );
     });
 }

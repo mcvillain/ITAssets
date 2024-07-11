@@ -110,7 +110,7 @@ function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: Local
 
 function delete_outdated_dbs_sql(incoming_dbs: IncomingLocalDB[]) {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
-        execute_sql(`DELETE FROM local_dbs WHERE database_id = '${db.database_id}'`);
+            `DELETE FROM azure_dbs WHERE database_id = '${db.database_id}' AND name = '${db.name}' AND itar = FALSE`
     })
 }
 
