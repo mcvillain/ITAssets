@@ -1,6 +1,6 @@
 <template>
     <notification />
-    <div class="" style=" justify-content: center; align-content: center; ;">
+    <!-- <div class="" style=" justify-content: center; align-content: center; ;">
         <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader
         </h2>
         <div class="my-2">
@@ -16,57 +16,180 @@
         </div>
         <div>
             <button @click="copyMyText()" class="postBtn">Copy To Clipboard</button>
-        </div>
-        <div class="spacer">
+         </div>
+    <div class="spacer">
         </div>
         <mainTable table_data_endpoint="uploader/current_user_cases" />
-        <div class="spacer">
-        </div>
-        <mainTable table_data_endpoint="uploader/all_cases" />
+        <div class="spacer"></div> -->
+
+    <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader</h2>
+
+    <div style="margin: 3rem;"></div>
+
+    <v-text-field clearable label="CaseID" variant="solo" width="78%" class="mx-auto" rounded="lg"
+        placeholder="Ex: 12345"></v-text-field>
+    <v-btn @click="" rounded="lg">
+        Get Upload URL
+    </v-btn>
+
+    <div style="margin: 1rem;"></div>
+
+    <div style="display: flex; flex-direction: row; justify-content: center; width: 100%;">
+        <v-text-field clearable label="Upload URL" id="url" style="max-width: 75%; margin: 0"
+            rounded="ts-lg bs-lg te-0 be-0" variant="solo" v-model="upload_url"></v-text-field>
+        <v-btn icon="mdi-content-copy" size="large" @click="copyMyText()" rounded="te-lg be-lg ts-0 bs-0 "
+            variant="flat"></v-btn>
     </div>
 
-    <!-- <div id="people">
-        <v-client-table v-if="data_loaded" :columns="columns" :data="table_data" :options="options" />
-    </div> -->
+    <div style="margin: 3rem;">
 
+        <div class="card text-center m-3">
+            <div class="card-body">
+                <v-data-table class="rounded-xl" v-model:sort-by="sortBy" :headers="headers"
+                    :items="example" v-model:items-per-page="itemsPerPage" item-value="name" item-key="name"
+                    :search="search" :loading="loading" show-select v-model="selected">
+                    <template v-slot:top>
+                        <v-toolbar class="rounded-t-xl">
+                            <ood_notify_vuetify v-if="ood" />
+                            <v-toolbar-title>My Cases</v-toolbar-title>
+                        </v-toolbar>
+                        <v-toolbar>
+                            <v-dialog max-width="400">
+                                <template v-slot:activator="{ props: activatorProps }">
+                                    <v-btn id="modal" height="55" width="100" v-bind="activatorProps"
+                                        class="bg-#b71c1c bi bi-trash-fill" variant="flat"></v-btn>
+                                </template>
+
+                                <template v-slot:default="{ isActive }">
+                                    <v-card title="Delete?">
+                                        <v-card-text>
+                                            Are you sure you want to delete these item(s)?
+                                        </v-card-text>
+
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text="No" @click="isActive.value = false"></v-btn>
+                                            <v-btn text="Yes" @click="isActive.value = false"></v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </template>
+                            </v-dialog>
+                            <v-text-field class="w-75 mw-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
+                                hide-details clearable single-line variant="solo-filled"
+                                v-model="search"></v-text-field>
+                        </v-toolbar>
+                    </template>
+                    <template v-slot:loading>
+                        <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+                    </template>
+                </v-data-table>
+
+                <div style="margin: 4rem;"></div>
+
+                <v-data-table class="rounded-xl" v-model:sort-by="sortBy" :headers="headers"
+                    :items="example" v-model:items-per-page="itemsPerPage" item-value="name" item-key="name"
+                    :search="search" :loading="loading" show-select v-model="selected">
+                    <template v-slot:top>
+                        <v-toolbar class="rounded-t-xl">
+                            <ood_notify_vuetify v-if="ood" />
+                            <v-toolbar-title>All Cases</v-toolbar-title>
+                        </v-toolbar>
+                        <v-toolbar>
+
+                            <v-dialog max-width="400">
+                                <template v-slot:activator="{ props: activatorProps }">
+                                    <v-btn id="modal" height="55" width="100" v-bind="activatorProps"
+                                        class="bg-#b71c1c bi bi-trash-fill" variant="flat"></v-btn>
+                                </template>
+
+                                <template v-slot:default="{ isActive }">
+                                    <v-card title="Delete?">
+                                        <v-card-text>
+                                            Are you sure you want to delete these item(s)?
+                                        </v-card-text>
+
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text="No" @click="isActive.value = false"></v-btn>
+                                            <v-btn text="Yes" @click="isActive.value = false"></v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </template>
+                            </v-dialog>
+                            <v-text-field class="w-75 mw-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
+                                hide-details clearable single-line variant="solo-filled"
+                                v-model="search"></v-text-field>
+                        </v-toolbar>
+                    </template>
+                    <template v-slot:loading>
+                        <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+                    </template>
+                </v-data-table>
+            </div>
+        </div>
+    </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import notification from './notification.vue';
-// import { ClientTable } from 'v-tables-3';
+// import mainTable from './uploader/mainTable.vue';
+import { ref, Ref } from 'vue'
+import ood_notify_vuetify from './ood_notify_vuetify.vue';
 
-// const el = "#people";
+// var databases = ref(null);
+var ood = false;
+var loading = ref(true);
+var itemsPerPage = ref(10);
+var search = ref("");
+const upload_url = ref("whatever");
 
-// let data_loaded = true;
-// let table_data = [
-//         { id: 1, name: "John", age: "20" },
-//         { id: 2, name: "Jane", age: "24" },
-//         { id: 3, name: "Susan", age: "16" },
-//         { id: 4, name: "Chris", age: "55" },
-//         { id: 5, name: "Dan", age: "40" }
-//     ];
-// let columns = ['id', 'name', 'age'];
-// let options = {}
+const sortBy = ref([{ key: 'size', order: 'desc' }]);
+// const expanded = ref([]);
 
+const headers = [
+    { title: "CaseID", key: "caseID", sortable: true, filterable: false },
+    { title: "Guid", key: "guid", sortable: true, filterable: false },
+];
 
-import mainTable from './uploader/mainTable.vue';
-import { ref, Ref} from 'vue'
-const search: Ref<string> = ref('');
+const example = [
+    { caseID: 12345, guid: 'HERIEOEHEOEH' },
+    { caseID: 678910, guid: 'HEEPIROEIEI' },
+    { caseID: 231321, guid: 'HERERWHEIEER' },
+    { caseID: 768263, guid: 'HEYUIEIRUIER' },
+];
+loading.value = false;
 
-function postCaseID() {
-    let cases = (document.getElementById("caseID") as HTMLInputElement).value;
-    alert(cases);
-}
+// function postCaseID() {
+//     let cases = (document.getElementById("caseID") as HTMLInputElement).value;
+//     alert(cases);
+// }
 
 async function copyMyText() {
-    let urlbox = document.getElementById("url") as HTMLInputElement;
-    urlbox.select();
-    await navigator.clipboard.writeText(urlbox.value);
+    // let urlbox = document.getElementById("url");
+    // urlbox.select();
+    await navigator.clipboard.writeText(upload_url.value);
 }
 
 </script>
 
+<script>
+export default {
+    data() {
+        return {
+            dialog: false,
+        }
+    },
+}
+</script>
+
 <style scoped>
+#modal {
+    margin-left: .5rem;
+    margin-right: .5rem;
+    font-size: x-large;
+    color: crimson;
+}
+
 .spacer {
     background-color: black;
     width: 75%;
@@ -101,45 +224,5 @@ async function copyMyText() {
 .postBtn:hover {
     scale: 105%;
     transition: ease 0.5s;
-}
-
-.center {
-    margin-top: 5rem;
-    align-self: center;
-    height: 600px;
-    /* max-height: 600px; */
-    width: 2000px;
-    background-color: hsla(200, 40%, 30%, .4);
-    background-image:
-        url('https://78.media.tumblr.com/cae86e76225a25b17332dfc9cf8b1121/tumblr_p7n8kqHMuD1uy4lhuo1_540.png'),
-        url('https://78.media.tumblr.com/66445d34fe560351d474af69ef3f2fb0/tumblr_p7n908E1Jb1uy4lhuo1_1280.png'),
-        url('https://78.media.tumblr.com/8cd0a12b7d9d5ba2c7d26f42c25de99f/tumblr_p7n8kqHMuD1uy4lhuo2_1280.png'),
-        url('https://78.media.tumblr.com/5ecb41b654f4e8878f59445b948ede50/tumblr_p7n8on19cV1uy4lhuo1_1280.png'),
-        url('https://78.media.tumblr.com/28bd9a2522fbf8981d680317ccbf4282/tumblr_p7n8kqHMuD1uy4lhuo3_1280.png');
-    background-repeat: repeat-x;
-    background-position:
-        0 20%,
-        0 100%,
-        0 50%,
-        0 100%,
-        0 0;
-    background-size:
-        2500px,
-        800px,
-        500px 200px,
-        1000px,
-        400px 260px;
-    animation: 50s para infinite linear;
-}
-
-@keyframes para {
-    100% {
-        background-position:
-            -5000px 20%,
-            -800px 95%,
-            500px 50%,
-            1000px 100%,
-            400px 0;
-    }
 }
 </style>
