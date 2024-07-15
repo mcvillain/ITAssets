@@ -12,17 +12,17 @@ jobs:
     - name: Get Timestamp
       id: timestamp
       run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
-    - name: Build the Docker image
-      working-directory: ./backend
-      run: docker build . --file Dockerfile --tag aiscorp/itassets-backend:v$TIMESTAMP
     - name: Login to Docker Registry
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-    - name: Push the Docker Image
-      run: |
-        docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:v$TIMESTAMP
-        docker push aiscorp/itassets-backend:v$TIMESTAMP
-        docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:latest
-        docker push aiscorp/itassets-backend:latest
+    - name: Build the Docker image
+      working-directory: ./backend
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
+  #  - name: Push the Docker Image
+  #    run: |
+  #      docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:v$TIMESTAMP
+  #      docker push aiscorp/itassets-backend:v$TIMESTAMP
+  #      docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:latest
+  #      docker push aiscorp/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
     steps:
