@@ -26,10 +26,12 @@ jobs:
     - name: Get Timestamp
       id: timestamp
       run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+    - name: Copy .env files
+      run: cp ./environment/prod_frontend.env ./frontend/.env.production
     - name: Login to Docker Registry
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
     - name: Build the Docker image
-      working-directory: ./backend
+      working-directory: ./frontend
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
     - name: Push the Docker Image
       run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
