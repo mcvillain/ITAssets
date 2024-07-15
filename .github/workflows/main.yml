@@ -4,8 +4,6 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-env:
-  BACKEND_TIMESTAMP: ${{ jobs.build-backend.steps.timestamp.outputs.time }}
 jobs:
   build-backend:
     runs-on: ubuntu-latest
@@ -16,13 +14,13 @@ jobs:
       run: echo "::set-output name=time::$(date +%s)"
     - name: Build the Docker image
       working-directory: ./backend
-      run: docker build . --file Dockerfile --tag AISCORP/itassets-backend:${BACKEND_TIMESTAMP}
+      run: docker build . --file Dockerfile --tag AISCORP/itassets-backend:${{ steps.timestamp.outputs.time }}
     - name: Login to Docker Registry
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
     - name: Push the Docker Image
       run: |
-        docker tag AISCORP/itassets-backend:${TIMESTAMP} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:${BACKEND_TIMESTAMP}
-        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:${BACKEND_TIMESTAMP}
+        docker tag AISCORP/itassets-backend:${TIMESTAMP} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:${{ steps.timestamp.outputs.time }}
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:${{ steps.timestamp.outputs.time }}
         docker tag AISCORP/itassets-backend:${TIMESTAMP} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
   build-frontend:
