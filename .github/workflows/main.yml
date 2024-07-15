@@ -17,6 +17,8 @@ jobs:
     - name: Build the Docker image
       working-directory: ./backend
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
+    - name: Push the Docker Image
+      run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
   #  - name: Push the Docker Image
   #    run: |
   #      docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:v$TIMESTAMP
