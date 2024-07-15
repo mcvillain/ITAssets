@@ -19,9 +19,9 @@ jobs:
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
     - name: Push the Docker Image
       run: |
-        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
+        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
-        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
+        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
@@ -39,8 +39,8 @@ jobs:
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
     - name: Push the Docker Image
       run: |
-        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
+        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
-        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:latest
+        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:latest
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:latest
       
