@@ -19,7 +19,7 @@ jobs:
         name: AISCORP/itassets-backend
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        registry: ${{ sercets.DOCKER_REGISTRY_URL }}
+        registry: ${{ secrets.DOCKER_REGISTRY_URL }}
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -36,5 +36,5 @@ jobs:
         name: AISCORP/itassets-frontend
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        registry: ${{ sercets.DOCKER_REGISTRY_URL }}
+        registry: ${{ secrets.DOCKER_REGISTRY_URL }}
       
