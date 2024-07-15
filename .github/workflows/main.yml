@@ -19,25 +19,28 @@ jobs:
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
     - name: Push the Docker Image
       run: |
-        docker tag AISCORP/itassets-backend:${TIMESTAMP} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
+        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time }}
-        docker tag AISCORP/itassets-backend:${TIMESTAMP} ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
+        docker tag AISCORP/itassets-backend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Get Timestamp
+      id: timestamp
+      run: echo "::set-output name=time::$(date +%s)"
     - name: Copy .env files
       run: cp ./environment/prod_frontend.env ./frontend/.env.production
     - name: Build the Docker image
       working-directory: ./frontend
-      run: docker build . --file Dockerfile --tag AISCORP/itassets-frontend:$(date +%s)
-    - name: Dockerize
-      if: success()
-      uses: manusa/actions-publish-docker@v1.1.2
-      with:
-        name: AISCORP/itassets-frontend
-        username: ${{ secrets.DOCKER_HUB_USER }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        registry: ${{ secrets.DOCKER_REGISTRY_URL }}
+      run: docker build . --file Dockerfile --tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
+    - name: Login to Docker Registry
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+    - name: Push the Docker Image
+      run: |
+        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time }}
+        docker tag AISCORP/itassets-frontend:v${{ steps.timestamp.outputs.time } ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:latest
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/AISCORP/itassets-frontend:latest
       
