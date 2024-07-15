@@ -19,12 +19,6 @@ jobs:
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
     - name: Push the Docker Image
       run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
-  #  - name: Push the Docker Image
-  #    run: |
-  #      docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:v$TIMESTAMP
-  #      docker push aiscorp/itassets-backend:v$TIMESTAMP
-  #      docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:latest
-  #      docker push aiscorp/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -32,17 +26,10 @@ jobs:
     - name: Get Timestamp
       id: timestamp
       run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
-    - name: Copy .env files
-      run: cp ./environment/prod_frontend.env ./frontend/.env.production
-    - name: Build the Docker image
-      working-directory: ./frontend
-      run: docker build . --file Dockerfile --tag aiscorp/itassets-frontend:v$TIMESTAMP
     - name: Login to Docker Registry
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+    - name: Build the Docker image
+      working-directory: ./backend
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
     - name: Push the Docker Image
-      run: |
-        docker tag aiscorp/itassets-frontend:v$TIMESTAMP aiscorp/itassets-frontend:v$TIMESTAMP
-        docker push aiscorp/itassets-frontend:v$TIMESTAMP
-        docker tag aiscorp/itassets-frontend:v$TIMESTAMP aiscorp/itassets-frontend:latest
-        docker push aiscorp/itassets-frontend:latest
-      
+      run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
