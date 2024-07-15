@@ -20,9 +20,9 @@ jobs:
     - name: Push the Docker Image
       run: |
         docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:v$TIMESTAMP
-        docker push --platform "linux" aiscorp/itassets-backend:v$TIMESTAMP
+        docker push aiscorp/itassets-backend:v$TIMESTAMP
         docker tag aiscorp/itassets-backend:v$TIMESTAMP aiscorp/itassets-backend:latest
-        docker push --platform "linux" aiscorp/itassets-backend:latest
+        docker push aiscorp/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +40,7 @@ jobs:
     - name: Push the Docker Image
       run: |
         docker tag aiscorp/itassets-frontend:v$TIMESTAMP aiscorp/itassets-frontend:v$TIMESTAMP
-        docker push --platform "linux" aiscorp/itassets-frontend:v$TIMESTAMP
+        docker push aiscorp/itassets-frontend:v$TIMESTAMP
         docker tag aiscorp/itassets-frontend:v$TIMESTAMP aiscorp/itassets-frontend:latest
-        docker push --platform "linux" aiscorp/itassets-frontend:latest
+        docker push aiscorp/itassets-frontend:latest
       
