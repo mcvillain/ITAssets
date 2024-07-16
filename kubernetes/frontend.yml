@@ -35,13 +35,13 @@ spec:
         # Keepalive
         livenessProbe:
           httpGet:
-            port: 80
+            port: 443
             path: /
           initialDelaySeconds: 15
           periodSeconds: 30
         readinessProbe:
           httpGet:
-            port: 80
+            port: 443
             path: /
           initialDelaySeconds: 5
           periodSeconds: 5
