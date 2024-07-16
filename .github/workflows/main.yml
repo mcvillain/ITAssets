@@ -17,8 +17,12 @@ jobs:
     - name: Build the Docker image
       working-directory: ./backend
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
+    - name: Tag Docker Image
+      run: docker tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:latest
     - name: Push the Docker Image
-      run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
+      run: |
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:v$TIMESTAMP
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-backend:latest
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -33,5 +37,9 @@ jobs:
     - name: Build the Docker image
       working-directory: ./frontend
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
+    - name: Tag Docker Image
+      run: docker tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:latest
     - name: Push the Docker Image
-      run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
+      run: |
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:latest
