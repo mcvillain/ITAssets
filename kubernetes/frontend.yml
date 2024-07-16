@@ -16,7 +16,7 @@ spec:
       - name: itassets-registry
       containers:
       - name: itassets-frontend
-        image: aegisitcontainers.azurecr.io/aiscorp/itassets-frontend
+        image: aegisitcontainers.azurecr.io/aiscorp/itassets-frontend:latest
         resources:
           limits:
             memory: "128Mi"
@@ -32,19 +32,6 @@ spec:
         - name: ssl
           mountPath: /srv/ssl/
           readOnly: true
-        # Keepalive
-        livenessProbe:
-          httpGet:
-            port: 443
-            path: /
-          initialDelaySeconds: 15
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            port: 443
-            path: /
-          initialDelaySeconds: 5
-          periodSeconds: 5
       volumes:
       - name: ssl
         secret:
