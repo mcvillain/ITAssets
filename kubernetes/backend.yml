@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: itassets-backend
+spec:
+  replicas: 1
+  serviceName: backend-service
+  selector:
+    matchLabels:
+      app: itassets-backend
+  template:
+    metadata:
+      labels:
+        app: itassets-backend
+    spec:
+      imagePullSecrets:
+      - name: itassets-registry
+      containers:
+      - name: itassets-backend
+        image: aegisitcontainers.azurecr.io/aiscorp/itassets-backend
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: backend-port
+          containerPort: 3000
+          protocol: TCP
+        env:
+          # MariaDB Info
+          - name: DB_HOST
+            value: $(MARIADB-SERVICE_SERVICE_HOST)
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secrets
+                key: DB_USER
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secrets
+                key: DB_PASS
+          # EntraID
+          - name: ENTRA_AUTH_TENANT_ID
+            valueFrom:
+              secretKeyRef:
+                name: itassets-backend-secrets
+                key: ENTRA_AUTH_TENANT_ID
+          - name: ENTRA_AUTH_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: itassets-backend-secrets
+                key: ENTRA_AUTH_CLIENT_ID
+          - name: ENTRA_AUTH_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: itassets-backend-secrets
+                key: ENTRA_AUTH_CLIENT_SECRET
+          # Other
+          - name: BASE_URI
+            valueFrom:
+              secretKeyRef:
+                name: itassets-backend-secrets
+                key: BASE_URI
+        # Keepalive
+        livenessProbe:
+          httpGet:
+            port: 3000
+            path: /auth
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            port: 3000
+            path: /auth
+          initialDelaySeconds: 5
+          periodSeconds: 5
