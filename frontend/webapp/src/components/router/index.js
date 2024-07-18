@@ -33,6 +33,10 @@ import { createWebHistory, createRouter } from "vue-router";
     path: "/about",
     component: () => import('../aboutPage.vue'),
   },
+  {
+    path: "/uploader",
+    component: () => import('../uploader.vue'),
+  },
 ]
 
 const router = createRouter({

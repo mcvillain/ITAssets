@@ -17,6 +17,7 @@
     "promise": "^8.3.0",
     "promises": "^0.2.5",
     "roboto-fontface": "*",
+    "v-tables-3": "^0.4.7",
     "vue": "^3.2.0",
     "vue-chartjs": "^5.2.0",
     "vue-router": "*",

@@ -37,6 +37,13 @@
                 <p class="label-DONTBREAK">Users</p>
             </span>
         </div>
+        <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/uploader')"
+            style="display: flex; flex-direction: row;">
+            <i class="bi bi-cloud-upload nav-icon" id="uploader-icon"></i>
+            <span v-if="!collapsed">
+                <p class="label-DONTBREAK">Uploader</p>
+            </span>
+        </div>
         <div class="item" :class="collapsed && 'item collapsed'" @click="goto('/about')"
             style="display: flex; flex-direction: row;">
             <i class="bi bi-chat-square-text-fill nav-icon" id="about-icon"></i>
@@ -142,6 +149,9 @@ onMounted(() => {
         case '/users':
             document.getElementById("users-icon")?.classList.add("active");
             break;
+        case '/uploader':
+            document.getElementById("uploader-icon")?.classList.add("active");
+            break;
         case '/about':
             document.getElementById("about-icon")?.classList.add("active");
             break;
@@ -183,6 +193,10 @@ onMounted(() => {
 
 .nav-icon.active {
     color: var(--sidebar-item-active);
+}
+
+.nav-icon:hover {
+    color: #15779f;
 }
 
 .spacer {
@@ -233,6 +247,34 @@ onMounted(() => {
 .sidebar-toggler {
     font-size: 3rem;
     color: #708490;
+}
+
+.sidebar-toggler:hover {
+    color:#15779f;
+}
+
+#about-icon:hover {
+    color: #15779f;
+}
+
+#uploader-icon:hover {
+    color: #15779f;
+}
+
+#users-icon:hover {
+    color: #15779f;
+}
+
+#servers-icon:hover {
+    color: #15779f;
+}
+
+#azure_dbs-icon:hover {
+    color: #15779f;
+}
+
+#internal_dbs-icon:hover {
+    color: #15779f;
 }
 
 .item {
@@ -287,4 +329,6 @@ onMounted(() => {
     vertical-align: -3rem;
     padding-left: 1rem;
 }
+
+
 </style>
