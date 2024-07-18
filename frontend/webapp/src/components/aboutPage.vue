@@ -57,7 +57,7 @@
                 host. The data is then displayed in a series of tables which <br>
                 can be filtered through the collapsible sidebar and searched as
                 desired.
-                <div class="name" style="left: 330px;">- Evan, Ian, Stephen, and Ethan</div>
+                <div class="name" style="left: 330px;">- Evan, Ian, and Stephen</div>
                 <div class="symbols"><i class="bi bi-code-slash"></i></div>
             </div>
         </div>
