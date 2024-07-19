@@ -110,7 +110,9 @@ function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: Local
 
 function delete_outdated_dbs_sql(incoming_dbs: IncomingLocalDB[]) {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
-            `DELETE FROM local_dbs WHERE database_id = '${db.database_id}' AND name = '${db.name}'`
+        execute_sql( // database_id = '${db.database_id}' AND 
+            `DELETE FROM azure_dbs WHERE name = '${db.name}' AND itar = FALSE`
+        );
     })
 }
 
@@ -141,9 +143,6 @@ function update_db_list(
 
 function update_dbs_sql(current_dbs: LocalDatabase[]) {
     current_dbs.forEach((db: LocalDatabase) => {
-        execute_sql(`INSERT INTO local_dbs 
-            (name, size, paths, created, database_id${db.version===undefined||db.version==='null'?'':', version'}) 
-            VALUES 
-            ('${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}${db.version===undefined||db.version==='null'?'':', \''+db.version+'\''})`);
+        execute_sql(`INSERT INTO local_dbs (name, size, paths, created, database_id${db.version===undefined||db.version==='null'?'':', version'}) VALUES ('${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}${db.version===undefined?'':', \''+db.version+'\''})`);
     });
 }
