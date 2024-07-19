@@ -1,7 +1,7 @@
 services:
   frontend:
     image: itassets-frontend:latest
-    hostname: frontend
+    hostname: itassets-frontend-service
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
@@ -29,7 +29,7 @@ services:
 
   backend:
     image: itassets-backend:latest
-    hostname: backend
+    hostname: itassets-backend-service
     networks:
       - itassets
     # depends_on: 
@@ -77,7 +77,7 @@ services:
 
   mariadb:
     image: mariadb:11.4-ubi
-    hostname: mariadb
+    hostname: mariadb-service
     networks:
       - itassets
     volumes:

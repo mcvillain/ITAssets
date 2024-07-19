@@ -158,17 +158,9 @@ function update_db_list(
 function update_dbs_sql(current_dbs: AzureDatabase[]) {
     current_dbs.forEach((db: AzureDatabase) => {
         execute_sql(
-            `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${
-                db.version === undefined || db.version === "null"
-                    ? ""
-                    : ", version"
-            }, itar) VALUES ('${db.name}', '${db.size}', '${db.paths.join(
-                "|"
-            )}', '${db.created}', ${db.database_id}, ${db.cost}${
-                db.database_id
-            }${
-                db.version === undefined ? "" : ", '" + db.version + "'"
-            }, FALSE)`
+            `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version === undefined || db.version === "null"? "": ", version"}, itar) 
+            VALUES 
+            ('${db.name}', '${db.size}', '${db.paths.join("|")}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version === undefined || db.version === "null"? "" : ", '" + db.version + "'"}, FALSE)`
         );
     });
 }

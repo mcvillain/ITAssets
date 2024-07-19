@@ -1,7 +1,7 @@
 services:
   frontend:
     image: itassets-frontend:latest
-    hostname: frontend
+    hostname: itassets-frontend-service
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
@@ -33,7 +33,7 @@ services:
 
   backend:
     image: itassets-backend:latest
-    hostname: backend
+    hostname: itassets-backend-service
     networks:
       - itassets
     depends_on: 
@@ -91,7 +91,7 @@ services:
 
   mariadb:
     image: mariadb:11.4-ubi
-    hostname: mariadb
+    hostname: mariadb-service
     networks:
       - itassets
     volumes:
@@ -120,7 +120,8 @@ services:
       - PMA_HOST=mariadb
       - PMA_PORT=3306
       - PMA_USER=root
-      - PMA_PASSWORD=Test1234
+      - PMA_PASSWORD=g&Pr*MOyeNeY%Qr5^FwUTU5^bCAM!GqV6ClIgbOS@O&V6B9axRiw3BefPSco6*Vs*TUKXD1yChf&Ej6qbp82Ss33YpqGfJpedyOpjzHbHi%za%&HWSk8AEqAfkunTA*G
+      #Test1234
     logging: 
       driver: json-file
       options:
