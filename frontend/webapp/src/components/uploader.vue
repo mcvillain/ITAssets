@@ -29,7 +29,6 @@
                         :loading="loading" >
                         <template v-slot:top>
                             <v-toolbar class="rounded-t-xl " id="head">
-                                <ood_notify_vuetify v-if="ood" />
                                 <v-toolbar-title>My Cases</v-toolbar-title>
                             </v-toolbar>
                             <v-toolbar>
@@ -76,7 +75,6 @@
                         :item-class="row-item">
                         <template v-slot:top>
                             <v-toolbar class="rounded-t-xl">
-                                <ood_notify_vuetify v-if="ood" />
                                 <v-toolbar-title>All Cases</v-toolbar-title>
                             </v-toolbar>
                             <v-toolbar>
@@ -122,11 +120,9 @@
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
 import { ref, Ref } from 'vue'
-import ood_notify_vuetify from './ood_notify_vuetify.vue';
 import { createVuetify } from 'vuetify'
 
 // var databases = ref(null);
-var ood = false;
 var loading = ref(true);
 var itemsPerPage = ref(10);
 var search = ref("");
