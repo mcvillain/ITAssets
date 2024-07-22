@@ -67,8 +67,8 @@ services:
     networks:
       - itassets
     volumes:
-      - "./keys/coordinator_signing/tls.crt:/srv/sign/tls.crt:ro"
-      - "./keys/coordinator_signing/tls.key:/srv/sign/tls.key:ro"
+      - "./keys/uploader_signing/tls.crt:/srv/sign/uploader/tls.crt:ro" # Uploader's Public Key
+      - "./keys/coordinator_signing/tls.key:/srv/sign/coordinator/tls.key:ro" # Coordinator's Private Key
     depends_on: 
       - mariadb
     env_file: 
