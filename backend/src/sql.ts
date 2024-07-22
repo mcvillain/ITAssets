@@ -48,7 +48,8 @@ export async function ensure_db_structure() {
         `);
         await conn.query(`
             CREATE TABLE IF NOT EXISTS local_dbs (
-                name VARCHAR(255) PRIMARY KEY,
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
                 size FLOAT,
                 paths TEXT,
                 database_id INT,

@@ -29,14 +29,13 @@ export async function post_localdb(
     let current_dbs: LocalDatabase[];
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
-    const sqldel = delete_outdated_dbs_sql(incoming_dbs);
     current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
     current_dbs = update_db_list(incoming_dbs, current_dbs);
     dataMemcache.set(LocalDatabases, current_dbs);
     let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
     ood.localDatabases = false;
     dataMemcache.set(OutOfDateCache, ood);
-    await sqldel;
+    await delete_dbs_sql();
     await update_dbs_sql(current_dbs);
     console.log("Done processing local databases...");
     return;
@@ -97,7 +96,7 @@ export async function get_localdb_csv(
 
 function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
-        const matched_db = current_dbs.find((existing_db) => existing_db.database_id === db.database_id);
+        const matched_db = current_dbs.find((existing_db) => existing_db.key === db.key);
         if (matched_db !== undefined) {
             let idx = current_dbs.indexOf(matched_db);
             if (idx >= 0) {
@@ -108,13 +107,6 @@ function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: Local
     return current_dbs;
 }
 
-function delete_outdated_dbs_sql(incoming_dbs: IncomingLocalDB[]) {
-    incoming_dbs.forEach((db: IncomingLocalDB) => {
-        execute_sql( // database_id = '${db.database_id}' AND 
-            `DELETE FROM azure_dbs WHERE name = '${db.name}' AND itar = FALSE`
-        );
-    })
-}
 
 function update_db_list(
     incoming_dbs: IncomingLocalDB[],
@@ -135,14 +127,21 @@ function update_db_list(
                 size: db.size,
                 version: db.version,
                 created: db.created,
-            });
+            } as LocalDatabase);
         }
     });
     return current_dbs;
 }
 
+function delete_dbs_sql() {
+    execute_sql( // database_id = '${db.database_id}' AND 
+        `DELETE FROM local_dbs WHERE 1 = 1`
+    );
+}
 function update_dbs_sql(current_dbs: LocalDatabase[]) {
     current_dbs.forEach((db: LocalDatabase) => {
-        execute_sql(`INSERT INTO local_dbs (name, size, paths, created, database_id${db.version===undefined||db.version==='null'?'':', version'}) VALUES ('${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}${db.version===undefined?'':', \''+db.version+'\''})`);
+        const sql_query = `INSERT INTO local_dbs (id, name, size, paths, created, database_id${db.version===undefined||db.version==='null'?'':', version'}) VALUES ('${db.key}', '${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}${db.version===undefined?'':', \''+db.version+'\''})`;
+        execute_sql(sql_query)
+        .catch((error: any) => console.error(`An SQL error occured updating the local databases.\nSQL Query: ${sql_query}\nError:\n${error}`));
     });
 }

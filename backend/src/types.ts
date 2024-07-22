@@ -15,6 +15,9 @@ export class LocalDatabase {
     database_id!: number;
     version: string | undefined;
     created!: string;
+    get key(): string {
+        return this.name + "_" + this.database_id;
+    };
 }
 export class IncomingLocalDB {
     name!: string;
@@ -24,8 +27,11 @@ export class IncomingLocalDB {
     database_id!: number;
     LastCheckInTime!: string;
     version: string | undefined;
+    get key(): string {
+        return this.name + "_" + this.database_id;
+    };
 }
-export function convert_sql_local_db(sql_local_db: SQL_LocalDatabase) {
+export function convert_sql_local_db(sql_local_db: SQL_LocalDatabase): LocalDatabase {
     return {
         name: sql_local_db.name,
         size: sql_local_db.size,
@@ -33,7 +39,7 @@ export function convert_sql_local_db(sql_local_db: SQL_LocalDatabase) {
         database_id: sql_local_db.database_id,
         version: sql_local_db.version,
         created: sql_local_db.created,
-    };
+    } as LocalDatabase;
 }
 export class SQL_LocalDatabase {
     name!: string;
@@ -52,6 +58,9 @@ export class AzureDatabase {
     database_id!: number;
     cost!: number;
     version: string | undefined;
+    get key(): string {
+        return this.name + "_" + this.database_id;
+    };
 }
 export class IncomingAzureDB {
     name!: string;
@@ -70,8 +79,8 @@ export function convert_sql_azure_db(sql_azure_db: SQL_AzureDB): AzureDatabase {
         created: sql_azure_db.created,
         database_id: sql_azure_db.database_id,
         cost: sql_azure_db.cost,
-        version: sql_azure_db.version
-    };
+        version: sql_azure_db.version,
+    } as AzureDatabase;
 }
 export class SQL_AzureDB {
     name!: string;

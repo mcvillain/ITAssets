@@ -32,7 +32,6 @@ export async function post_azuredb(
     let current_dbs: AzureDatabase[];
     if (_current_dbs === undefined) current_dbs = [];
     else current_dbs = _current_dbs;
-    const sqldel = delete_outdated_dbs_sql(incoming_dbs);
     current_dbs = delete_outdated_dbs(incoming_dbs, current_dbs);
     let pricePerGig = await getAzDBPricePerGB(sizePriceCache);
     current_dbs = await update_db_list(incoming_dbs, current_dbs, pricePerGig);
@@ -40,7 +39,7 @@ export async function post_azuredb(
     let ood: OutOfDate = dataMemcache.get(OutOfDateCache) as OutOfDate;
     ood.azureDatabases = false;
     dataMemcache.set(OutOfDateCache, ood);
-    await sqldel;
+    await delete_dbs_sql();
     await update_dbs_sql(current_dbs);
     console.log("Done processing Azure databases...");
     return;
@@ -117,13 +116,6 @@ function delete_outdated_dbs(
     return current_dbs;
 }
 
-function delete_outdated_dbs_sql(incoming_dbs: IncomingAzureDB[]) {
-    incoming_dbs.forEach((db: IncomingAzureDB) => {
-        execute_sql( // database_id = '${db.database_id}' AND 
-            `DELETE FROM azure_dbs WHERE name = '${db.name}' AND itar = FALSE`
-        );
-    });
-}
 
 function update_db_list(
     incoming_dbs: IncomingAzureDB[],
@@ -149,18 +141,23 @@ function update_db_list(
                 version: db.version,
                 created: db.created,
                 cost: price,
-            });
+            } as AzureDatabase);
         }
     });
     return current_dbs;
 }
 
+function delete_dbs_sql() {
+    execute_sql( // database_id = '${db.database_id}' AND 
+        `DELETE FROM azure_dbs WHERE itar = FALSE`
+    );
+}
 function update_dbs_sql(current_dbs: AzureDatabase[]) {
     current_dbs.forEach((db: AzureDatabase) => {
-        execute_sql(
-            `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version === undefined || db.version === "null"? "": ", version"}, itar) 
+        const sql_query = `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version === undefined || db.version === "null"? "": ", version"}, itar) 
             VALUES 
-            ('${db.name}', '${db.size}', '${db.paths.join("|")}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version === undefined || db.version === "null"? "" : ", '" + db.version + "'"}, FALSE)`
-        );
+            ('${db.name}', '${db.size}', '${db.paths.join("|")}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version === undefined || db.version === "null"? "" : ", '" + db.version + "'"}, FALSE)`;
+        execute_sql(sql_query)
+        .catch((error: any) => console.error(`An SQL error occured updating the local databases.\nSQL Query: ${sql_query}\nError:\n${error}`));
     });
 }
