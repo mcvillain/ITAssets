@@ -61,7 +61,7 @@ services:
   
   upload_coordinator:
     image: uploader-coordinator:latest
-    hostname: coordinator
+    hostname: itassets-coordinator-service
     ports: 
       - 3030:3000/tcp
     networks:
