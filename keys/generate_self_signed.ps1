@@ -1,5 +1,6 @@
 Set-Location $PSScriptRoot
 
+New-Item -Path ./frontend_https -ItemType Directory -Force
 openssl genrsa -out ./frontend_https/domain.key 2048
 Write-Output @"
 US

@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p ./frontend_https
 openssl genrsa -out ./frontend_https/domain.key 2048
 cat << EOF
 US
