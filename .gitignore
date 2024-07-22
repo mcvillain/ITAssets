@@ -1,4 +1,4 @@
-ssl/*
+keys/*/*.*
 frontend/*.local
 ./frontend.tar
 ./backend.tar

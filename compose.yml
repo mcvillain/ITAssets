@@ -6,8 +6,8 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     volumes:
-      - "./ssl/domain.crt:/srv/ssl/fullchain.pem:ro"
-      - "./ssl/domain.key:/srv/ssl/privkey.pem:ro"
+      - "./keys/frontend_https/domain.crt:/srv/ssl/fullchain.pem:ro"
+      - "./keys/frontend_https/domain.key:/srv/ssl/privkey.pem:ro"
     networks:
       - itassets
     depends_on: 
@@ -66,6 +66,9 @@ services:
       - 3030:3000/tcp
     networks:
       - itassets
+    volumes:
+      - "./keys/coordinator_signing/tls.crt:/srv/sign/tls.crt:ro"
+      - "./keys/coordinator_signing/tls.key:/srv/sign/tls.key:ro"
     depends_on: 
       - mariadb
     env_file: 
