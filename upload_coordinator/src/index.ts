@@ -1,11 +1,7 @@
 import express, { Express, Request, Response } from "express";
 const cookieParser = require("cookie-parser");
 import dotenv from "dotenv";
-// import {
-//     AuthenticationResult,
-//     ConfidentialClientApplication,
-// } from "@azure/msal-node";
-
+import fs from  'fs';
 import { post_support_request_upload_url } from "./endpoints/support_request_upload_url";
 import { get_support_get_current_cases_pages } from "./endpoints/support_get_current_cases_page";
 import { get_support_get_all_cases_page } from "./endpoints/support_get_all_cases_page";
@@ -16,12 +12,13 @@ import { get_uploader_validate_case_uuid } from "./endpoints/uploader_validate_c
 import { post_uploader_checkin_new_file } from "./endpoints/uploader_checkin_new_file";
 import { post_uploader_update_file_progress } from "./endpoints/uploader_update_file_progress";
 import session from "express-session";
-// import { clientConfig, config } from "./msauth_config";
 
 import { startup_backend_loop } from "./daemon_service";
 import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 setTimeout(startup_backend_loop,1000);
 
+const uploader_pubkey=fs.readFileSync('/srv/sign/uploader/tls.crt'); 
+const coordinator_privkey=fs.readFileSync('/srv/sign/coordinator/tls.key'); 
 
 dotenv.config();
 
@@ -86,16 +83,16 @@ app.post("/uploader/register_uploader", async (req: Request, res: Response) => {
     await post_uploader_register_uploader(req, res);
 });
 
-app.get("/uploader/validate/:case_uuid", async (req: Request, res: Response) => {
-    await get_uploader_validate_case_uuid(req, res);
+app.get("/uploader/validate/:case_uuid", async (req: Request, res: Response, uploader_pubkey: any) => {
+    await get_uploader_validate_case_uuid(req, res, uploader_pubkey);
 });
 
-app.post("/uploader/checkin_new_file", async (req: Request, res: Response) => {
-    await post_uploader_checkin_new_file(req, res);
+app.post("/uploader/checkin_new_file", async (req: Request, res: Response, uploader_pubkey: any ) => {
+    await post_uploader_checkin_new_file(req, res, uploader_pubkey);
 });
 
-app.post("/uploader/update_file_progress", async (req: Request, res: Response) => {
-    await post_uploader_update_file_progress(req, res);
+app.post("/uploader/update_file_progress", async (req: Request, res: Response, uploader_pubkey: any) => {
+    await post_uploader_update_file_progress(req, res, uploader_pubkey);
 });
 
 
