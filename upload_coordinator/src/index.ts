@@ -83,15 +83,15 @@ app.post("/uploader/register_uploader", async (req: Request, res: Response) => {
     await post_uploader_register_uploader(req, res);
 });
 
-app.get("/uploader/validate/:case_uuid", async (req: Request, res: Response, uploader_pubkey: any) => {
+app.get("/uploader/validate/:case_uuid", async (req: Request, res: Response) => {
     await get_uploader_validate_case_uuid(req, res, uploader_pubkey);
 });
 
-app.post("/uploader/checkin_new_file", async (req: Request, res: Response, uploader_pubkey: any ) => {
+app.post("/uploader/checkin_new_file", async (req: Request, res: Response) => {
     await post_uploader_checkin_new_file(req, res, uploader_pubkey);
 });
 
-app.post("/uploader/update_file_progress", async (req: Request, res: Response, uploader_pubkey: any) => {
+app.post("/uploader/update_file_progress", async (req: Request, res: Response) => {
     await post_uploader_update_file_progress(req, res, uploader_pubkey);
 });
 
