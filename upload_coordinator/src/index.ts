@@ -19,6 +19,7 @@ import session from "express-session";
 // import { clientConfig, config } from "./msauth_config";
 
 import { startup_backend_loop } from "./daemon_service";
+import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 setTimeout(startup_backend_loop,1000);
 
 
@@ -70,6 +71,10 @@ app.get("/support/get_all_cases/:page", async (req: Request, res: Response) => {
 
 app.get("/support/get_case_files/:case_uuid", async (req: Request, res: Response) => {
     await get_support_get_case_files_case_uuid(req, res);
+});
+
+app.get('/support/get_case_owner/:case_uuid', async (req: Request, res: Response) => {
+    await get_support_get_case_owner(req, res);
 });
 
 app.delete("/support/delete_all_case_files/:case_uuid", async (req: Request, res: Response) => {

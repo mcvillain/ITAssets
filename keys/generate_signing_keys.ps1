@@ -25,3 +25,16 @@ IT
 localhost
 helpdesk@aiscorp.com
 "@ | openssl req -key ./uploader_signing/tls.key -new -x509 -days 365 -out ./uploader_signing/tls.crt
+
+Write-Output "Generating Backend Signing Keys..."
+New-Item -Path ./backend_signing -ItemType Directory -Force
+openssl genrsa -out ./backend_signing/tls.key 2048
+Write-Output @"
+US
+PA
+Horsham
+AISCORP
+IT
+localhost
+helpdesk@aiscorp.com
+"@ | openssl req -key ./backend_signing/tls.key -new -x509 -days 365 -out ./backend_signing/tls.crt

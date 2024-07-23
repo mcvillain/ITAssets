@@ -36,6 +36,8 @@ services:
     hostname: itassets-backend-service
     networks:
       - itassets
+    volumes:
+      - "./keys/backend_signing/tls.key:/srv/sign/backend/tls.key:ro" # Coordinator's Private Key
     depends_on: 
       - upload_coordinator
     env_file: 
@@ -67,6 +69,7 @@ services:
     networks:
       - itassets
     volumes:
+      - "./keys/backend_signing/tls.crt:/srv/sign/backend/tls.crt:ro" # Backend's Public Key
       - "./keys/uploader_signing/tls.crt:/srv/sign/uploader/tls.crt:ro" # Uploader's Public Key
       - "./keys/coordinator_signing/tls.key:/srv/sign/coordinator/tls.key:ro" # Coordinator's Private Key
     depends_on: 
@@ -120,11 +123,10 @@ services:
       - "9090:80"
     environment:
       - PMA_ARBITRARY=0
-      - PMA_HOST=mariadb
+      - PMA_HOST=mariadb-service
       - PMA_PORT=3306
       - PMA_USER=root
-      - PMA_PASSWORD=g&Pr*MOyeNeY%Qr5^FwUTU5^bCAM!GqV6ClIgbOS@O&V6B9axRiw3BefPSco6*Vs*TUKXD1yChf&Ej6qbp82Ss33YpqGfJpedyOpjzHbHi%za%&HWSk8AEqAfkunTA*G
-      #Test1234
+      - PMA_PASSWORD=Test1234
     logging: 
       driver: json-file
       options:

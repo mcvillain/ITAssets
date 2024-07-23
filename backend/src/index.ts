@@ -27,6 +27,7 @@ import { get_azuredb, get_azuredb_csv, post_azuredb } from "./endpoints/azure_db
 import { get_users, post_users } from "./endpoints/users";
 import session from "express-session";
 import { clientConfig, } from "./msauth_config";
+import { delete_all_case_files, get_all_cases, get_case_files, get_user_cases } from "./endpoints/uploads/uploads_proxy";
 
 dotenv.config();
 
@@ -151,6 +152,23 @@ app.get("/users", async (req: Request, res: Response) => {
 });
 app.post("/users", async (req: Request, res: Response) => {
     await post_users(req, res, dataCache, loginCache);
+});
+
+// Uploads
+app.delete('/uploads/delete_all_case_files/:case_uuid', async (req: Request, res: Response) => {
+    await delete_all_case_files(req, res, loginCache);
+});
+app.get('/uploads/get_all_cases/:page', async (req: Request, res: Response) => {
+    await get_all_cases(req, res, loginCache);
+});
+app.get('/uploads/get_user_cases/:page', async (req: Request, res: Response) => {
+    await get_user_cases(req, res, loginCache);
+});
+app.get('/uploads/get_case_files/:case_uuid', async (req: Request, res: Response) => {
+    await get_case_files(req, res, loginCache);
+});
+app.get('/uploads/request_upload_url/:case_uuid', async (req: Request, res: Response) => {
+    await get_case_files(req, res, loginCache);
 });
 
 const server = app.listen(port, () => {
