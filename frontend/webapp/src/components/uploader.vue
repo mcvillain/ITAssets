@@ -6,7 +6,7 @@
 
     <v-text-field clearable label="CaseID" variant="solo" width="78%" class="mx-auto" rounded="lg"
         placeholder="Ex: 12345"></v-text-field>
-    <v-btn @click="" rounded="lg" >
+    <v-btn @click="" rounded="lg">
         Get Upload URL
     </v-btn>
 
@@ -24,29 +24,54 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <v-data-table class="rounded-xl mw-75" v-model:sort-by="sortBy" :headers="headers" :items="example"
-                        v-model:items-per-page="itemsPerPage" item-value="name" item-key="name" :search="search"
-                        :loading="loading" >
+                    <v-data-table class="rounded-xl mw-75 elevation-1" v-model:sort-by="sortBy" :headers="headers"
+                        :items="example" v-model:items-per-page="itemsPerPage" item-value="name" item-key="name"
+                        :search="search" :loading="loading">
                         <template v-slot:top>
                             <v-toolbar class="rounded-t-xl " id="head">
                                 <v-toolbar-title>My Cases</v-toolbar-title>
                             </v-toolbar>
                             <v-toolbar>
-                                <v-text-field class="w-75 search-bar" label="Search"
-                                    prepend-inner-icon="mdi-magnify" hide-details clearable single-line
-                                    variant="solo-filled" rounded="0" v-model="search"></v-text-field>
+                                <v-text-field class="w-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
+                                    hide-details clearable single-line variant="solo-filled" rounded="0"
+                                    v-model="search"></v-text-field>
 
                             </v-toolbar>
                         </template>
                         <template v-slot:loading>
                             <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                         </template>
+                        <template v-slot:item.caseID="{ item }">
+                            <v-dialog v-model="dialog" width="500">
+                                <template v-slot:activator="{ props: activatorProps }">
+                                    <v-btn block variant="flat" v-bind="activatorProps">
+                                        {{ item.caseID }}
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        More Info
+                                    </v-card-title>
+                                    <v-card-text>
+                                       Random Case information
+                                    </v-card-text>
+                                    <v-divider></v-divider>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="primary" text @click="close">
+                                            Close
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </template>
                         <template v-slot:item.delete="{ item }">
                             <div>
-                                <v-dialog max-width="400" v-model="item.delete">
+                                <v-dialog max-width="400" v-model="dialogDelete">
                                     <template v-slot:activator="{ props: activatorProps }">
                                         <v-btn id="modal" height="57" width="100" rounded="0" v-bind="activatorProps"
-                                            class="bg-#b71c1c bi bi-trash-fill" variant="flat" ></v-btn>
+                                            class="bg-#b71c1c bi bi-trash-fill" block variant="flat"
+                                            @click="deleteItem(item)"></v-btn>
                                     </template>
 
                                     <template v-slot:default="{ isActive }">
@@ -57,8 +82,8 @@
 
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn text="No" @click="isActive.value = false"></v-btn>
-                                                <v-btn text="Yes" @click="isActive.value = false"></v-btn>
+                                                <v-btn text="No" @click="closeDelete"></v-btn>
+                                                <v-btn text="Yes" @click="deleteItemConfirm"></v-btn>
                                             </v-card-actions>
                                         </v-card>
                                     </template>
@@ -69,28 +94,52 @@
 
                     <div style="margin: 4rem;"></div>
 
-                    <v-data-table class="rounded-xl mw-75" v-model:sort-by="sortBy" :headers="headers" :items="example"
-                        v-model:items-per-page="itemsPerPage" item-value="name" item-key="name" :search="search"
-                        :loading="loading"
-                        :item-class="row-item">
+                    <v-data-table class="rounded-xl mw-75 elevation-1" v-model:sort-by="sortBy" :headers="headers"
+                        :items="example" v-model:items-per-page="itemsPerPage" item-value="name" item-key="name"
+                        :search="search" :loading="loading" :item-class="row - item">
                         <template v-slot:top>
                             <v-toolbar class="rounded-t-xl">
                                 <v-toolbar-title>All Cases</v-toolbar-title>
                             </v-toolbar>
                             <v-toolbar>
-                                <v-text-field class="w-75 search-bar" label="Search" 
-                                    prepend-inner-icon="mdi-magnify" hide-details clearable single-line
-                                    variant="solo-filled" v-model="search"></v-text-field>
+                                <v-text-field class="w-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
+                                    hide-details clearable single-line variant="solo-filled"
+                                    v-model="search"></v-text-field>
                             </v-toolbar>
                         </template>
                         <template v-slot:loading>
                             <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                         </template>
+                        <template v-slot:item.caseID="{ item }">
+                            <v-dialog v-model="dialog" width="500">
+                                <template v-slot:activator="{ props: activatorProps }">
+                                    <v-btn block variant="flat" v-bind="activatorProps">
+                                        {{ item.caseID }}
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title class="text-h5 grey lighten-2">
+                                        More Info
+                                    </v-card-title>
+                                    <v-card-text>
+                                       Random Case information
+                                    </v-card-text>
+                                    <v-divider></v-divider>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="primary" text @click="close">
+                                            Close
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </template>
                         <template v-slot:item.delete="{ item }">
-                            <v-dialog max-width="400" v-model="item.delete">
+                            <v-dialog max-width="400" v-model="dialogDelete">
                                 <template v-slot:activator="{ props: activatorProps }">
                                     <v-btn id="modal" height="57" width="125" rounded="0" v-bind="activatorProps"
-                                        class="bg-#b71c1c bi bi-trash-fill" variant="flat"></v-btn>
+                                        class="bg-#b71c1c bi bi-trash-fill" block variant="flat"
+                                        @click="deleteItem(item)"></v-btn>
                                 </template>
 
                                 <template v-slot:default="{ isActive }">
@@ -101,8 +150,8 @@
 
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn text="No" @click="isActive.value = false"></v-btn>
-                                            <v-btn text="Yes" @click="isActive.value = false"></v-btn>
+                                            <v-btn text="No" @click="closeDelete"></v-btn>
+                                            <v-btn text="Yes" @click="deleteItemConfirm"></v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </template>
@@ -131,19 +180,6 @@ const upload_url = ref("whatever");
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 // const expanded = ref([]);
 
-
-const headers = [
-    { title: "CaseID", key: "caseID", align: "center", sortable: true, filterable: true },
-    { title: "Guid", key: "guid", align: "center", sortable: true, filterable: true },
-    { title: "", key: "delete", align: "end" },
-];
-
-const example = [
-    { caseID: 12345, guid: 'HERIEOEHEOEH' },
-    { caseID: 678910, guid: 'HEEPIROEIEI' },
-    { caseID: 231321, guid: 'HERERWHEIEER' },
-    { caseID: 768263, guid: 'HEYUIEIRUIER' },
-];
 loading.value = false;
 
 async function copyMyText() {
@@ -152,26 +188,95 @@ async function copyMyText() {
     await navigator.clipboard.writeText(upload_url.value);
 }
 
+// onMounted(() => {
+//     fetch(import.meta.env.VITE_API_ENDPOINT + "/uploader", {
+//         credentials: "include",
+//     })
+//         .then((response) => response.json())
+//         .then((data) => {
+//             databases.value = data.data;
+//             ood = data.ood;
+//             loading.value = false;
+//         })
+//         .catch((error) => {
+//             console.error("Error fetching data:", error);
+//         });
+// });
+
+
 </script>
 
 <script>
 export default {
-    theme: {
-    defaultTheme: 'myCustomTheme',
-    themes: {
-      myCustomTheme: {
-        dark: false,
-        colors: {
-          background: '#ef3b32',
+    data: () => ({
+
+        dialog: false,
+        dialogDelete: false,
+
+        headers: [
+            { title: "CaseID", key: "caseID", align: "center", sortable: true, filterable: true },
+            { title: "Guid", key: "guid", align: "center", sortable: true, filterable: true },
+            { title: "", key: "delete", align: "end" },
+        ],
+
+        example: [
+            { caseID: 12345, guid: 'HERIEOEHEOEH' },
+            { caseID: 678910, guid: 'HEEPIROEIEI' },
+            { caseID: 231321, guid: 'HERERWHEIEER' },
+            { caseID: 768263, guid: 'HEYUIEIRUIER' },
+        ],
+
+        editedIndex: -1,
+        editedItem: {
+            caseID: '',
+            guid: '',
         },
-      },
+
+        defaultItem: {
+            caseID: '',
+            guid: '',
+        },
+    }),
+
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+        dialogDelete(val) {
+            val || this.closeDelete()
+        },
     },
-  },
-    data() {
-        return {
-            dialog: false,
-        }
-    },
+
+    methods: {
+
+        deleteItem(item) {
+            this.editedIndex = this.example.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialogDelete = true
+        },
+
+        deleteItemConfirm() {
+            this.example.splice(this.editedIndex, 1)
+            this.closeDelete()
+        },
+
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+
+    }
 }
 
 </script>
