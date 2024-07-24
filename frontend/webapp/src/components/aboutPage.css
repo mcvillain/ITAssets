@@ -110,10 +110,15 @@
 .flowchart2023 {
     /* position: -webkit-sticky;
     position: sticky; */
-    width: 40% !important;
+    width: 50% !important;
+    margin:auto;
     margin-bottom: 3rem;
     border-radius: 5rem;
     /* inset: -500px; */
+    display: flex;
+    position: relative;
+    
+    
 }
 
 .picture2024 {

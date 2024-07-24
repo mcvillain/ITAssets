@@ -74,8 +74,9 @@
             </div>
         </div>
 
-        <div class="flowchart2023" style="margin: 3rem;">
-            <img  src="/src/assets/IT-Asset-Flowchart.png"  />
+        <div style="margin: 3rem;">
+            <img class="flowchart2023" src="/src/assets/IT-Asset-Flowchart.png"  />
+            <img class="flowchart2023" src="\src\assets\2023ITAssetsPage.png" />
         </div>
 
         <div class="frame">
