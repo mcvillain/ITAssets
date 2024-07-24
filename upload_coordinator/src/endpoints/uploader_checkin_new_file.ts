@@ -13,13 +13,13 @@ export async function post_uploader_checkin_new_file(
 ) {
     const message = req.body;
     const signature = req.headers.signature as string;
-    let verify = createVerify('SHA256');
+    let verify = createVerify('sha512');
     verify.write(JSON.stringify(message));
     verify.end();
-    const isVerified = verify.verify(uploader_pubkey, signature, 'base64');
+    const isVerified = verify.verify(uploader_pubkey, signature, 'hex');
     if (isVerified) {
         // Request case_guid
-        let case_guid = req.body.case_guid;
+        let case_guid = req.body.upload.metadata.case_id;
         // Request file metadata
         let file_metadata = req.body.upload;
         // SQL Insert in Files Table links to case_guid
