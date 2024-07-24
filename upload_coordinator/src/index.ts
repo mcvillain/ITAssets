@@ -5,7 +5,7 @@ import fs from  'fs';
 import { post_support_request_upload_url } from "./endpoints/support_request_upload_url";
 import { get_support_get_current_cases_pages } from "./endpoints/support_get_current_cases_page";
 import { get_support_get_all_cases_page } from "./endpoints/support_get_all_cases_page";
-import { delete_support_delete_all_cases_files_case_uuid } from "./endpoints/support_delete_all_cases_files_caase_uuid";
+import { delete_support_delete_all_cases_files_case_uuid } from "./endpoints/support_delete_all_cases_files_case_uuid";
 import { get_support_get_case_files_case_uuid } from "./endpoints/support_get_case_files_case_uuid"
 import { post_uploader_register_uploader } from "./endpoints/uploader_register_uploader";
 import { get_uploader_validate_case_uuid } from "./endpoints/uploader_validate_case_uuid";
@@ -25,7 +25,7 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-// Setup Session Config
+// Setup Session Config                           
 const session_config: session.SessionOptions = {
     secret:
         process.env.SESSION_SECRET !== undefined
