@@ -35,11 +35,11 @@ export async function ensure_db_structure() {
         const conn = await getPool().getConnection();
         await conn.query(`
             CREATE TABLE IF NOT EXISTS azure_dbs (
-                name VARCHAR(255),
+                name VARCHAR(255) PRIMARY KEY,
                 size FLOAT,
                 paths TEXT,
                 created VARCHAR(22),
-                database_id INT PRIMARY KEY,
+                database_id INT,
                 cost FLOAT,
                 version VARCHAR(15) DEFAULT NULL,
                 itar BOOLEAN DEFAULT FALSE,
@@ -48,10 +48,10 @@ export async function ensure_db_structure() {
         `);
         await conn.query(`
             CREATE TABLE IF NOT EXISTS local_dbs (
-                name VARCHAR(255),
+                name VARCHAR(255) PRIMARY KEY,
                 size FLOAT,
                 paths TEXT,
-                database_id INT PRIMARY KEY,
+                database_id INT,
                 version VARCHAR(15) DEFAULT NULL,
                 created VARCHAR(22),
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

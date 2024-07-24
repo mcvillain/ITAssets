@@ -18,5 +18,5 @@ RUN printf "\nVITE_APP_VERSION='$(npm version patch)'" >> /srv/ITAssets/.env.pro
 RUN npm install && npm install axios && npm install vue-router@4 && npm install vue-router && npm run build
 RUN mv /srv/ITAssets/dist/* /usr/local/apache2/htdocs/
 RUN rm -Rf /srv/ITAssets
-VOLUME [ "/srv/ssl/fullchain.pem", "/srv/ssl/privkey.pem" ]
+# VOLUME [ "/srv/ssl/fullchain.pem", "/srv/ssl/privkey.pem" ]
 WORKDIR /usr/local/apache2/htdocs/

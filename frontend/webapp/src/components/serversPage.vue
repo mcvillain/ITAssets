@@ -2,23 +2,30 @@
     <div class="card text-center m-3">
         <div class="card-body">
             <notification />
-            <v-data-table class="rounded-xl" v-model:sort-by="sortBy" :headers="headers" :items="databases" v-model:items-per-page="itemsPerPage"
-                item-value="name" item-key="name" :search="search" :loading="loading">
+            <v-data-table class="rounded-xl" v-model:sort-by="sortBy" :headers="headers" :items="databases"
+                v-model:items-per-page="itemsPerPage" item-value="name" item-key="name" :search="search"
+                :loading="loading">
                 <template v-slot:top>
                     <v-toolbar class="rounded-t-xl">
                         <ood_notify_vuetify v-if="ood" />
-                        <v-toolbar-title>Azure Databases</v-toolbar-title>
+                        <v-toolbar-title>Servers</v-toolbar-title>
                     </v-toolbar>
                     <v-toolbar>
-                        <v-text-field class="w-75 mw-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
-                            hide-details clearable single-line variant="solo-filled" v-model="search"></v-text-field>
+                        <div class="tb-row">
+                            <v-text-field class="w-75 mw-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify"
+                                hide-details clearable single-line variant="solo-filled"
+                                v-model="search"></v-text-field>
+                            <v-btn icon="mdi-table-arrow-down" size="large" href="/api/Servers.csv" download></v-btn>
+                        </div>
                     </v-toolbar>
                 </template>
                 <template v-slot:loading>
                     <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                 </template>
                 <template v-slot:item.Status="{ item }">
-                    <v-chip :color="item.Status=='Running'?'green':'red'" :text="item.Status" class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small" label></v-chip>
+                    <v-chip :color="item.Status == 'Running' ? 'green' : 'red'" :text="item.Status"
+                        class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small"
+                        label></v-chip>
                 </template>
             </v-data-table>
         </div>
@@ -60,6 +67,7 @@ onMounted(() => {
             console.error("Error fetching database data:", error);
         });
 });
+
 </script>
 
 <style scoped>
@@ -75,9 +83,10 @@ onMounted(() => {
     max-width: 75%;
 }
 
-.search-bar {
-    margin-left: auto;
-    margin-right: auto;
+.tb-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 ul {
