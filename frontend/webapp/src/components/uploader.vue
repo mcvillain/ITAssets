@@ -158,7 +158,6 @@
                             </v-dialog>
                         </template>
                     </v-data-table>
-
                 </div>
             </div>
         </div>
@@ -169,9 +168,8 @@
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
 import { ref, Ref } from 'vue'
-import { createVuetify } from 'vuetify'
 
-// var databases = ref(null);
+var databases = ref(null);
 var loading = ref(true);
 var itemsPerPage = ref(10);
 var search = ref("");
@@ -183,26 +181,23 @@ const sortBy = ref([{ key: 'size', order: 'desc' }]);
 loading.value = false;
 
 async function copyMyText() {
-    // let urlbox = document.getElementById("url");
-    // urlbox.select();
     await navigator.clipboard.writeText(upload_url.value);
 }
 
-// onMounted(() => {
-//     fetch(import.meta.env.VITE_API_ENDPOINT + "/uploader", {
-//         credentials: "include",
-//     })
-//         .then((response) => response.json())
-//         .then((data) => {
-//             databases.value = data.data;
-//             ood = data.ood;
-//             loading.value = false;
-//         })
-//         .catch((error) => {
-//             console.error("Error fetching data:", error);
-//         });
-// });
-
+onMounted(() => {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/uploader", {
+        credentials: "include",
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            databases.value = data.data;
+            ood = data.ood;
+            loading.value = false;
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+});
 
 </script>
 
