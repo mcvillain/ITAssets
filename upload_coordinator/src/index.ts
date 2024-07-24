@@ -17,6 +17,7 @@ import { startup_backend_loop } from "./daemon_service";
 import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 setTimeout(startup_backend_loop,1000);
 
+const backend_pubkey=fs.readFileSync('/srv/sign/backend/tls.crt')
 const uploader_pubkey=fs.readFileSync('/srv/sign/uploader/tls.crt'); 
 const coordinator_privkey=fs.readFileSync('/srv/sign/coordinator/tls.key'); 
 
@@ -75,7 +76,7 @@ app.get('/support/get_case_owner/:case_uuid', async (req: Request, res: Response
 });
 
 app.delete("/support/delete_all_case_files/:case_uuid", async (req: Request, res: Response) => {
-    await delete_support_delete_all_cases_files_case_uuid(req, res);
+    await delete_support_delete_all_cases_files_case_uuid(req, res, coordinator_privkey, backend_pubkey);
 });
 
 // Uploader 

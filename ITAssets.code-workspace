@@ -20,6 +20,9 @@
 				"password": "Test1234",
 				"database": "uploader_db"
 			}
+		],
+		"cSpell.words": [
+			"privkey"
 		]
 	}
 }
