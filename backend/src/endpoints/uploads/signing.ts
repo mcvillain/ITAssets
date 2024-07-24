@@ -10,9 +10,9 @@ export class SignedMessage {
 }
 
 export function signMessage(msg: string): SignedMessage {
-    const sign = createSign('RSA-SHA256');
+    const sign = createSign('sha512');
     sign.write(msg);
     sign.end();
-    const signature = sign.sign(privateKey, 'base64');
+    const signature = sign.sign(privateKey, 'hex');
     return { message: msg, signature } as SignedMessage;
 }
