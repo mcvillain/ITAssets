@@ -167,9 +167,10 @@
 <script setup>
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
-import { ref, Ref } from 'vue'
+import { ref, Ref, onMounted } from 'vue'
 
-var databases = ref(null);
+var all_uploads = ref(null);
+var current_uploads = ref(null);
 var loading = ref(true);
 var itemsPerPage = ref(10);
 var search = ref("");
@@ -185,12 +186,12 @@ async function copyMyText() {
 }
 
 onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/uploader", {
+    fetch(import.meta.env.VITE_API_ENDPOINT + "/uploads/get_all_cases/0", {
         credentials: "include",
     })
         .then((response) => response.json())
         .then((data) => {
-            databases.value = data.data;
+            all_uploads.value = data.data;
             ood = data.ood;
             loading.value = false;
         })
