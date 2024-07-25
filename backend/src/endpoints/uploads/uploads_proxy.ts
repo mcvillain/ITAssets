@@ -4,7 +4,7 @@ import { get_auth_lvl } from "../auth";
 import NodeCache from "node-cache";
 import { AuthenticationResult } from "@azure/msal-node";
 
-const UPLOAD_SERVICE = 'itassets-coordinator-service:3000'
+const UPLOAD_SERVICE = 'http://itassets-coordinator-service:3000/support'
 
 // Delete All Cases By Case UUID
 export async function delete_all_case_files(req: Request, res: Response, loginMemcache: NodeCache) {
@@ -32,7 +32,7 @@ export async function delete_all_case_files(req: Request, res: Response, loginMe
             return;
         }
         try {
-            const case_owner = await fetch(`${UPLOAD_SERVICE}/support/get_case_owner/${req.params.case_uuid}`);
+            const case_owner = await fetch(`${UPLOAD_SERVICE}/get_case_owner/${req.params.case_uuid}`);
             if (username != await case_owner.text()) {
                 res.sendStatus(401);
                 return;
@@ -46,7 +46,7 @@ export async function delete_all_case_files(req: Request, res: Response, loginMe
     // Execute Function
     let msg: string = req.params.case_uuid;
     let message: SignedMessage = signMessage(msg);
-    fetch(`${UPLOAD_SERVICE}/support/delete_all_case_files/${message.message}`, {
+    fetch(`${UPLOAD_SERVICE}/delete_all_case_files/${message.message}`, {
         headers: new Headers({
             'signature': message.signature,
         }),
@@ -74,17 +74,20 @@ export async function get_all_cases(req: Request, res: Response, loginMemcache: 
         return;
     }
     // Execute Function
-    let message: SignedMessage = signMessage(req.params.page);
-    fetch(`${UPLOAD_SERVICE}/support/get_all_cases/${message.message}`, {
+    let message: SignedMessage = signMessage(crypto.randomUUID());
+    fetch(`${UPLOAD_SERVICE}/get_all_cases`, {
         headers: new Headers({
+            "Content-Type": "application/json",
             'signature': message.signature,
+            'verify': message.message
         }),
-    }).then(resp => {
-        res.status(resp.status).send(resp.body);
+        body: JSON.stringify(req.body),
+        method: 'POST',
+    }).then(async resp => {
+        res.status(resp.status).send(await resp.text());
     }).catch(err => {
         console.error(err)
-    }).finally(() => {
-        if (!res.closed) res.sendStatus(500);
+        res.sendStatus(500)
     });
 }
 
@@ -109,7 +112,7 @@ export async function get_user_cases(req: Request, res: Response, loginMemcache:
     const username = user_id.account?.username;
     // Execute Function
     let message: SignedMessage = signMessage(req.params.page);
-    fetch(`${UPLOAD_SERVICE}/support/get_current_user_cases/${message.message}`, {
+    fetch(`${UPLOAD_SERVICE}/get_current_user_cases/${message.message}`, {
         headers: new Headers({
             'signature': message.signature,
         }),
@@ -144,7 +147,7 @@ export async function get_case_files(req: Request, res: Response, loginMemcache:
     }
     // Execute Function
     let message: SignedMessage = signMessage(req.params.case_uuid);
-    fetch(`${UPLOAD_SERVICE}/support/get_case_files/${message.message}`, {
+    fetch(`${UPLOAD_SERVICE}/get_case_files/${message.message}`, {
         headers: new Headers({
             'signature': message.signature,
         }),
@@ -184,7 +187,7 @@ export async function get_uploader_url(req: Request, res: Response, loginMemcach
             return;
         }
         try {
-            const case_owner = await fetch(`${UPLOAD_SERVICE}/support/get_case_owner/${req.params.case_uuid}`);
+            const case_owner = await fetch(`${UPLOAD_SERVICE}/get_case_owner/${req.params.case_uuid}`);
             if (username != await case_owner.text()) {
                 res.sendStatus(401);
                 return;
@@ -203,7 +206,7 @@ export async function get_uploader_url(req: Request, res: Response, loginMemcach
     }
     const msg = JSON.stringify({case_id, owner: username});
     let message: SignedMessage = signMessage(msg);
-    fetch(`${UPLOAD_SERVICE}/support/request_upload_url`, {
+    fetch(`${UPLOAD_SERVICE}/request_upload_url`, {
         headers: new Headers({
             'signature': message.signature,
         }),

@@ -24,12 +24,9 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    
                     <CurrentUserCasesTable />
-
                     <div style="margin: 4rem;"></div>
-
-                    <!-- All Cases Table -->
+                    <AllCasesTable />
                 </div>
             </div>
         </div>
@@ -39,39 +36,13 @@
 <script setup>
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
-import { ref, Ref, onMounted } from 'vue'
+import { ref, Ref } from 'vue'
 import CurrentUserCasesTable from './uploader/currentUserCasesTable.vue';
-
-var all_uploads = ref(null);
-var current_uploads = ref(null);
-var loading = ref(true);
-var itemsPerPage = ref(10);
-var search = ref("");
-const upload_url = ref("whatever");
-
-const sortBy = ref([{ key: 'size', order: 'desc' }]);
-// const expanded = ref([]);
-
-loading.value = false;
+import AllCasesTable from './uploader/allCasesTable.vue';
 
 async function copyMyText() {
     await navigator.clipboard.writeText(upload_url.value);
 }
-
-onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/uploads/get_all_cases/0", {
-        credentials: "include",
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            all_uploads.value = data.data;
-            ood = data.ood;
-            loading.value = false;
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-        });
-});
 
 </script>
 

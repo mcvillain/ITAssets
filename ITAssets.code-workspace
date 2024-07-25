@@ -22,7 +22,13 @@
 			}
 		],
 		"cSpell.words": [
-			"privkey"
+			"ammt",
+			"Itar",
+			"localdb",
+			"msal",
+			"privkey",
+			"resave",
+			"vuetify"
 		]
 	}
 }

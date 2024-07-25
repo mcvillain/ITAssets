@@ -1,4 +1,58 @@
 <template>
+    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="serverItems" :items-length="totalItems" :loading="loading" :search="search" item-value="name" @update:options="loadItems"></v-data-table-server>
+
+</template>
+
+<script lang="ts" setup>
+import { ref, Ref } from 'vue';
+
+const itemsPerPage = ref(5);
+const headers = [
+    { title: "Case ID", sortable: true, key: 'case_id' },
+    { title: "Case Owner", sortable: true, key: 'owner' },
+    { title: "Creation Date", sortable: true, key: 'created_at' },
+];
+const search = ref('');
+const serverItems = ref([]);
+const loading = ref(true);
+const totalItems = ref(0);
+
+function loadItems(options: any) {
+    loading.value = true;
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/get_all_cases`, {
+        body: JSON.stringify(options),
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then( async resp => {
+        if (!resp.ok) {
+            console.error("Could not load cases...");
+            console.error(`${resp.status}: ${resp.statusText}`);
+        }
+        let body = await resp.json();
+        serverItems.value = body.items;
+        totalItems.value = body.total;
+        loading.value = false;
+    }).catch(err => console.error(err));
+}
+</script>
+
+<style scoped>
+</style>
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
     <v-data-table class="rounded-xl mw-75 elevation-1" v-model:sort-by="sortBy" :headers="headers" :items="example"
         v-model:items-per-page="itemsPerPage" item-value="name" item-key="name" :search="search" :loading="loading"
         :item-class="row - item">
@@ -61,11 +115,4 @@
             </v-dialog>
         </template>
     </v-data-table>
-</template>
-
-<script lang="ts" setup>
-//
-</script>
-
-<style scoped>
-</style>
+-->

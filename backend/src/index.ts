@@ -39,7 +39,7 @@ const session_config: session.SessionOptions = {
     secret:
         process.env.SESSION_SECRET !== undefined
             ? process.env.SESSION_SECRET
-            : "DEVELOPMENT_SECRED_DO_NOT_USE",
+            : "DEVELOPMENT_SECRET_DO_NOT_USE",
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -50,8 +50,8 @@ const session_config: session.SessionOptions = {
 };
 
 // Middleware
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ limit: "25mb", extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session(session_config));
 
@@ -158,7 +158,7 @@ app.post("/users", async (req: Request, res: Response) => {
 app.delete('/uploads/delete_all_case_files/:case_uuid', async (req: Request, res: Response) => {
     await delete_all_case_files(req, res, loginCache);
 });
-app.get('/uploads/get_all_cases/:page', async (req: Request, res: Response) => {
+app.post('/uploads/get_all_cases', async (req: Request, res: Response) => {
     await get_all_cases(req, res, loginCache);
 });
 app.get('/uploads/get_user_cases/:page', async (req: Request, res: Response) => {
