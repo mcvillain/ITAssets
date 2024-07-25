@@ -56,23 +56,23 @@ app.get('/healthcheck', (req: Request, res: Response) => {
 
 // Support 
 app.post("/support/request_upload_url", async (req: Request, res: Response) => {
-    await post_support_request_upload_url(req, res);
+    await post_support_request_upload_url(req, res, backend_pubkey);
 });
 
 app.get("/support/get_current_user_cases/:page", async (req: Request, res: Response) => {
-    await get_support_get_current_cases_pages(req, res);
+    await get_support_get_current_cases_pages(req, res, backend_pubkey);
 });
 
 app.get("/support/get_all_cases/:page", async (req: Request, res: Response) => {
-    await get_support_get_all_cases_page(req, res);
+    await get_support_get_all_cases_page(req, res, backend_pubkey);
 });
 
 app.get("/support/get_case_files/:case_uuid", async (req: Request, res: Response) => {
-    await get_support_get_case_files_case_uuid(req, res);
+    await get_support_get_case_files_case_uuid(req, res, backend_pubkey);
 });
 
 app.get('/support/get_case_owner/:case_uuid', async (req: Request, res: Response) => {
-    await get_support_get_case_owner(req, res);
+    await get_support_get_case_owner(req, res, backend_pubkey);
 });
 
 app.delete("/support/delete_all_case_files/:case_uuid", async (req: Request, res: Response) => {
