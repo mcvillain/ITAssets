@@ -1,5 +1,7 @@
 <template>
-    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="serverItems" :items-length="totalItems" :loading="loading" :search="search" item-value="name" @update:options="loadItems"></v-data-table-server>
+    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="serverItems"
+        :items-length="totalItems" :loading="loading" :search="search" item-value="name"
+        @update:options="loadItems"></v-data-table-server>
 
 </template>
 
@@ -25,7 +27,7 @@ function loadItems(options: any) {
         headers: {
             "Content-Type": "application/json",
         },
-    }).then( async resp => {
+    }).then(async resp => {
         if (!resp.ok) {
             console.error("Could not load cases...");
             console.error(`${resp.status}: ${resp.statusText}`);
@@ -38,8 +40,7 @@ function loadItems(options: any) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 
 
