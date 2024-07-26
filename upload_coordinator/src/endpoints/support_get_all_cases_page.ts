@@ -32,7 +32,7 @@ export async function get_support_get_all_cases_page(req: Request, res: Response
     const response = {
         items: data,
         total: Number(count_row[0]['TOTAL']),
-    }
+    };
 
     // Return the response after transforming it a bit to only include the data in json in the response
     res.status(200).send(JSON.stringify(response));

@@ -26,8 +26,8 @@ export async function ensure_uploaderdb() {
     const conn = await getPool().getConnection();
     await conn.query(`
         CREATE TABLE IF NOT EXISTS cases (
-            guid CHAR(36) PRIMARY KEY,
-            case_id INT,
+            guid CHAR(36) UNIQUE,
+            case_id INT PRIMARY KEY,
             owner VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );

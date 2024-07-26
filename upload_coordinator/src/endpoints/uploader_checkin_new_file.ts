@@ -19,7 +19,7 @@ export async function post_uploader_checkin_new_file(
     const isVerified = verify.verify(uploader_pubkey, signature, 'hex');
     if (isVerified) {
         // Request case_guid
-        let case_guid = req.body.upload.metadata.case_id;
+        let case_guid = req.body.upload.metadata.upload_guid;
         // Request file metadata
         let file_metadata = req.body.upload;
         // SQL Insert in Files Table links to case_guid
