@@ -20,8 +20,10 @@ export async function get_support_get_case_files_case_uuid(req: Request, res: Re
         res.sendStatus(401);
         return;
     }
-
-    const response = await execute_sql (`SELECT file_path,file_size,uploaded_at FROM files WHERE case_guid = '${case_id}'`);
+    const data = await execute_sql (`SELECT file_path,file_size,uploaded_at FROM files WHERE case_guid = '${case_id}'`);
+    const response = {
+        items: data
+    }
     console.log(response);
     res.status(200);
     res.send(JSON.stringify(response));
