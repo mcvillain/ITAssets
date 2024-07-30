@@ -61,3 +61,21 @@ jobs:
       run: |
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:v$TIMESTAMP
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:latest
+  build-uploader:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get Timestamp
+      id: timestamp
+      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+    - name: Login to Docker Registry
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+    - name: Build the Docker image
+      working-directory: ./aegis_uploader
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/aegis-uploader:v$TIMESTAMP
+    - name: Tag Docker Image
+      run: docker tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/aegis-uploader:v$TIMESTAMP ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/aegis-uploader:latest
+    - name: Push the Docker Image
+      run: |
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/aegis-uploader:v$TIMESTAMP
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/aegis-uploader:latest
