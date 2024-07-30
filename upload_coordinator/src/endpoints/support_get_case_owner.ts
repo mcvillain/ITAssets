@@ -21,7 +21,7 @@ export async function get_support_get_case_owner(req: Request, res: Response, ba
         return;
     }
     // Use SQL to query for the top 'ITEMS_PER_PAGE' results, skipping the ammt calculated before
-    const response = await execute_sql (`SELECT owner FROM cases WHERE guid = ${req.params.case_uuid}`);
-    res.status(200);
-    res.send(JSON.stringify(response));
+    const response = await execute_sql (`SELECT * FROM cases WHERE case_id = ${req.params.case_uuid}`);
+    const resp = JSON.stringify(response[0]);
+    res.status(200).send(resp);
 }

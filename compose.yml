@@ -75,7 +75,7 @@ services:
     depends_on: 
       - mariadb
     env_file: 
-      - "./environment/dev_coordinator.env"
+      - "./environment/coordinator.env"
       - "./environment/database.env"
     restart: always
     healthcheck:

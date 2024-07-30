@@ -7,8 +7,8 @@ WORKDIR /srv/
 # ENV VERSION = RANDOM_NUM
 # ENV FRONTEND_ORIGIN="https://itassets.aiscorp.com/"   
 # RUN git clone https://github.com/mcvillain/ITAssets.git
-COPY ./src /srv/ITAssets
-WORKDIR /srv/ITAssets
+COPY ./src /srv/upload_coordinator
+WORKDIR /srv/upload_coordinator
 RUN npm install
 RUN npx tsc
 CMD ["node", "index.js"]

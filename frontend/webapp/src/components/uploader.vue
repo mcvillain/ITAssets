@@ -3,20 +3,22 @@
     <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader</h2>
 
     <div style="margin: 3rem;"></div>
-
-    <v-text-field clearable label="CaseID" variant="solo" width="78%" class="mx-auto" rounded="lg"
-        placeholder="Ex: 12345"></v-text-field>
-    <v-btn @click="" rounded="lg">
-        Get Upload URL
-    </v-btn>
-
-    <div style="margin: 1rem;"></div>
-
-    <div style="display: flex; flex-direction: row; justify-content: center; width: 100%;">
-        <v-text-field clearable label="Upload URL" id="url" style="max-width: 75%; margin: 0"
-            rounded="ts-lg bs-lg te-0 be-0" variant="solo" v-model="upload_url"></v-text-field>
-        <v-btn icon="mdi-content-copy" size="large" @click="copyMyText()" rounded="te-lg be-lg ts-0 bs-0 "
-            variant="flat solo"></v-btn>
+    <div style="padding-left: 2rem; padding-right: 2rem;">
+        <v-row>
+            <v-col cols="12" md="5">
+                <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist" v-model="case_id" />
+            </v-col>
+            <v-col cols="12" md="1">
+                <v-checkbox v-model="itar" color="red" label="ITAR?" hide-details />
+            </v-col>
+            <v-col cols="12" md="2">
+                <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
+            </v-col>
+            <v-col cols="12" md="4">
+                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url"
+                    append-inner-icon="mdi-content-copy" @click:append-inner="copyUploadUrl" />
+            </v-col>
+        </v-row>
     </div>
 
     <div style="margin: 3rem;">
@@ -24,9 +26,9 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <CurrentUserCasesTable />
+                    <AllCasesTable v-if="current_user_cases_endpoint!==''" title="My Cases" :endpoint="current_user_cases_endpoint" />
                     <div style="margin: 4rem;"></div>
-                    <AllCasesTable />
+                    <AllCasesTable title="All Cases" :endpoint="all_cases_endpoint" />
                 </div>
             </div>
         </div>
@@ -36,87 +38,39 @@
 <script setup>
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
-import { ref, Ref } from 'vue'
-import CurrentUserCasesTable from './uploader/currentUserCasesTable.vue';
+import { ref } from 'vue'
 import AllCasesTable from './uploader/allCasesTable.vue';
 
-async function copyMyText() {
-    await navigator.clipboard.writeText(upload_url.value);
+const all_cases_endpoint = ref("/uploads/get_all_cases");
+const current_user_cases_endpoint = ref('');
+const current_user = ref('')
+fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", { credentials: 'include' }).then((resp) => { if (resp.status === 401) { location.href = '/'; } return resp.json() }).then((body) => { let auth_lvl = body.auth_lvl; if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) { location.href = '/'; } current_user.value = body.username; current_user_cases_endpoint.value = `/uploads/get_user_cases/${encodeURIComponent(body.username)}`; });
+
+
+const case_id = ref('');
+const upload_url = ref('');
+const case_id_hint = ref('');
+const case_id_hint_persist = ref(false);
+const itar = ref(false);
+
+async function get_upload_url() {
+    let headers = {};
+    if (itar.value) headers.itar = true;
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
+        'headers': new Headers(headers),
+    }).then(async resp => {
+        if (resp.ok) {
+            upload_url.value = `${import.meta.env.VITE_UPLOAD_URL}/?id=${(await resp.json()).uuid}`;
+            return;
+        } else {
+            case_id_hint.value = "Invalid Case ID";
+            case_id_hint_persist.value = true;
+        }
+    }).catch(err => console.error(err));
 }
 
-</script>
-
-<script>
-export default {
-    data: () => ({
-
-        dialog: false,
-        dialogDelete: false,
-
-        headers: [
-            { title: "CaseID", key: "caseID", align: "center", sortable: true, filterable: true },
-            { title: "Guid", key: "guid", align: "center", sortable: true, filterable: true },
-            { title: "", key: "delete", align: "end" },
-        ],
-
-        example: [
-            { caseID: 12345, guid: 'HERIEOEHEOEH' },
-            { caseID: 678910, guid: 'HEEPIROEIEI' },
-            { caseID: 231321, guid: 'HERERWHEIEER' },
-            { caseID: 768263, guid: 'HEYUIEIRUIER' },
-        ],
-
-        editedIndex: -1,
-        editedItem: {
-            caseID: '',
-            guid: '',
-        },
-
-        defaultItem: {
-            caseID: '',
-            guid: '',
-        },
-    }),
-
-    watch: {
-        dialog(val) {
-            val || this.close()
-        },
-        dialogDelete(val) {
-            val || this.closeDelete()
-        },
-    },
-
-    methods: {
-
-        deleteItem(item) {
-            this.editedIndex = this.example.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialogDelete = true
-        },
-
-        deleteItemConfirm() {
-            this.example.splice(this.editedIndex, 1)
-            this.closeDelete()
-        },
-
-        close() {
-            this.dialog = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
-
-        closeDelete() {
-            this.dialogDelete = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
-
-    }
+async function copyUploadUrl() {
+    await navigator.clipboard.writeText(upload_url.value);
 }
 
 </script>

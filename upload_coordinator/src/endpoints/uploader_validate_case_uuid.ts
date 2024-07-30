@@ -12,7 +12,7 @@ export async function get_uploader_validate_case_uuid(req: Request, res: Respons
     const isVerified = verify.verify(uploader_pubkey, signature, 'hex');
     if (isVerified) {
         //Request uuid
-        if ((await execute_sql(`SELECT guid FROM cases WHERE guid = '${case_uuid}'`)).length == 1) {
+        if ((await execute_sql(`SELECT guid FROM cases WHERE guid = '${case_uuid}' AND upload_url_active = TRUE`)).length == 1) {
             res.sendStatus(200)
         } else {
             res.sendStatus(410)

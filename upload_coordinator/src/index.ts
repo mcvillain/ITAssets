@@ -60,7 +60,7 @@ app.post("/support/request_upload_url", async (req: Request, res: Response) => {
     await post_support_request_upload_url(req, res, backend_pubkey);
 });
 
-app.post("/support/get_current_user_cases/:page", async (req: Request, res: Response) => {
+app.post("/support/get_current_user_cases/:owner", async (req: Request, res: Response) => {
     await get_support_get_current_cases_pages(req, res, backend_pubkey);
 });
 

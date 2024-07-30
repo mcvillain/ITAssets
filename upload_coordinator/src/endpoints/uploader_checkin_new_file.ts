@@ -20,10 +20,11 @@ export async function post_uploader_checkin_new_file(
     if (isVerified) {
         // Request case_guid
         let case_guid = req.body.upload.metadata.upload_guid;
+        let case_id = (await execute_sql(`SELECT case_id FROM cases WHERE guid = '${case_guid}'`))[0].case_id;
         // Request file metadata
         let file_metadata = req.body.upload;
         // SQL Insert in Files Table links to case_guid
-        await execute_sql(`INSERT INTO files (guid, file_path, case_guid, file_size) VALUES ('${file_metadata.id}', '${file_metadata.metadata.filename}', '${case_guid}', '${file_metadata.size}')`);
+        await execute_sql(`INSERT INTO files (guid, file_path, case_id, file_size) VALUES ('${file_metadata.id}', '${file_metadata.metadata.filename}', ${case_id}, '${file_metadata.size}')`);
         res.sendStatus(202);
     } else {
         res.sendStatus(401);

@@ -20,11 +20,18 @@ export async function get_support_get_case_files_case_uuid(req: Request, res: Re
         res.sendStatus(401);
         return;
     }
-    const data = await execute_sql (`SELECT file_path,file_size,uploaded_at FROM files WHERE case_guid = '${case_id}'`);
+    const page_number = parseInt(req.body.page)-1;
+    const items_per_page = parseInt(req.body.itemsPerPage);
+    const skipped = page_number * items_per_page;
+    const search = req.body.search as string;
+    const searchTerms = search?search.split(" ").map((term: string) => `%${term}%`):[];
+    const whereClause = search.length>0?' AND ('+searchTerms.map(term => `(file_path LIKE '${term}')`).join(' OR ')+')': '';
+    const total = await execute_sql (`SELECT COUNT(guid) AS TOTAL FROM files WHERE case_id = '${case_id}'${whereClause}`);
+    const data = await execute_sql (`SELECT file_path,file_size,uploaded_at,upload_complete FROM files WHERE case_id = '${case_id}'${whereClause}`);
     const response = {
-        items: data
-    }
-    console.log(response);
+        items: data,
+        total:  Number(total[0]['TOTAL']),
+    };
     res.status(200);
     res.send(JSON.stringify(response));
 }

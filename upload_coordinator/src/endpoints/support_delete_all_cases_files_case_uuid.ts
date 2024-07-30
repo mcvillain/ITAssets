@@ -22,14 +22,20 @@ export async function delete_support_delete_all_cases_files_case_uuid(
         res.sendStatus(401);
         return;
     }
+    // Check ITAR
+    const case_info = await execute_sql(`SELECT itar FROM cases WHERE case_id = '${case_id}'`);
+    if (case_info.length <= 0) {
+        res.sendStatus(404);
+        return;
+    }
+    const itar = case_info[0].itar;
     // Resign message and send to uploader
     let sign = createSign("sha512");
     sign.write(msg);
     sign.end();
     const new_signature = sign.sign(coordinator_privkey, "hex");
-    let uploader_url = '';
     fetch(
-        `${uploader_url}/support/delete_all_case_files/${msg}`,
+        `${itar?process.env.ITAR_UPLOADER_URL:process.env.UPLOADER_URL}/api/delete_files/${msg}`,
         {
             headers: new Headers({
                 signature: new_signature,
@@ -39,20 +45,20 @@ export async function delete_support_delete_all_cases_files_case_uuid(
     )
         .then(async (resp) => {
             if (resp.ok) {
+                await execute_sql(
+                    `DELETE FROM files WHERE case_id = '${case_id}'`
+                );
+                await execute_sql(
+                    `DELETE FROM cases WHERE case_id = '${case_id}'`
+                );
                 res.sendStatus(200);
-
-                await execute_sql(
-                    `DELETE FROM files WHERE case_guid = '${case_id}'`
-                );
-                await execute_sql(
-                    `DELETE FROM cases WHERE guid = '${case_id}'`
-                );
+                return;
             }
+            console.error(await resp.text());
+            res.sendStatus(500);
         })
         .catch((err) => {
             console.error(err);
+            res.sendStatus(500);
         })
-        .finally(() => {
-            if (!res.closed) res.sendStatus(500);
-        });
 }
