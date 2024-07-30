@@ -62,7 +62,7 @@ services:
         - "itassets-backend:latest"
   
   upload_coordinator:
-    image: uploader-coordinator:latest
+    image: upload-coordinator:latest
     hostname: itassets-coordinator-service
     ports: 
       - 3030:3000/tcp
@@ -94,6 +94,31 @@ services:
       context: ./upload_coordinator
       tags:
         - "upload-coordinator:latest"
+
+  uploader:
+    image: aegis-uploader:latest
+    hostname: aisuploader
+    ports:
+      - 3131:3000/tcp
+    networks:
+      - aisuploader
+    restart: always
+    volumes:
+      - "./keys/coordinator_signing/tls.crt:/srv/sign/coordinator/tls.crt:ro" # Coordinator's Public Key
+      - "./keys/uploader_signing/tls.key:/srv/sign/uploader/tls.key:ro" # Uploader's Private Key
+    env_file:
+      - "./environment/dev_uploader.env"
+    cap_add:
+    - SYS_ADMIN
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+    build: 
+      context: ./aegis_uploader
+      tags:
+        - "aegis-uploader:latest"
 
   mariadb:
     image: mariadb:11.4-ubi
@@ -135,3 +160,4 @@ services:
 
 networks:
   itassets:
+  aisuploader:

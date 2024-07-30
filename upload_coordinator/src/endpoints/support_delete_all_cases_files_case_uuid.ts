@@ -29,6 +29,12 @@ export async function delete_support_delete_all_cases_files_case_uuid(
         return;
     }
     const itar = case_info[0].itar;
+    const file_info = await execute_sql(`SELECT guid FROM files WHERE case_id = '${case_id}'`);
+    if (file_info.length <= 0) {
+        await erase_db(case_id);
+        res.sendStatus(200);
+        return;
+    }
     // Resign message and send to uploader
     let sign = createSign("sha512");
     sign.write(msg);
@@ -45,12 +51,7 @@ export async function delete_support_delete_all_cases_files_case_uuid(
     )
         .then(async (resp) => {
             if (resp.ok) {
-                await execute_sql(
-                    `DELETE FROM files WHERE case_id = '${case_id}'`
-                );
-                await execute_sql(
-                    `DELETE FROM cases WHERE case_id = '${case_id}'`
-                );
+                await erase_db(case_id);
                 res.sendStatus(200);
                 return;
             }
@@ -61,4 +62,13 @@ export async function delete_support_delete_all_cases_files_case_uuid(
             console.error(err);
             res.sendStatus(500);
         })
+}
+
+async function erase_db(case_id: any) {
+    await execute_sql(
+        `DELETE FROM files WHERE case_id = '${case_id}'`
+    );
+    await execute_sql(
+        `DELETE FROM cases WHERE case_id = '${case_id}'`
+    );
 }

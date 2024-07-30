@@ -1,6 +1,6 @@
 <template>
     <notification />
-    <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Case ID Uploader</h2>
+    <h2 style="align-content: center; margin-top: 2rem; margin-bottom: 1rem; font-size: xx-large;">Aegis Uploader</h2>
 
     <div style="margin: 3rem;"></div>
     <div style="padding-left: 2rem; padding-right: 2rem;">
@@ -26,9 +26,9 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <AllCasesTable v-if="current_user_cases_endpoint!==''" title="My Cases" :endpoint="current_user_cases_endpoint" />
+                    <AllCasesTable v-if="current_user_cases_endpoint!==''" title="My Cases" :endpoint="current_user_cases_endpoint" :key="rerender" />
                     <div style="margin: 4rem;"></div>
-                    <AllCasesTable title="All Cases" :endpoint="all_cases_endpoint" />
+                    <AllCasesTable title="All Cases" :endpoint="all_cases_endpoint" :key="rerender" />
                 </div>
             </div>
         </div>
@@ -40,6 +40,8 @@ import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
 import { ref } from 'vue'
 import AllCasesTable from './uploader/allCasesTable.vue';
+
+const rerender = ref(0);
 
 const all_cases_endpoint = ref("/uploads/get_all_cases");
 const current_user_cases_endpoint = ref('');
@@ -61,6 +63,7 @@ async function get_upload_url() {
     }).then(async resp => {
         if (resp.ok) {
             upload_url.value = `${import.meta.env.VITE_UPLOAD_URL}/?id=${(await resp.json()).uuid}`;
+            rerender.value++;
             return;
         } else {
             case_id_hint.value = "Invalid Case ID";

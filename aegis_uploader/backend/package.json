@@ -1,0 +1,33 @@
+{
+  "name": "aegis_uploader",
+  "version": "1.0.0",
+  "description": "Aegis In-House Uploader Solution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/agsheeran/aegis_uploader.git"
+  },
+  "author": "AISCORP",
+  "license": "proprietary software, no public license",
+  "bugs": {
+    "url": "https://github.com/agsheeran/aegis_uploader/issues"
+  },
+  "homepage": "https://github.com/agsheeran/aegis_uploader#readme",
+  "dependencies": {
+    "@tus/file-store": "^1.4.0",
+    "@tus/server": "^1.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "nano": "^10.1.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.11",
+    "typescript": "^5.5.3"
+  },
+  "keywords": []
+}

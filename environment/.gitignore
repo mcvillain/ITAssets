@@ -1,3 +1,3 @@
 dev_backend.env
-dev_coordinator.env
+dev_uploader.env
 prod_backend.env

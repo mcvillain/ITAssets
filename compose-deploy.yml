@@ -51,29 +51,35 @@ services:
         max-size: "12m"
         max-file: "5"
   
-  # upload_coordinator:
-  #   image: uploader-coordinator:latest
-  #   hostname: coordinator
-  #   networks:
-  #     - itassets
-  #   depends_on: 
-  #     - mariadb
-  #   env_file: 
-  #     - "./environment/prod_coordinator.env"
-  #     - "./environment/database.env"
-  #   restart: always
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
-  #     interval: 1m30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 40s
-  #     start_interval: 5s
-  #   logging:
-  #     driver: json-file
-  #     options:
-  #       max-size: "12m"
-  #       max-file: "5"
+  upload_coordinator:
+    image: upload-coordinator:latest
+    hostname: itassets-coordinator-service
+    ports: 
+      - 3030:3000/tcp
+    networks:
+      - itassets
+    volumes:
+      - "./keys/backend_signing/tls.crt:/srv/sign/backend/tls.crt:ro" # Backend's Public Key
+      - "./keys/uploader_signing/tls.crt:/srv/sign/uploader/tls.crt:ro" # Uploader's Public Key
+      - "./keys/coordinator_signing/tls.key:/srv/sign/coordinator/tls.key:ro" # Coordinator's Private Key
+    depends_on: 
+      - mariadb
+    env_file: 
+      - "./environment/coordinator.env"
+      - "./environment/database.env"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
 
   mariadb:
     image: mariadb:11.4-ubi
