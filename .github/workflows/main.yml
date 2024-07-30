@@ -43,3 +43,21 @@ jobs:
       run: |
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:v$TIMESTAMP
         docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/itassets-frontend:latest
+  build-coordinator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get Timestamp
+      id: timestamp
+      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+    - name: Login to Docker Registry
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY_URL }} -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+    - name: Build the Docker image
+      working-directory: ./upload_coordinator
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:v$TIMESTAMP
+    - name: Tag Docker Image
+      run: docker tag ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:v$TIMESTAMP ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:latest
+    - name: Push the Docker Image
+      run: |
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:v$TIMESTAMP
+        docker push ${{ secrets.DOCKER_REGISTRY_URL }}/aiscorp/upload-coordinator:latest
