@@ -1,7 +1,7 @@
 <template>
   <div class="container index-container">
-    <img v-show="agreed" alt="Aegis logo" class="logo" src="./assets/aegis-header-logo-en.svg"  height="125" />
-    
+    <img v-show="agreed" alt="Aegis logo" class="logo" src="./assets/aegis-header-logo-en.svg" height="125" />
+
     <!-- Modal -->
     <TransparentModal :visible="showModal">
       <h1 class="modal-header HKGrotesk-Bold">Aegis TOS!</h1>
@@ -38,19 +38,32 @@ const error_message = ref("");
 const params = new URLSearchParams(document.location.search);
 const upload_guid = ref(params.get('id') as string);
 fetch(`/api/validate_case_id/${upload_guid.value}`)
-.then(res => {
-  if (!res.ok) {
+  .then(async res => {
+    if (!res.ok) {
+      showModal.value = false;
+      showErrorModal.value = true;
+      if (res.status == 400) {
+        if ((await res.text()) == 'itar')
+          error_message.value = "This upload is tagged as containing ITAR data. Please ask the customer support representative for the ITAR upload link.";
+        else
+          error_message.value = "This upload is not tagged as containing ITAR data. Please ask the customer support representative for the non-ITAR upload link.";
+      } else {
+        error_message.value = "This upload URL has expired or does not exist";
+      }
+    } else {
+      const data = await res.json();
+      if (data.itar == true) {
+        console.log("ITAR");
+        // TODO: Do something with this information... ex: load a different header svg
+      }
+    }
+  })
+  .catch(err => {
+    console.error(err);
     showModal.value = false;
     showErrorModal.value = true;
-    error_message.value = "This upload URL has expired or does not exist";
-  }
-})
-.catch(err => {
-  console.error(err);
-  showModal.value = false;
-  showErrorModal.value = true;
-  error_message.value = "Error verifying the upload URL";
-});
+    error_message.value = "Error verifying the upload URL";
+  });
 
 const closeModal = () => {
   showModal.value = false; // Close modal
@@ -73,7 +86,6 @@ const handleAgree = () => {
 </style>
 
 <style>
-
 .modal-header {
   color: #27272D !important;
   font-size: 28px !important;
@@ -95,8 +107,9 @@ const handleAgree = () => {
 
 .content {
   text-align: center;
-  margin-top: 20px; /* Adjust margin as needed */
-  
+  margin-top: 20px;
+  /* Adjust margin as needed */
+
 }
 
 .uppy-Root {
@@ -137,11 +150,11 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
 .HKGrotesk-Bold {
   font-family: "Hanken Grotesk", sans-serif !important;
   font-optical-sizing: auto !important;
   font-weight: bold !important;
   font-style: normal !important;
 }
-
 </style>

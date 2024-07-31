@@ -17,7 +17,7 @@ export async function get_uploader_get_case_id_from_upload_guid(req: Request, re
     verify.write(message);
     verify.end();
     const is_verified = verify.verify(uploader_pubkey, signature, "hex");
-    console.log(`${signature} | ${message} | ${is_verified}`);
+    // console.log(`${signature} | ${message} | ${is_verified}`);
     if (!is_verified) {
         res.sendStatus(401);
         return;

@@ -90,12 +90,23 @@ app.get('/api/validate_case_id/:case_uuid', async (req: Request, res: Response) 
             res.status(resp.status).send(resp.body);
             return;
         }
-        get_case_id(message.message, uploader_privkey).then(case_id => {
+        const data = await resp.json();
+        console.log(data);
+        if ((process.env.ITAR != 'true' && (data).itar) || (process.env.ITAR == 'true' && !(data).itar)) {
+            let msg = '';
+            if (process.env.ITAR != 'true' && (data).itar)
+                msg = 'itar';
+            else if (process.env.ITAR == 'true' && !(data).itar)
+                msg = 'non-itar';
+            res.status(400).send(msg);
+            return;
+        }
+        get_case_id(message.message, uploader_privkey).then(async case_id => {
             if (typeof case_id !== 'string') {
                 res.sendStatus(case_id);
                 return;
             }
-            res.status(resp.status).send(resp.body);
+            res.status(resp.status).send(JSON.stringify(data));
         })
         .catch(err => {
             console.error(err);
