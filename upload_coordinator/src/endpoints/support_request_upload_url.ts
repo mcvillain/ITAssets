@@ -33,7 +33,7 @@ export async function post_support_request_upload_url(
     // Check if case already exists
     let old_case = await execute_sql(`SELECT guid FROM cases WHERE case_id = ${caseID}`);
     if (old_case.length > 0) {
-        res.status(200).send(JSON.stringify({ uuid: old_case[0].guid as string}));
+        res.status(200).send(JSON.stringify({ uuid: old_case[0].guid as string, itar }));
         return;
     }
     // Generate New GUID use
@@ -42,5 +42,5 @@ export async function post_support_request_upload_url(
     await execute_sql(`INSERT INTO cases (guid, case_id, owner, itar) VALUES ('${uuid}', ${caseID},'${owner}', ${itar?'TRUE':'FALSE'})`);
     // Return the GUID in the response
     res.status(201);
-    res.send(JSON.stringify({ uuid }));
+    res.send(JSON.stringify({ uuid, itar }));
 }

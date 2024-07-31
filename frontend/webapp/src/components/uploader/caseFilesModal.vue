@@ -18,17 +18,21 @@
                         <v-col cols="12" md="4" sm="6"
                             style="display: flex; justify-content: center; align-content: center;">
                             <v-dialog max-width="25%">
-                                <template v-slot:activator="{props: activatorPropsV2}">
-                                    <v-btn text="Delete All Case Files" prepend-icon="mdi-trash-can" append-icon="mdi-trash-can" color="red" v-bind="activatorPropsV2"></v-btn>
+                                <template v-slot:activator="{ props: activatorPropsV2 }">
+                                    <v-btn text="Delete All Case Files" prepend-icon="mdi-trash-can"
+                                        append-icon="mdi-trash-can" color="red" v-bind="activatorPropsV2"></v-btn>
                                 </template>
-                                <template v-slot:default="{isActive}">
+                                <template v-slot:default="{ isActive }">
                                     <v-card :title="`Delete all files for case ${case_id}?`">
                                         <v-card-text v-if="delete_error">{{ delete_error_msg }}</v-card-text>
                                         <v-divider></v-divider>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                                <v-btn color="red" :loading="deleting" prepend-icon="mdi-trash-can" append-icon="mdi-trash-can" text="DELETE" variant="flat" @click="deleteFiles" />
-                                                <v-btn color="primary" :disabled="deleting" text="Close" @click="isActive.value = false" />
+                                            <v-btn color="red" :loading="deleting" prepend-icon="mdi-trash-can"
+                                                append-icon="mdi-trash-can" text="DELETE" variant="flat"
+                                                @click="deleteFiles" />
+                                            <v-btn color="primary" :disabled="deleting" text="Close"
+                                                @click="isActive.value = false" />
                                         </v-card-actions>
                                     </v-card>
                                 </template>
@@ -62,8 +66,8 @@
                             label></v-chip>
                     </template>
                     <!-- Show Size in GB -->
-                    <template v-slot:item.file_size="{value}">
-                        {{ bytesToGigabytes(value as number) }}
+                    <template v-slot:item.file_size="{ value }">
+                        {{ bytesToHumanReadable(value as number) }}
                     </template>
                 </v-data-table-server>
                 <v-divider></v-divider>
@@ -130,7 +134,7 @@ function loadCaseData() {
         if (!resp.ok) return;
         const data: any = await resp.json();
         case_owner.value = data.owner;
-        upload_url.value = `${import.meta.env.VITE_UPLOAD_URL}/?id=${data.guid}`;
+        upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.guid}`;
     }).catch(err => {
         console.error(err);
     });
@@ -146,14 +150,24 @@ async function copyUploadUrl() {
     }, 2000);
 }
 
-function bytesToGigabytes(bytes: number): string {
-    const gigabytes = bytes / Math.pow(10, 9);
-    return gigabytes.toFixed(2) + " GB";
+function bytesToHumanReadable(bytes: number): string {
+    if (bytes >= Math.pow(10, 9)) {
+        const gigabytes = bytes / Math.pow(10, 9);
+        return gigabytes.toFixed(2) + " GB";
+    } else if (bytes >= Math.pow(10, 6)) {
+        const megabytes = bytes / Math.pow(10, 6);
+        return megabytes.toFixed(2) + " MB";
+    } else if (bytes >= Math.pow(10, 3)) {
+        const kilobytes = bytes / Math.pow(10, 3);
+        return kilobytes.toFixed(2) + " KB";
+    } else {
+        return bytes + " B";
+    }
 }
 
 function deleteFiles() {
     deleting.value = true;
-    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/delete_all_case_files/${props.case_id}`, {method: 'DELETE'}).then(async resp => {
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/delete_all_case_files/${props.case_id}`, { method: 'DELETE' }).then(async resp => {
         if (!resp.ok) {
             delete_error.value = true;
             delete_error_msg.value = await resp.text();

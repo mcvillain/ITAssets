@@ -36,7 +36,6 @@ export async function delete_all_case_files(
             console.log("User tried to delete file with undefined username");
             return;
         }
-        // TODO: Make the UPLOAD_SERVICE dynamic based on weather or not the case is ITAR
         try {
             let message: SignedMessage = signMessage(req.params.case_uuid);
             const case_owner = await fetch(
@@ -258,10 +257,27 @@ export async function get_uploader_url(
         }
     }
     // Execute Function
-    const itar = req.headers.itar !== undefined;
+    // const itar = req.headers.itar !== undefined;
     const case_id = req.params.case_uuid;
     if (case_id === undefined) {
         res.sendStatus(400);
+        return;
+    }
+    let itar = false;
+    try {
+        let headers = new Headers();
+        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" +process.env. INVGATE_PASS).toString('base64'));
+        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {headers});
+        if (!resp.ok) {
+            res.sendStatus(404);
+            return;
+        }
+        const custom_fields = (await resp.json()).custom_fields;
+        console.log(custom_fields);
+        itar = custom_fields['8'];
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Couldn't verify case ID");
         return;
     }
     let message: SignedMessage = signMessage(crypto.randomUUID());

@@ -120,6 +120,29 @@ services:
       tags:
         - "aegis-uploader:latest"
 
+  uploader_itar:
+    image: aegis-uploader:latest
+    hostname: ais_itar_uploader
+    ports:
+      - 3535:3000/tcp
+    networks:
+      - aisuploader
+    restart: always
+    volumes:
+      - "./keys/coordinator_signing/tls.crt:/srv/sign/coordinator/tls.crt:ro" # Coordinator's Public Key
+      - "./keys/uploader_signing/tls.key:/srv/sign/uploader/tls.key:ro" # Uploader's Private Key
+    environment:
+      - ITAR=true
+    env_file:
+      - "./environment/dev_uploader.env"
+    cap_add:
+    - SYS_ADMIN
+    logging: 
+      driver: json-file
+      options:
+        max-size: "12m"
+        max-file: "5"
+
   mariadb:
     image: mariadb:11.4-ubi
     hostname: mariadb-service

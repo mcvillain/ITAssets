@@ -8,13 +8,10 @@
             <v-col cols="12" md="5">
                 <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist" v-model="case_id" />
             </v-col>
-            <v-col cols="12" md="1">
-                <v-checkbox v-model="itar" color="red" label="ITAR?" hide-details />
-            </v-col>
             <v-col cols="12" md="2">
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="5">
                 <v-text-field :readonly="true" label="Upload Link" v-model="upload_url"
                     append-inner-icon="mdi-content-copy" @click:append-inner="copyUploadUrl" />
             </v-col>
@@ -53,16 +50,13 @@ const case_id = ref('');
 const upload_url = ref('');
 const case_id_hint = ref('');
 const case_id_hint_persist = ref(false);
-const itar = ref(false);
 
 async function get_upload_url() {
     let headers = {};
-    if (itar.value) headers.itar = true;
-    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
-        'headers': new Headers(headers),
-    }).then(async resp => {
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`).then(async resp => {
         if (resp.ok) {
-            upload_url.value = `${import.meta.env.VITE_UPLOAD_URL}/?id=${(await resp.json()).uuid}`;
+            const data = await resp.json();
+            upload_url.value = `${data.itar?import.meta.env.VITE_UPLOAD_ITAR_URL:import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
             rerender.value++;
             return;
         } else {
