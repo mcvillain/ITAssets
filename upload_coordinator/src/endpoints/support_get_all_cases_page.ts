@@ -28,13 +28,13 @@ export async function get_support_get_all_cases_page(req: Request, res: Response
     // Generate the search WHERE clauses
     const search = req.body.search as string;
     const searchTerms = search?search.split(" ").map((term: string) => `%${term}%`):[];
-    const ownerClause = owner===null?'(':`owner = '${owner}' AND (`;
-    const whereClause = (owner!==null?` WHERE ${ownerClause}`:' WHERE (')+(search.length>0?searchTerms.map(term => `case_id LIKE '${term}' OR owner LIKE '${term}')`).join(' OR '): '1=1') + ')';
+    const ownerClause = owner===null?'(':`c.owner = '${owner}' AND (`;
+    const whereClause = (owner!==null?` WHERE ${ownerClause}`:' WHERE (')+(search.length>0?searchTerms.map(term => `c.case_id LIKE '${term}' OR c.owner LIKE '${term}')`).join(' OR '): '1=1') + ')';
     const sortBy = req.body.sortBy;
-    const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY created_at DESC';
+    const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY c.created_at DESC';
     // Use SQL to query for the top 'ITEMS_PER_PAGE' results, skipping the ammt calculated before
-    const count_row = await execute_sql (`SELECT COUNT(guid) as TOTAL FROM cases${whereClause}`);
-    const data = await execute_sql (`SELECT * FROM cases${whereClause} ${sortClause} LIMIT ${items_per_page} OFFSET ${skipped}`);
+    const count_row = await execute_sql (`SELECT COUNT(guid) as TOTAL FROM cases c${whereClause}`);
+    const data = await execute_sql (`SELECT c.guid as guid, c.case_id as case_id, c.owner as owner, c.upload_url_active as upload_url_active, c.created_at as created_at, c.itar as itar, case_size FROM cases c LEFT JOIN (SELECT case_id, SUM(file_size) AS case_size FROM files GROUP BY case_id) f ON c.case_id=f.case_id${whereClause} ${sortClause} LIMIT ${items_per_page} OFFSET ${skipped}`);
     const response = {
         items: data,
         total: Number(count_row[0]['TOTAL']),

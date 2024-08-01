@@ -37,7 +37,7 @@ services:
     networks:
       - itassets
     volumes:
-      - "./keys/backend_signing/tls.key:/srv/sign/backend/tls.key:ro" # Coordinator's Private Key
+      - "./keys/backend_signing/tls.key:/srv/sign/backend/tls.key:ro" # Backend's Private Key
     depends_on: 
       - upload_coordinator
     env_file: 

@@ -101,6 +101,9 @@ app.get('/uploader/get_case_id_from_upload_guid/:guid', async (req: Request, res
     await get_uploader_get_case_id_from_upload_guid(req, res, uploader_pubkey);
 });
 
+app.get('/healthcheck', (req: Request, res: Response) => {
+    res.sendStatus(200);
+});
 
 const server = app.listen(port, () => {
     let os = require("os");

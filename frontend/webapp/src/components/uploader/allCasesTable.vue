@@ -20,6 +20,10 @@
         <template v-slot:item.case_id="{ value }">
             <CaseFilesModal :case_id="value" />
         </template>
+        <!-- Show Size in GB -->
+        <template v-slot:item.case_size="{ value }">
+            {{ bytesToHumanReadable(value as number) }}
+        </template>
         <!-- ITAR Column -->
         <template v-slot:item.itar="{ value }">
             <v-chip v-if="value == 1" color="red" text="ITAR" class="text-uppercase"
@@ -43,6 +47,7 @@ const headers = [
     { title: "Case ID", sortable: true, key: 'case_id' },
     { title: "Case Owner", sortable: true, key: 'owner' },
     { title: "Creation Date", sortable: true, key: 'created_at' },
+    { title: "Case Size", sortable: true, key: 'case_size' },
     { title: "ITAR", sortable: true, key: 'itar' },
 ];
 const search = ref('');
@@ -69,6 +74,21 @@ function loadItems(options: any) {
         loading.value = false;
     }).catch(err => console.error(err));
 }
+
+function bytesToHumanReadable(bytes: number): string {
+    if (bytes >= Math.pow(10, 9)) {
+        const gigabytes = bytes / Math.pow(10, 9);
+        return gigabytes.toFixed(2) + " GB";
+    } else if (bytes >= Math.pow(10, 6)) {
+        const megabytes = bytes / Math.pow(10, 6);
+        return megabytes.toFixed(2) + " MB";
+    } else if (bytes >= Math.pow(10, 3)) {
+        const kilobytes = bytes / Math.pow(10, 3);
+        return kilobytes.toFixed(2) + " KB";
+    } else {
+        return bytes + " B";
+    }
+}
 </script>
 
 <style scoped>
@@ -86,79 +106,3 @@ function loadItems(options: any) {
     text-align: center;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-<!--
-
-
-    <v-data-table class="rounded-xl mw-75 elevation-1" v-model:sort-by="sortBy" :headers="headers" :items="example"
-        v-model:items-per-page="itemsPerPage" item-value="name" item-key="name" :search="search" :loading="loading"
-        :item-class="row - item">
-        <template v-slot:top>
-            <v-toolbar class="rounded-t-xl">
-                <v-toolbar-title>All Cases</v-toolbar-title>
-            </v-toolbar>
-            <v-toolbar>
-                <v-text-field class="w-75 search-bar" label="Search" prepend-inner-icon="mdi-magnify" hide-details
-                    clearable single-line variant="solo-filled" v-model="search"></v-text-field>
-            </v-toolbar>
-        </template>
-        <template v-slot:loading>
-            <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
-        </template>
-        <template v-slot:item.caseID="{ item }">
-            <v-dialog v-model="dialog" width="500">
-                <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn block variant="flat" v-bind="activatorProps">
-                        {{ item.caseID }}
-                    </v-btn>
-                </template>
-                <v-card>
-                    <v-card-title class="text-h5 grey lighten-2">
-                        More Info
-                    </v-card-title>
-                    <v-card-text>
-                        Random Case information
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="close">
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </template>
-        <template v-slot:item.delete="{ item }">
-            <v-dialog max-width="400" v-model="dialogDelete">
-                <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn id="modal" height="57" width="125" rounded="0" v-bind="activatorProps"
-                        class="bg-#b71c1c bi bi-trash-fill" block variant="flat" @click="deleteItem(item)"></v-btn>
-                </template>
-
-                <template v-slot:default="{ isActive }">
-                    <v-card title="Delete?">
-                        <v-card-text>
-                            Are you sure you want to delete these item(s)?
-                        </v-card-text>
-
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn text="No" @click="closeDelete"></v-btn>
-                            <v-btn text="Yes" @click="deleteItemConfirm"></v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </template>
-            </v-dialog>
-        </template>
-    </v-data-table>
--->
