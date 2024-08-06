@@ -103,7 +103,7 @@ export async function get_servers_csv(
         const data: Server[] = _data as Server[];
         let filedata = 'VM Name, Status, IP, Last Check-In, Hypervisor, Hostname, Size, Cost\n';
         data.forEach((db:Server) => {
-            filedata+=`${db.VMName}, ${db.Status}, ${db.IP}, ${db.LastCheckInTime}, ${db.HyperVisor}, ${db.Hostname}, ${db.Size}, ${db.Cost}\n`;
+            filedata+=`${db.VMName}, ${db.Status}, ${db.IP}, ${new Date(db.LastCheckInTime).toLocaleString()}, ${db.HyperVisor}, ${db.Hostname}, ${db.Size}, ${db.Cost}\n`;
         });
         res.status(200).contentType('text/csv').send(filedata);
         return;
