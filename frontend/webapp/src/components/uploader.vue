@@ -55,22 +55,28 @@ async function get_upload_url() {
     let headers = {
         'Content-Type': 'application/json'
     };
-    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({ case_id: case_id.value })
-    }).then(async resp => {
-        if (resp.ok) {
-            const data = await resp.json();
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ case_id: case_id.value })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
             upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
             rerender.value++;
-            return;
         } else {
-            case_id_hint.value = "Invalid Case ID -- YO MAMMA";
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+            case_id_hint.value = "Invalid Case ID";
             case_id_hint_persist.value = true;
         }
-    }).catch(err => console.error(err));
+    } catch (err) {
+        console.error('Fetch error:', err);
+    }
 }
+
 
 
 async function copyUploadUrl() {
