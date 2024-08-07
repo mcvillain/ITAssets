@@ -1,3 +1,6 @@
+/* Slide in animations */
+
+
 .shapes {
     position: relative;
     left: -1350px;
@@ -7,6 +10,7 @@
     height: 160px;
     width: 1400px;
     border-radius: 1rem;
+    top: 40px;
 }
 
 #shapeOne {
@@ -38,6 +42,7 @@
 
 /* Bootstrap symbol placement */
 
+
 .symbols {
     background-color: #27272d;
     border-radius: 1rem;
@@ -50,7 +55,9 @@
     color: #15779f
 }
 
+
 /* The Frames and Text for the Titles */
+
 
 .textA2023 {
     color: white;
@@ -68,6 +75,7 @@
 
 .heading {
     font-size: xx-large;
+    font-weight: bold;
 }
 
 .textA2024 {
@@ -82,6 +90,7 @@
 
 .textB2024 {
     font-size: medium;
+    font-weight:100;
 }
 
 .frame {
@@ -100,7 +109,9 @@
     padding: .5rem;
 }
 
+
 /* The 2023 and 2024 title pictures */
+
 
 .picture2023 {
     border-radius: 5rem;
@@ -146,7 +157,9 @@
     width: 100% !important;
 }
 
+
 /* All of the teams related stuff */
+
 
 .teams{
     color: black;
@@ -158,8 +171,8 @@
 
 .aiden {
     color: white;
-  width: 100%;
-  font-size: xxx-large;
+    width: 100%;
+    font-size: xxx-large;
 }
 
 .brey {
@@ -169,11 +182,13 @@
 }
 
 .teamFrameOrange {
+    font-weight: bold;
     background: linear-gradient(to right, #f26522, #ef3b32);
     border-radius: 1rem;
     padding: .5rem;
-    margin-right: .25rem;
+    margin-right: 1rem;
     margin-bottom: .75rem;
+    height: 100%;
 }
 
 .teamFrameWhite {
@@ -183,15 +198,26 @@
     margin-right: 1rem;
 }
 
+.stevePic {
+    width: 90% !important;
+    border-radius: 1rem;
+}
+
+
 /* All of the College related stuff */
 
+
 .college {
-    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: .75rem;
     font-size: xxx-large;
 }
 
 .collegeFrame {
-    background: linear-gradient(to right, #f26522, #ef3b32);
+    color: black;
+    font-weight: bold;
+    background: #f1f1f1;
     border-radius: 1rem;
     padding: .5rem;
     margin-right: .25rem;
@@ -283,6 +309,7 @@
     text-align: center;
     padding-top: 11px;
     position: relative;
+    top: 40px;
     left: -10px;
     font-size: large;
 }
@@ -333,3 +360,214 @@
     left: 340px;
 }
 
+
+
+
+
+
+/* 2023 IT Assets Page Table */
+
+
+
+
+
+
+
+.card {
+    padding: 1rem;
+}
+
+.running {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+    background-color: lime;
+}
+
+.offline {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+    background-color: red;
+}
+
+.status_row_cell {
+    min-width: 0 !important;
+}
+
+.status_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.status_text {
+    padding-left: 1rem;
+}
+
+#server-bar {
+    border: 1px solid rgb(206, 206, 206);
+    background-color: #f3f5ff;
+    width: 195px;
+    margin-left: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input[type="text"] {
+    text-align: center;
+}
+
+#database-bar {
+    border: 1px solid rgb(206, 206, 206);
+    background-color: #f3f5ff;
+    width: 195px;
+    margin-left: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.vm:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.stat:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.ip:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.time:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.hv:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.host:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.Cost:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.dName:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.dSize:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.dPath:hover {
+    background-color: #af2525;
+    scale: 105%;
+    transition: ease 0.5s;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    max-width: 1200px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 500px;
+}
+
+.styled-table thead tr {
+    background: #ef3b32;
+    color: #ffffff;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.styled-table tbody tr:nth-of-type(even):focus {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #9c9c9c;
+}
+
+.styled-table tbody tr:nth-of-type(even):hover {
+    background-color: #9c9c9c;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    min-width: 200px;
+}
+
+.styled-table tbody tr:nth-of-type(red) {
+    background-color: #eb9696;
+}
+
+.styled-table tbody tr {
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    background-color: #ffffff;
+    border-bottom: 2px solid #e92e2e;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+
+h3 {
+    margin: 40px 0 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+a {
+    color: #42b983;
+}
