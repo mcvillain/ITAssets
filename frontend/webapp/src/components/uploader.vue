@@ -6,8 +6,7 @@
     <div style="padding-left: 2rem; padding-right: 2rem;">
         <v-row>
             <v-col cols="12" md="5">
-                <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist"
-                    v-model="case_id" />
+                <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist" v-model="case_id" />
             </v-col>
             <v-col cols="12" md="2">
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
@@ -24,8 +23,7 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <AllCasesTable v-if="current_user_cases_endpoint !== ''" title="My Cases"
-                        :endpoint="current_user_cases_endpoint" :key="rerender" />
+                    <AllCasesTable v-if="current_user_cases_endpoint!==''" title="My Cases" :endpoint="current_user_cases_endpoint" :key="rerender" />
                     <div style="margin: 4rem;"></div>
                     <AllCasesTable title="All Cases" :endpoint="all_cases_endpoint" :key="rerender" />
                 </div>
@@ -54,23 +52,11 @@ const case_id_hint = ref('');
 const case_id_hint_persist = ref(false);
 
 async function get_upload_url() {
-    let headers = {
-        'Content-Type': 'application/json'
-    };
-    let body = JSON.stringify({ case_id: case_id.value });
-    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url`, {
-        method: 'POST',
-        headers: headers,
-        body: body
-    }).then(async resp => {
+    let headers = {};
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`).then(async resp => {
         if (resp.ok) {
             const data = await resp.json();
-            console.log(data); // Debugging statement
-            console.log(data.uuid); // Debugging statement
-            console.log(data.itar); // Debugging statement
-            console.log(import.meta.env.VITE_UPLOAD_ITAR_URL); // Debugging statement
-            console.log(import.meta.env.VITE_UPLOAD_URL); // Debugging statement
-            upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
+            upload_url.value = `${data.itar?import.meta.env.VITE_UPLOAD_ITAR_URL:import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
             rerender.value++;
             return;
         } else {
@@ -79,7 +65,6 @@ async function get_upload_url() {
         }
     }).catch(err => console.error(err));
 }
-
 
 async function copyUploadUrl() {
     await navigator.clipboard.writeText(upload_url.value);
