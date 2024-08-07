@@ -266,7 +266,7 @@ export async function get_uploader_url(
     let itar = false;
     try {
         let headers = new Headers();
-        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" +process.env. INVGATE_PASS).toString('base64'));
+        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" +process.env. INVGATE_PASS)/*.toString('base64')*/);
         const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {headers});
         if (!resp.ok) {
             res.sendStatus(404);
