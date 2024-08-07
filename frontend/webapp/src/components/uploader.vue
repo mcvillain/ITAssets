@@ -52,11 +52,17 @@ const case_id_hint = ref('');
 const case_id_hint_persist = ref(false);
 
 async function get_upload_url() {
-    let headers = {};
-    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`).then(async resp => {
+    let headers = {
+        'Content-Type': 'application/json'
+    };
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ case_id: case_id.value })
+    }).then(async resp => {
         if (resp.ok) {
             const data = await resp.json();
-            upload_url.value = `${data.itar?import.meta.env.VITE_UPLOAD_ITAR_URL:import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
+            upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
             rerender.value++;
             return;
         } else {
@@ -65,6 +71,7 @@ async function get_upload_url() {
         }
     }).catch(err => console.error(err));
 }
+
 
 async function copyUploadUrl() {
     await navigator.clipboard.writeText(upload_url.value);
