@@ -266,14 +266,24 @@ export async function get_uploader_url(
     let itar = false;
     try {
         let headers = new Headers();
-        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" + process.env.INVGATE_PASS).toString('base64'));
+        // Correctly set the Authorization header
+        headers.set('Authorization', 'Basic ' + Buffer.from(`${process.env.INVGATE_USER}:${process.env.INVGATE_PASS}`).toString('base64'));
+
         const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, { headers });
+
+        console.log('INVGATE response status:', resp.status);
+        const textResponse = await resp.text();
+        console.log('INVGATE response body:', textResponse);
+
         if (!resp.ok) {
-            console.error('Failed to fetch case ID details:', await resp.text());
+            console.error('Failed to fetch case ID details:', textResponse);
             res.sendStatus(404);
             return;
         }
-        const custom_fields = (await resp.json()).custom_fields;
+
+        const custom_fields = JSON.parse(textResponse).custom_fields;
+        console.log('Custom fields:', custom_fields);
+
         itar = custom_fields['8'] === 'true';  // Ensure you check the exact format of this value
     } catch (err) {
         console.error('Error verifying case ID:', err);
@@ -304,3 +314,4 @@ export async function get_uploader_url(
         res.sendStatus(500);
     }
 }
+
