@@ -3,3 +3,4 @@ frontend/*.local
 ./frontend.tar
 ./backend.tar
 sql*
+kubernetes*

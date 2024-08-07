@@ -1,3 +1,4 @@
 registry.yml
 dockercfg.json
 backend-secrets.yml
+itassets-prod 1.yaml
