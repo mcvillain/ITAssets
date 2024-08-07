@@ -224,7 +224,6 @@ export async function get_case_owner(
         });
 }
 
-// Request Upload URL
 export async function get_uploader_url(
     req: Request,
     res: Response,
@@ -232,73 +231,76 @@ export async function get_uploader_url(
 ) {
     // Authenticate
     const session_id = req.cookies["session_id"];
-    if (session_id === undefined) {
+    if (!session_id) {
         res.sendStatus(401);
         return;
     }
+    
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (!(auth_lvl >= 1 && auth_lvl <= 3)) {
         res.sendStatus(401);
         return;
     }
+    
     let username;
     if (auth_lvl < 3) {
-        const user_id: AuthenticationResult | undefined =
-            await loginMemcache.get(session_id);
-        if (user_id === undefined) {
+        const user_id: AuthenticationResult | undefined = await loginMemcache.get(session_id);
+        if (!user_id) {
             res.sendStatus(401);
             return;
         }
         username = user_id.account?.username;
-        if (username === undefined) {
+        if (!username) {
             res.sendStatus(401);
             console.log("User tried to create link with undefined username");
             return;
         }
     }
-    // Execute Function
-    // const itar = req.headers.itar !== undefined;
+    
     const case_id = req.params.case_uuid;
-    if (case_id === undefined) {
+    if (!case_id) {
         res.sendStatus(400);
         return;
     }
+
     let itar = false;
     try {
         let headers = new Headers();
-        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" +process.env. INVGATE_PASS)/*.toString('base64')*/);
-        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {headers});
+        headers.set('Authorization', 'Basic ' + Buffer.from(process.env.INVGATE_USER + ":" + process.env.INVGATE_PASS).toString('base64'));
+        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, { headers });
         if (!resp.ok) {
+            console.error('Failed to fetch case ID details:', await resp.text());
             res.sendStatus(404);
             return;
         }
         const custom_fields = (await resp.json()).custom_fields;
-        console.log(custom_fields);
-        itar = custom_fields['8'];
+        itar = custom_fields['8'] === 'true';  // Ensure you check the exact format of this value
     } catch (err) {
-        console.error(err);
+        console.error('Error verifying case ID:', err);
         res.status(500).send("Couldn't verify case ID");
         return;
     }
+    
     let message: SignedMessage = signMessage(crypto.randomUUID());
-    fetch(`${UPLOAD_SERVICE}/request_upload_url`, {
-        headers: new Headers({
-            "Content-Type": "application/json",
-            'signature': message.signature,
-            'verify': message.message
-        }),
-        body: JSON.stringify({ case_id: case_id, owner: username, itar }),
-        method: "POST",
-    })
-        .then(async (resp) => {
-            if (resp.ok) {
-                res.status(200).send(await resp.text());
-            } else {
-                res.sendStatus(resp.status);
-            }
-        })
-        .catch((err) => {
-            console.error(err);
-            res.sendStatus(500);
+    try {
+        const response = await fetch(`${UPLOAD_SERVICE}/request_upload_url`, {
+            headers: new Headers({
+                "Content-Type": "application/json",
+                'signature': message.signature,
+                'verify': message.message
+            }),
+            body: JSON.stringify({ case_id, owner: username, itar }),
+            method: "POST",
         });
+        
+        if (response.ok) {
+            res.status(200).send(await response.text());
+        } else {
+            console.error('Failed to request upload URL:', await response.text());
+            res.sendStatus(response.status);
+        }
+    } catch (err) {
+        console.error('Error requesting upload URL:', err);
+        res.sendStatus(500);
+    }
 }

@@ -68,7 +68,7 @@ async function get_upload_url() {
             rerender.value++;
         } else {
             const errorData = await response.json();
-            console.error('Error:', errorData);
+            console.error('Error from server:', errorData);
             case_id_hint.value = "Invalid Case ID";
             case_id_hint_persist.value = true;
         }
@@ -76,6 +76,7 @@ async function get_upload_url() {
         console.error('Fetch error:', err);
     }
 }
+
 
 
 
