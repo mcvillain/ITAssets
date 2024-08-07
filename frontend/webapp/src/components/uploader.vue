@@ -60,7 +60,7 @@ async function get_upload_url() {
             rerender.value++;
             return;
         } else {
-            case_id_hint.value = "Invalid Case ID";
+            case_id_hint.value = "Invalid Case ID -- YO MAMMA";
             case_id_hint_persist.value = true;
         }
     }).catch(err => console.error(err));
