@@ -268,13 +268,12 @@ export async function get_uploader_url(
     const myHeaders = new Headers();
     myHeaders.append(
         "Authorization",
-        "Basic RmlsZVVwbG9hZGVyOkpUdXZ6T2l1Rjl4b2l1N1BCVFN2R1J2Zw=="
+        `Basic ${process.env.INVGATE_USER}`
     );
-    // myHeaders.append("Cookie", "PHPSESSID=ed4b2e86f2184cef0fd11183fc8a8cfb");
 
     const raw = "";
 
-    fetch(`https://aegis.sd.cloud.invgate.net/api/v1/incident?id=${case_id}`, {
+    fetch(`${process.env.INVGATE_URI}?=${case_id}`, {
         method: "GET",
         headers: myHeaders,
         body: raw,
