@@ -86,8 +86,7 @@ export async function ensure_db_structure() {
                 Hostname VARCHAR(255),
                 Size VARCHAR(255) NULL,
                 Cost FLOAT NULL,
-                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                UPDATE servers SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
+                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
         `);
         await conn.query(`

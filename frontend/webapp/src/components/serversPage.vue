@@ -60,13 +60,13 @@ export function formatDate(timestamp) {
   // Define options for date and time formatting
   const options = {
     year: '2-digit', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    timeZone: 'UTC'
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
   };
 
   // Format the date and time with Intl.DateTimeFormat
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
 
 
 onMounted(() => {
