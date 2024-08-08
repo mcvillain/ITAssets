@@ -217,7 +217,7 @@
 .collegeFrame {
     color: black;
     font-weight: bold;
-    background: #f1f1f1;
+    background: lime;
     border-radius: 1rem;
     padding: .5rem;
     margin-right: .25rem;
@@ -267,7 +267,7 @@
 
 /* Slideshow Animation Code */
 
-.slider {
+.slideshow {
     position: relative;
     animation: slideshow 20s ease infinite;
 }

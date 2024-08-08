@@ -2,7 +2,7 @@
     <notification />
 
     <!-- 2023 About Page -->
-
+    
     <div style="background: linear-gradient(to right, #27272d, #34343b, #5d5d6d); color: white;">
         <div class="frame">
             <div class="innerFrame">
@@ -240,25 +240,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="collegeGrid" style="background: linear-gradient(to right, #f26522, #ef3b32);">
-            <div class="aidenTeam" style="font-size: 50px;">
-
-                <div>
-                    <div class="slider">
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/JaredAboutPagePic.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
-                        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvenMoreFahd.png" />
-                    </div>
-
-                    <div class="picFrame"></div>
-                    <div class="picFrame2"></div>
-                </div>
-            </div>
-        </div>
-
-        <div style="margin: 3rem;"></div>
-
     </div>
 </template>
 

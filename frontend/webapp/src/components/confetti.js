@@ -1,162 +1,4 @@
-<template>
-
-    <!-- This line activates the confetti in the background -->
-
-    <div id="confetti"></div>
-
-    <!-- Party Mode Llama, Table, and slideshow -->
-
-    <notification />
-    <ood_notify v-if="ood" />
-
-    <!-- Llama photo -->
-    
-    <img id="spin" src="/src/assets/parent.webp" />
-
-    <div class="card text-center m-3">
-        <div class="card-body">
-            <h1 class="header" v-if="toggleDataTable.value == 'about'"></h1>
-            <h1 class="header" v-else-if="toggleDataTable.value == 'database'"></h1>
-            <h1 class="header" v-else></h1>
-            <div class="search-bar" v-if="toggleDataTable.value != 'about'">
-                <input style="color: black;" type="text" v-model="searchKeyword" placeholder="Search Name" />
-            </div>
-            <div v-if="toggleDataTable.value == 'about'">
-
-
-                <!-- <aboutPage></aboutPage> -->
-                <!--ABOUT PAGE CAN BE BUILT HERE
-            OR DESIGNED IN ANOTHER COMPONENT AND IMPORTED-->
-
-
-            </div>
-            
-            <!-- Data Table Code -->
-            
-            <table v-else-if="toggleDataTable.value == 'database'" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Size in GB</th>
-                        <th>Path</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="database in filteredDatabases" :key="database.name">
-                        <td>{{ database.name }}</td>
-                        <td>{{ database.size }}</td>
-                        <td>{{ database.paths }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table v-else="toggleDataTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th class="vm">VM Name</th>
-                        <th class="stat">Status</th>
-                        <th class="ip">IP</th>
-                        <th class="time">Last Check-In Time</th>
-                        <th class="hv">HyperVisor</th>
-                        <th class="host">Hostname</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="server in filteredServers" :key="server.VMName">
-                        <td>{{ server.VMName }}</td>
-                        <td>
-                            <div class="running" v-if="server.Status == 'Running'"></div>
-                            <div class="offline" v-else></div>
-                        </td>
-                        <td>{{ server.IP }}</td>
-                        <td>{{ server.LastCheckInTime }}</td>
-                        <td>{{ server.HyperVisor }}</td>
-                        <td>{{ server.Hostname }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Slideshow Code -->
-
-    
-
-    <div class="slideshow">
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/JaredAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvanAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/IanAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/EthanAboutPagePic.png" />
-    </div>
-
-
-</template>
-
-
-<script setup href="./confetti.js"> //DO NOT REMOVE HREF, Confetti Does not work without it
-import { ref, onMounted, computed } from "vue";
-import toggleDataTable from "./state.js";
-import "./aboutPage.css";
-import "https://code.jquery.com/jquery-1.11.0.js";
-import notification from "./notification.vue";
-import ood_notify from './ood_notify.vue';
-import router from "./router/index.js";
-const searchKeyword = ref("");
-var servers = ref(null);
-var databases = ref(null);
-console.log(toggleDataTable.value);
-var ood = false;
-
-// Fetches Data for Table
-
-onMounted(() => {
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/servers", {
-        credentials: "include",
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            servers.value = data.data;
-            ood = data.ood;
-        })
-        .catch((error) => {
-            console.error("Error fetching server data:", error);
-        });
-
-    fetch(import.meta.env.VITE_API_ENDPOINT + "/databases", {
-        credentials: "include",
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            databases.value = data;
-        })
-        .catch((error) => {
-            console.error("Error fetching database data:", error);
-        });
-});
-const filteredServers = computed(() => {
-    if (!searchKeyword.value) {
-        return servers.value;
-    }
-    return servers.value.filter((server) =>
-        server.VMName.toLowerCase().includes(searchKeyword.value.toLowerCase())
-    );
-});
-
-const filteredDatabases = computed(() => {
-    if (!searchKeyword.value) {
-        return databases.value;
-    }
-    const keywordTwo = searchKeyword.value.toLowerCase();
-    return databases.value.filter((databases) =>
-        databases.name.toLowerCase().includes(keywordTwo)
-    );
-});
-
-// All of the Needed JS confetti Code 
-// DO NOT REMOVE
-
-$(document).ready(function () {
+$(document).ready(function() {
     var frameRate = 30;
     var dt = 1.0 / frameRate;
     var DEG_TO_RAD = Math.PI / 180;
@@ -170,32 +12,32 @@ $(document).ready(function () {
 
     function Vector2(_x, _y) {
         this.x = _x, this.y = _y;
-        this.Length = function () {
+        this.Length = function() {
             return Math.sqrt(this.SqrLength());
         }
-        this.SqrLength = function () {
+        this.SqrLength = function() {
             return this.x * this.x + this.y * this.y;
         }
-        this.Equals = function (_vec0, _vec1) {
+        this.Equals = function(_vec0, _vec1) {
             return _vec0.x == _vec1.x && _vec0.y == _vec1.y;
         }
-        this.Add = function (_vec) {
+        this.Add = function(_vec) {
             this.x += _vec.x;
             this.y += _vec.y;
         }
-        this.Sub = function (_vec) {
+        this.Sub = function(_vec) {
             this.x -= _vec.x;
             this.y -= _vec.y;
         }
-        this.Div = function (_f) {
+        this.Div = function(_f) {
             this.x /= _f;
             this.y /= _f;
         }
-        this.Mul = function (_f) {
+        this.Mul = function(_f) {
             this.x *= _f;
             this.y *= _f;
         }
-        this.Normalize = function () {
+        this.Normalize = function() {
             var sqrLen = this.SqrLength();
             if (sqrLen != 0) {
                 var factor = 1.0 / Math.sqrt(sqrLen);
@@ -203,7 +45,7 @@ $(document).ready(function () {
                 this.y *= factor;
             }
         }
-        this.Normalized = function () {
+        this.Normalized = function() {
             var sqrLen = this.SqrLength();
             if (sqrLen != 0) {
                 var factor = 1.0 / Math.sqrt(sqrLen);
@@ -212,31 +54,31 @@ $(document).ready(function () {
             return new Vector2(0, 0);
         }
     }
-    Vector2.Lerp = function (_vec0, _vec1, _t) {
+    Vector2.Lerp = function(_vec0, _vec1, _t) {
         return new Vector2((_vec1.x - _vec0.x) * _t + _vec0.x, (_vec1.y - _vec0.y) * _t + _vec0.y);
     }
-    Vector2.Distance = function (_vec0, _vec1) {
+    Vector2.Distance = function(_vec0, _vec1) {
         return Math.sqrt(Vector2.SqrDistance(_vec0, _vec1));
     }
-    Vector2.SqrDistance = function (_vec0, _vec1) {
+    Vector2.SqrDistance = function(_vec0, _vec1) {
         var x = _vec0.x - _vec1.x;
         var y = _vec0.y - _vec1.y;
         return (x * x + y * y + z * z);
     }
-    Vector2.Scale = function (_vec0, _vec1) {
+    Vector2.Scale = function(_vec0, _vec1) {
         return new Vector2(_vec0.x * _vec1.x, _vec0.y * _vec1.y);
     }
-    Vector2.Min = function (_vec0, _vec1) {
+    Vector2.Min = function(_vec0, _vec1) {
         return new Vector2(Math.min(_vec0.x, _vec1.x), Math.min(_vec0.y, _vec1.y));
     }
-    Vector2.Max = function (_vec0, _vec1) {
+    Vector2.Max = function(_vec0, _vec1) {
         return new Vector2(Math.max(_vec0.x, _vec1.x), Math.max(_vec0.y, _vec1.y));
     }
-    Vector2.ClampMagnitude = function (_vec0, _len) {
+    Vector2.ClampMagnitude = function(_vec0, _len) {
         var vecNorm = _vec0.Normalized;
         return new Vector2(vecNorm.x * _len, vecNorm.y * _len);
     }
-    Vector2.Sub = function (_vec0, _vec1) {
+    Vector2.Sub = function(_vec0, _vec1) {
         return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y, _vec0.z - _vec1.z);
     }
 
@@ -246,10 +88,10 @@ $(document).ready(function () {
         this.drag = _drag;
         this.force = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
-        this.AddForce = function (_f) {
+        this.AddForce = function(_f) {
             this.force.Add(_f);
         }
-        this.Integrate = function (_dt) {
+        this.Integrate = function(_dt) {
             var acc = this.CurrentForce(this.position);
             acc.Div(this.mass);
             var posDelta = new Vector2(this.velocity.x, this.velocity.y);
@@ -259,7 +101,7 @@ $(document).ready(function () {
             this.velocity.Add(acc);
             this.force = new Vector2(0, 0);
         }
-        this.CurrentForce = function (_pos, _vel) {
+        this.CurrentForce = function(_pos, _vel) {
             var totalForce = new Vector2(this.force.x, this.force.y);
             var speed = this.velocity.Length();
             var dragVel = new Vector2(this.velocity.x, this.velocity.y);
@@ -289,7 +131,7 @@ $(document).ready(function () {
             var dy = Math.sin(this.angle + DEG_TO_RAD * (i * 90 + 45));
             this.corners[i] = new Vector2(dx, dy);
         }
-        this.Update = function (_dt) {
+        this.Update = function(_dt) {
             this.time += _dt;
             this.rotation += this.rotationSpeed * _dt;
             this.cosA = Math.cos(DEG_TO_RAD * this.rotation);
@@ -300,7 +142,7 @@ $(document).ready(function () {
                 this.pos.y = 0;
             }
         }
-        this.Draw = function (_g) {
+        this.Draw = function(_g) {
             if (this.cosA > 0) {
                 _g.fillStyle = this.frontColor;
             } else {
@@ -338,7 +180,7 @@ $(document).ready(function () {
         for (var i = 0; i < this.particleCount; i++) {
             this.particles[i] = new EulerMass(_x, _y - i * this.particleDist, this.particleMass, this.particleDrag);
         }
-        this.Update = function (_dt) {
+        this.Update = function(_dt) {
             var i = 0;
             this.time += _dt * this.oscillationSpeed;
             this.position.y += this.ySpeed * _dt;
@@ -369,7 +211,7 @@ $(document).ready(function () {
                 this.Reset();
             }
         }
-        this.Reset = function () {
+        this.Reset = function() {
             this.position.y = -Math.random() * ConfettiRibbon.bounds.y;
             this.position.x = Math.random() * ConfettiRibbon.bounds.x;
             this.prevPosition = new Vector2(this.position.x, this.position.y);
@@ -386,7 +228,7 @@ $(document).ready(function () {
                 this.particles[i] = new EulerMass(this.position.x, this.position.y - i * this.particleDist, this.particleMass, this.particleDrag);
             }
         }
-        this.Draw = function (_g) {
+        this.Draw = function(_g) {
             for (var i = 0; i < this.particleCount - 1; i++) {
                 var p0 = new Vector2(this.particles[i].position.x + this.xOff, this.particles[i].position.y + this.yOff);
                 var p1 = new Vector2(this.particles[i + 1].position.x + this.xOff, this.particles[i + 1].position.y + this.yOff);
@@ -439,14 +281,14 @@ $(document).ready(function () {
                 }
             }
         }
-        this.Side = function (x1, y1, x2, y2, x3, y3) {
+        this.Side = function(x1, y1, x2, y2, x3, y3) {
             return ((x1 - x2) * (y3 - y2) - (y1 - y2) * (x3 - x2));
         }
     }
     confetti = {};
-    confetti.Context = function (parent) {
+    confetti.Context = function(parent) {
         var i = 0;
-        ConfettiRibbon.bounds = new Vector2(0, 0);
+    ConfettiRibbon.bounds = new Vector2(0, 0);
         var canvasParent = document.getElementById(parent);
         var canvas = document.createElement('canvas');
         canvas.width = canvasParent.offsetWidth;
@@ -469,23 +311,23 @@ $(document).ready(function () {
         for (i = 0; i < confettiPaperCount; i++) {
             confettiPapers[i] = new ConfettiPaper(Math.random() * canvas.width, Math.random() * canvas.height);
         }
-        this.resize = function () {
+        this.resize = function() {
             canvas.width = canvasParent.offsetWidth;
             canvas.height = canvasParent.offsetHeight;
             ConfettiPaper.bounds = new Vector2(canvas.width, canvas.height);
             ConfettiRibbon.bounds = new Vector2(canvas.width, canvas.height);
         }
-        this.start = function () {
+        this.start = function() {
             this.stop()
             var context = this
-            this.interval = setInterval(function () {
+            this.interval = setInterval(function() {
                 confetti.update();
             }, 1000.0 / frameRate)
         }
-        this.stop = function () {
+        this.stop = function() {
             clearInterval(this.interval);
         }
-        this.update = function () {
+        this.update = function() {
             var i = 0;
             context.clearRect(0, 0, canvas.width, canvas.height);
             for (i = 0; i < confettiPaperCount; i++) {
@@ -500,181 +342,7 @@ $(document).ready(function () {
     }
     var confetti = new confetti.Context('confetti');
     confetti.start();
-    $(window).resize(function () {
+    $(window).resize(function() {
         confetti.resize();
     });
 });
-
-</script>
-
-<style>
-.background {
-    background: linear-gradient(to right, #2e5fe5, #a200ff);
-}
-
-#confetti {
-    background: linear-gradient(to right, #2e5fe5, #a200ff);
-    height: 100%;
-    left: 0px;
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    z-index: 0;
-}
-
-
-#spin:hover {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.styled-table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.running {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.5rem;
-    background-color: lime;
-    /*border: 1px solid black;*/
-    margin: auto;
-}
-
-.offline {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.5rem;
-    background-color: red;
-    /*border: 1px solid black;*/
-    margin: auto;
-}
-
-.search-bar {
-    border: 1px solid rgb(206, 206, 206);
-    background-color: #f3f5ff;
-    width: 195px;
-    margin-left: 10px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-input[type="text"] {
-    text-align: center;
-}
-
-.vm:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.stat:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.ip:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.time:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.hv:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.host:hover {
-    background-color: #3a25af;
-    scale: 105%;
-    transition: ease 0.5s;
-}
-
-.styled-table thead tr {
-    background-color: #2e50e9;
-    color: #ffffff;
-    text-align: center;
-}
-
-.styled-table tbody tr:nth-of-type(even):focus {
-    background-color: #f3f3f3;
-}
-
-.styled-table th,
-.styled-table td {
-    padding: 12px 15px;
-}
-
-.styled-table tbody tr:nth-of-type(red) {
-    background-color: #eb9696;
-}
-
-.styled-table tbody tr {
-    background-color: #e0e0e0;
-    border-bottom: 1px solid #dddddd;
-}
-
-.styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-.styled-table tbody tr:last-of-type {
-    background-color: #ffffff;
-    border-bottom: 2px solid #2e50e9;
-}
-
-.styled-table tbody tr.active-row {
-    font-weight: bold;
-    color: #009879;
-}
-
-h3 {
-    margin: 40px 0 0;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    display: inline-block;
-    margin: 0 10px;
-}
-
-a {
-    color: #42b983;
-}
-
-
-/* 
-body {
-    background: linear-gradient(to right, #2e5fe5, #a200ff);
-} */
-
-</style>
