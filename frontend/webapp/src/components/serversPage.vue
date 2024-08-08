@@ -53,13 +53,26 @@ const headers = [
 ];
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 
+function formatDate(timestamp) {
+  const date = new Date(timestamp);
+  const options = {
+    year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZoneName: 'short'
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
 onMounted(() => {
     fetch(import.meta.env.VITE_API_ENDPOINT + "/servers", {
         credentials: "include",
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.data);
+            // Use the formatDate method for each server's LastCheckInTime
+            data.data.forEach(server => {
+              server.LastCheckInTime = formatDate(server.LastCheckInTime);
+            });
             databases.value = data.data;
             ood = data.ood;
             loading.value = false;
