@@ -57,9 +57,8 @@ async function get_upload_url() {
     };
     try {
         const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/request_upload_url/${case_id.value}`, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({ case_id: case_id.value })
+            method: 'GET',
+            headers: headers
         });
 
         if (response.ok) {
@@ -76,6 +75,7 @@ async function get_upload_url() {
         console.error('Fetch error:', err);
     }
 }
+
 
 
 
