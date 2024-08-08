@@ -235,16 +235,17 @@ export async function get_uploader_url(
         res.sendStatus(401);
         return;
     }
-    
+
     const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
     if (!(auth_lvl >= 1 && auth_lvl <= 3)) {
         res.sendStatus(401);
         return;
     }
-    
+
     let username;
     if (auth_lvl < 3) {
-        const user_id: AuthenticationResult | undefined = await loginMemcache.get(session_id);
+        const user_id: AuthenticationResult | undefined =
+            await loginMemcache.get(session_id);
         if (!user_id) {
             res.sendStatus(401);
             return;
@@ -256,7 +257,7 @@ export async function get_uploader_url(
             return;
         }
     }
-    
+
     const case_id = req.params.case_uuid;
     if (!case_id) {
         res.sendStatus(400);
@@ -264,54 +265,95 @@ export async function get_uploader_url(
     }
 
     let itar = false;
-    try {
-        let headers = new Headers();
-        // Correctly set the Authorization header
-        headers.set('Authorization', 'Basic ' + Buffer.from(`${process.env.INVGATE_USER}:${process.env.INVGATE_PASS}`).toString('base64'));
+    const myHeaders = new Headers();
+    myHeaders.append(
+        "Authorization",
+        "Basic RmlsZVVwbG9hZGVyOkpUdXZ6T2l1Rjl4b2l1N1BCVFN2R1J2Zw=="
+    );
+    myHeaders.append("Cookie", "PHPSESSID=ed4b2e86f2184cef0fd11183fc8a8cfb");
 
-        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, { headers });
+    const raw = "";
 
-        console.log('INVGATE response status:', resp.status);
-        const textResponse = await resp.text();
-        console.log('INVGATE response body:', textResponse);
+    fetch("https://aegis.sd.cloud.invgate.net/api/v1/incident?id=1556", {
+        method: "GET",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+    })
+        .then((response) => response.text())
+        .then((result) => {
+            console.log(result);
 
-        if (!resp.ok) {
-            console.error('Failed to fetch case ID details:', textResponse);
-            res.sendStatus(404);
-            return;
-        }
+            // Parse the result to get custom fields
+            const custom_fields = JSON.parse(result).custom_fields;
+            console.log("Custom fields:", custom_fields);
 
-        const custom_fields = JSON.parse(textResponse).custom_fields;
-        console.log('Custom fields:', custom_fields);
+            // Check the ITAR field
+            const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
+            console.log("ITAR:", itar);
+        })
+        .catch((error) => console.error(error));
 
-        itar = custom_fields['8'] === 'true';  // Ensure you check the exact format of this value
-    } catch (err) {
-        console.error('Error verifying case ID:', err);
-        res.status(500).send("Couldn't verify case ID");
-        return;
-    }
-    
+    // Correctly set the Authorization header
+    // const headers = new Headers();
+    // headers.set(
+    //     "Authorization",
+    //     "Basic " +
+    //         Buffer.from(
+    //             `${process.env.INVGATE_USER}:${process.env.INVGATE_PASS}`
+    //         ).toString("base64")
+    // );
+
+    // const fetchCaseDetails = async (case_id: any) => {
+    //     try {
+    //         const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
+    //             headers,
+    //         });
+
+    //         console.log("INVGATE response status:", resp.status);
+    //         const textResponse = await resp.text();
+    //         console.log("INVGATE response body:", textResponse);
+
+    //         if (!resp.ok) {
+    //             console.error("Failed to fetch case ID details:", textResponse);
+    //             res.sendStatus(404);
+    //             return;
+    //         }
+
+    //         const custom_fields = JSON.parse(textResponse).custom_fields;
+    //         console.log("Custom fields:", custom_fields);
+
+    //         const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
+    //         console.log("ITAR:", itar);
+    //     } catch (err) {
+    //         console.error("Error verifying case ID:", err);
+    //         res.status(500).send("Couldn't verify case ID");
+    //         return;
+    //     }
+
     let message: SignedMessage = signMessage(crypto.randomUUID());
     try {
         const response = await fetch(`${UPLOAD_SERVICE}/request_upload_url`, {
             headers: new Headers({
                 "Content-Type": "application/json",
-                'signature': message.signature,
-                'verify': message.message
+                signature: message.signature,
+                verify: message.message,
             }),
             body: JSON.stringify({ case_id, owner: username, itar }),
             method: "POST",
         });
-        
+
         if (response.ok) {
             res.status(200).send(await response.text());
         } else {
-            console.error('Failed to request upload URL:', await response.text());
+            console.error(
+                "Failed to request upload URL:",
+                await response.text()
+            );
             res.sendStatus(response.status);
         }
     } catch (err) {
-        console.error('Error requesting upload URL:', err);
+        console.error("Error requesting upload URL:", err);
         res.sendStatus(500);
     }
 }
-
