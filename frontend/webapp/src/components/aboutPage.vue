@@ -2,7 +2,7 @@
     <notification />
 
     <!-- 2023 About Page -->
-    
+
     <div style="background: linear-gradient(to right, #27272d, #34343b, #5d5d6d); color: white;">
         <div class="frame">
             <div class="innerFrame">
@@ -24,7 +24,7 @@
 
         <!-- Descriptions for the 2023 It Assets Page: -->
         <div style="background: #f1f1f1; border-radius: 1rem; margin-right: 1rem;">
-            <div class="p" style="" >
+            <div class="p" style="">
                 <div class="innerP">Backend</div>
             </div>
             <div class="textp" style="margin: 3rem; margin-bottom: 6rem;">
@@ -91,8 +91,9 @@
                 <div class="card-body">
                     <ood_notify v-if="ood" />
                     <h1 class="header" style="color: black;">2023 Servers Page</h1>
-                    <div id="server-bar" >
-                        <input style="color: black;" type="text" v-model="serverSearchKeyword" placeholder="Search Servers" />
+                    <div id="server-bar">
+                        <input style="color: black;" type="text" v-model="serverSearchKeyword"
+                            placeholder="Search Servers" />
                     </div>
                     <table class="styled-table">
                         <thead>
@@ -101,7 +102,7 @@
                                 <th class="vm" @click="sortBy('VMName')">VM Name {{ getSortingIcon('VMName') }}</th>
                                 <th class="stat status_row_cell" @click="sortBy('Status')">Status {{
                                     getSortingIcon('Status')
-                                    }}</th>
+                                }}</th>
                                 <th class="ip" @click="sortBy('IP')">IP {{ getSortingIcon('IP') }}</th>
                                 <th class="time" @click="sortBy('LastCheckInTime')">Last Check-In Time {{
                                     getSortingIcon('LastCheckInTime') }}</th>
@@ -167,7 +168,9 @@
                     <div class="textB2024" style="line-height: 2;">
 
                         <!-- Team Description Goes Here: -->
-
+                        <div>
+                            (Aiden Sheeran, Fahd Khan, Jared Werts, and Stephen Trezza) <br> <br>
+                        </div>
 
 
                         We have two types of customers:
@@ -207,6 +210,8 @@
                     <div class="textB2024">
 
                         <!-- Team Description Goes Here: -->
+
+                        (Brey Rivera, Evan Comiciotto, Ethan Pakuris, and Ian Whitaker) <br> <br>
 
                         Saas Page
 
