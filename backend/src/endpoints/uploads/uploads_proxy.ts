@@ -270,7 +270,7 @@ export async function get_uploader_url(
         "Authorization",
         "Basic RmlsZVVwbG9hZGVyOkpUdXZ6T2l1Rjl4b2l1N1BCVFN2R1J2Zw=="
     );
-    myHeaders.append("Cookie", "PHPSESSID=ed4b2e86f2184cef0fd11183fc8a8cfb");
+    // myHeaders.append("Cookie", "PHPSESSID=ed4b2e86f2184cef0fd11183fc8a8cfb");
 
     const raw = "";
 
