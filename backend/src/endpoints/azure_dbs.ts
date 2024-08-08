@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { IncomingAzureDB, AzureDatabase, OutOfDate } from "../types";
+import { IncomingAzureDB, AzureDatabase, OutOfDate, convertIsoToEst } from "../types";
 import { AzureDatabases, OutOfDate as OutOfDateCache } from "../const";
 import NodeCache from "node-cache";
 import { getAzDBPricePerGB } from "../util";
@@ -90,7 +90,7 @@ export async function get_azuredb_csv(
         const data: AzureDatabase[] = _data as AzureDatabase[];
         let filedata = 'Name, Size, Created, Version, Cost, File Paths\n';
         data.forEach((db:AzureDatabase) => {
-            filedata+=`${db.name}, ${db.size}, ${db.created}, ${db.version}, ${db.cost}, ${db.paths.join('|')}\n`;
+            filedata+=`${db.name}, ${db.size}, ${convertIsoToEst(db.created)}, ${db.version}, ${db.cost}, ${db.paths.join('|')}\n`;
         });
         res.status(200).contentType('text/csv').send(filedata);
         return;
