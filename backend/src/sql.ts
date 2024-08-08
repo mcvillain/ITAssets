@@ -81,12 +81,13 @@ export async function ensure_db_structure() {
             CREATE TABLE IF NOT EXISTS servers (
                 Status VARCHAR(7),
                 IP VARCHAR(15),
-                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 VMName VARCHAR(255) PRIMARY KEY,
                 HyperVisor VARCHAR(255),
                 Hostname VARCHAR(255),
                 Size VARCHAR(255) NULL,
-                Cost FLOAT NULL
+                Cost FLOAT NULL,
+                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                UPDATE servers SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
             );
         `);
         await conn.query(`
