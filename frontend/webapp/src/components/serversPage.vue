@@ -59,6 +59,7 @@ onMounted(() => {
     })
         .then((response) => response.json())
         .then((data) => {
+            console.log(data.data);
             databases.value = data.data;
             ood = data.ood;
             loading.value = false;
