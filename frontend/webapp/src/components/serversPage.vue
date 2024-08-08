@@ -53,12 +53,32 @@ const headers = [
 ];
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 
+export function formatDate(timestamp) {
+  // Create a Date object from the timestamp
+  const date = new Date(timestamp);
+
+  // Define options for date and time formatting
+  const options = {
+    year: '2-digit', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  };
+
+  // Format the date and time with Intl.DateTimeFormat
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
+
+
 onMounted(() => {
     fetch(import.meta.env.VITE_API_ENDPOINT + "/servers", {
         credentials: "include",
     })
         .then((response) => response.json())
         .then((data) => {
+            // Use the formatDate method for each server's LastCheckInTime
+            data.data.forEach(server => {
+              server.LastCheckInTime = formatDate(server.LastCheckInTime);
+            });
             databases.value = data.data;
             ood = data.ood;
             loading.value = false;

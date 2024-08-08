@@ -8,7 +8,13 @@ import {
     convert_sql_azure_db,
     convert_sql_local_db,
 } from "./types";
-import { AzureDatabases, ItarDatabases, LocalDatabases, Servers, Users as UserCache } from "./const";
+import {
+    AzureDatabases,
+    ItarDatabases,
+    LocalDatabases,
+    Servers,
+    Users as UserCache,
+} from "./const";
 let _pool: mariadb.Pool | undefined;
 function getPool(): mariadb.Pool {
     if (!_pool) {
@@ -34,6 +40,18 @@ export async function ensure_db_structure() {
         await _conn.end();
         const conn = await getPool().getConnection();
         await conn.query(`
+        CREATE FUNCTION ConvertIsoToEst(@isoTimestamp DATETIME)
+            RETURNS NVARCHAR(50)
+            AS
+            BEGIN
+            DECLARE @estTime DATETIMEOFFSET;
+            -- Convert the DATETIME to EST timezone (-5 hours from UTC)
+            SET @estTime = SWITCHOFFSET(TODATETIMEOFFSET(@isoTimestamp, '+00:00'), '-05:00');
+            -- Format the date and time in MM-DD-YY HH:MM:SSS format
+            RETURN FORMAT(@estTime, 'MM-dd-yy HH:mm:ss.fff', 'en-US');
+            END;
+        `);
+        await conn.query(`
             CREATE TABLE IF NOT EXISTS azure_dbs (
                 name VARCHAR(255) PRIMARY KEY,
                 size FLOAT,
@@ -44,6 +62,7 @@ export async function ensure_db_structure() {
                 version VARCHAR(15) DEFAULT NULL,
                 itar BOOLEAN DEFAULT FALSE,
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
             );
         `);
         await conn.query(`
@@ -62,12 +81,12 @@ export async function ensure_db_structure() {
             CREATE TABLE IF NOT EXISTS servers (
                 Status VARCHAR(7),
                 IP VARCHAR(15),
-                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 VMName VARCHAR(255) PRIMARY KEY,
                 HyperVisor VARCHAR(255),
                 Hostname VARCHAR(255),
                 Size VARCHAR(255) NULL,
-                Cost FLOAT NULL
+                Cost FLOAT NULL,
+                LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
         `);
         await conn.query(`
@@ -87,12 +106,14 @@ export async function ensure_db_structure() {
     } catch (err) {
         console.error("Waiting for sql server...");
         let prom;
-        setTimeout(()=>prom=ensure_db_structure(), 1000);
+        setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
-    } 
+    }
 }
 
-export async function execute_sql(query: string | mariadb.QueryOptions): Promise<any> {
+export async function execute_sql(
+    query: string | mariadb.QueryOptions
+): Promise<any> {
     let conn;
     let resp;
     try {
@@ -113,7 +134,9 @@ export async function restore_state(data_cache: NodeCache) {
 }
 
 async function restore_azure_dbs(data_cache: NodeCache) {
-    let az_dbs: SQL_AzureDB[] = await execute_sql("SELECT * FROM azure_dbs WHERE itar = 0;");
+    let az_dbs: SQL_AzureDB[] = await execute_sql(
+        "SELECT * FROM azure_dbs WHERE itar = 0;"
+    );
     data_cache.set(
         AzureDatabases,
         az_dbs.map((db: SQL_AzureDB) => convert_sql_azure_db(db))
@@ -121,7 +144,9 @@ async function restore_azure_dbs(data_cache: NodeCache) {
 }
 
 async function restore_itar_dbs(data_cache: NodeCache) {
-    let az_dbs: SQL_AzureDB[] = await execute_sql("SELECT * FROM azure_dbs WHERE itar = 1;");
+    let az_dbs: SQL_AzureDB[] = await execute_sql(
+        "SELECT * FROM azure_dbs WHERE itar = 1;"
+    );
     data_cache.set(
         ItarDatabases,
         az_dbs.map((db: SQL_AzureDB) => convert_sql_azure_db(db))
@@ -129,7 +154,9 @@ async function restore_itar_dbs(data_cache: NodeCache) {
 }
 
 async function restore_local_dbs(data_cache: NodeCache) {
-    let local_dbs: SQL_LocalDatabase[] = await execute_sql("SELECT * FROM local_dbs");
+    let local_dbs: SQL_LocalDatabase[] = await execute_sql(
+        "SELECT * FROM local_dbs"
+    );
     data_cache.set(
         LocalDatabases,
         local_dbs.map((db: SQL_LocalDatabase) => convert_sql_local_db(db))
@@ -138,30 +165,39 @@ async function restore_local_dbs(data_cache: NodeCache) {
 
 async function restore_servers(data_cache: NodeCache) {
     let servers: Server[] = await execute_sql("SELECT * FROM servers");
-    data_cache.set(
-        Servers,
-        servers
-    );
+    data_cache.set(Servers, servers);
 }
 
 async function restore_users(data_cache: NodeCache) {
     // Query Data
-    let total_users = (await execute_sql("SELECT value FROM users WHERE totalUsers = TRUE"))[0]?.value;
-    let service_accounts = (await execute_sql("SELECT value FROM users WHERE serviceAccounts = TRUE"))[0]?.value;
-    let departments = await execute_sql("SELECT name, value FROM users WHERE department = TRUE");
-    let titles = await execute_sql("SELECT name, value FROM users WHERE title = TRUE");
-    let managers = await execute_sql("SELECT name, value FROM users WHERE manager = TRUE");
+    let total_users = (
+        await execute_sql("SELECT value FROM users WHERE totalUsers = TRUE")
+    )[0]?.value;
+    let service_accounts = (
+        await execute_sql(
+            "SELECT value FROM users WHERE serviceAccounts = TRUE"
+        )
+    )[0]?.value;
+    let departments = await execute_sql(
+        "SELECT name, value FROM users WHERE department = TRUE"
+    );
+    let titles = await execute_sql(
+        "SELECT name, value FROM users WHERE title = TRUE"
+    );
+    let managers = await execute_sql(
+        "SELECT name, value FROM users WHERE manager = TRUE"
+    );
     // Structure Data
     let users = new Users();
     users.totalUsers = total_users;
     users.serviceAccounts = service_accounts;
-    departments.forEach((dept: {name:string, value: number}) => {
+    departments.forEach((dept: { name: string; value: number }) => {
         users.departments[dept.name] = dept.value;
     });
-    titles.forEach((title: {name:string, value: number}) => {
+    titles.forEach((title: { name: string; value: number }) => {
         users.title[title.name] = title.value;
     });
-    managers.forEach((manager: {name:string, value: number}) => {
+    managers.forEach((manager: { name: string; value: number }) => {
         users.manager[manager.name] = manager.value;
     });
     data_cache.set(UserCache, users);

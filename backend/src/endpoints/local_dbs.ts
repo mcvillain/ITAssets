@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { get_auth_lvl } from "./auth";
-import { IncomingLocalDB, LocalDatabase, OutOfDate, convertIsoToEst} from "../types";
+import { IncomingLocalDB, LocalDatabase, OutOfDate} from "../types";
 import { LocalDatabases, OutOfDate as OutOfDateCache } from "../const";
 import NodeCache from "node-cache";
 import { execute_sql } from "../sql";
@@ -86,7 +86,7 @@ export async function get_localdb_csv(
         const data: LocalDatabase[] = _data as LocalDatabase[];
         let filedata = 'Name, Size, Created, Version, File Paths\n';
         data.forEach((db:LocalDatabase) => {
-            filedata+=`${db.name}, ${db.size}, ${convertIsoToEst(db.created)}, ${db.version}, ${db.paths.join('|')}\n`;
+            filedata+=`${db.name}, ${db.size}, ${db.created}, ${db.version}, ${db.paths.join('|')}\n`;
         });
         res.status(200).contentType('text/csv').send(filedata);
         return;
