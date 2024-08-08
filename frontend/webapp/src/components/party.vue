@@ -87,7 +87,9 @@
         <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
         <img id="groupPhoto" class="collegePic2" src="/src/assets/EvanAboutPagePic.png" />
         <img id="groupPhoto" class="collegePic2" src="/src/assets/IanAboutPagePic.png" />
+        <img id="groupPhoto" class="collegePic2" src="/src/assets/StephenAboutPagePic.png" style="border-radius: 1rem;" />
         <img id="groupPhoto" class="collegePic2" src="/src/assets/EthanAboutPagePic.png" />
+        <img id="groupPhoto" class="collegePic2" src="/src/components/router/cheese.gif" />
     </div>
 
 
