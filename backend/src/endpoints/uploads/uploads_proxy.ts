@@ -274,7 +274,7 @@ export async function get_uploader_url(
 
     const raw = "";
 
-    fetch("https://aegis.sd.cloud.invgate.net/api/v1/incident?id=1556", {
+    fetch(`https://aegis.sd.cloud.invgate.net/api/v1/incident?id=${case_id}`, {
         method: "GET",
         headers: myHeaders,
         body: raw,
