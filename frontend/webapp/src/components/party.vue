@@ -522,6 +522,10 @@ $(document).ready(function () {
     z-index: 0;
 }
 
+#spin {
+    position: relative;
+    z-index: 1;
+}
 
 #spin:hover {
     animation: spin 1s linear infinite;
@@ -546,6 +550,8 @@ $(document).ready(function () {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .running {
@@ -573,6 +579,9 @@ $(document).ready(function () {
     margin-left: 10px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    z-index: 1;
+    border-radius: 1rem;
 }
 
 input[type="text"] {
