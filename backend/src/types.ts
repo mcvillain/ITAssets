@@ -126,3 +126,29 @@ export class OutOfDate {
     itarDatabases = true;
     users = true;
 }
+
+export function convertIsoToEst(isoString: any) {
+    // Parse the ISO string to a Date object
+    const date = new Date(isoString);
+
+    // Convert to EST timezone (-5 hours from UTC)
+    const estTime = new Date(date.getTime() - (5*60*60*1000));
+
+    // Format the date and time in MM-DD-YY HH:MM:SSS format
+    const formattedDate = estTime.toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }).replace(',', '');
+
+    // Extract milliseconds
+    const milliseconds = estTime.getMilliseconds().toString().padStart(3, '0');
+
+    // Combine the formatted date and milliseconds
+    return `${formattedDate}.${milliseconds}`;
+}
