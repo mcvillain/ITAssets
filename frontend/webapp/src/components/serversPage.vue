@@ -53,15 +53,21 @@ const headers = [
 ];
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 
-function formatDate(timestamp) {
+export function formatDate(timestamp) {
+  // Create a Date object from the timestamp
   const date = new Date(timestamp);
+
+  // Define options for date and time formatting
   const options = {
-    year: 'numeric', month: 'long', day: 'numeric',
+    year: '2-digit', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', second: '2-digit',
-    timeZoneName: 'short'
+    timeZone: 'UTC'
   };
+
+  // Format the date and time with Intl.DateTimeFormat
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
 
 onMounted(() => {
     fetch(import.meta.env.VITE_API_ENDPOINT + "/servers", {
