@@ -222,6 +222,7 @@
                 <div class="teamFrameWhite" style="background: white;">
                     <div class="textB2024">
                         <img class="breyflowchart2024" src="/src/assets/teamBreyFlowChart.png">
+                        <img class="breyflowchart2024" src="/src/assets/BreyFlowChartTwo.png">
                     </div>
                 </div>
             </div>
