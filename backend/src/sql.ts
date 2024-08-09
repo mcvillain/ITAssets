@@ -22,7 +22,7 @@ function getPool(): mariadb.Pool {
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            connectionLimit: 10000,
+            connectionLimit: 1000,
             database: "itassets",
         });
     }
@@ -119,8 +119,17 @@ export async function execute_sql(
     try {
         conn = await getPool().getConnection();
         resp = await conn.query(query);
+    } catch (error) {
+        console.error('Error executing query:', error);
+        throw error; // Re-throw the error after logging it
     } finally {
-        if (conn) conn.release();
+        if (conn) {
+            try {
+                conn.release();
+            } catch (releaseError) {
+                console.error('Error releasing connection:', releaseError);
+            }
+        }
     }
     return resp;
 }
