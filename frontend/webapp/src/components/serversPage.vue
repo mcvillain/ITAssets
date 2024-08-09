@@ -53,7 +53,7 @@ const headers = [
 ];
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 
-export function formatDate(timestamp) {
+function formatDate(timestamp) {
   // Create a Date object from the timestamp
   const date = new Date(timestamp);
 
