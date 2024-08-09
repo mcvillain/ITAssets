@@ -10,7 +10,7 @@
     <ood_notify v-if="ood" />
 
     <!-- Llama photo -->
-    
+
     <img id="spin" src="/src/assets/parent.webp" />
 
     <div class="card text-center m-3">
@@ -21,18 +21,11 @@
             <div class="search-bar" v-if="toggleDataTable.value != 'about'">
                 <input style="color: black;" type="text" v-model="searchKeyword" placeholder="Search Name" />
             </div>
-            <div v-if="toggleDataTable.value == 'about'">
+            <div v-if="toggleDataTable.value == 'about'"></div>
 
+            <!-- I assume Aiden tried to create a toggle button to switch between two types of tables (Servers and Databases) 
+            But is not implemented within the page itself-->
 
-                <!-- <aboutPage></aboutPage> -->
-                <!--ABOUT PAGE CAN BE BUILT HERE
-            OR DESIGNED IN ANOTHER COMPONENT AND IMPORTED-->
-
-
-            </div>
-            
-            <!-- Data Table Code -->
-            
             <table v-else-if="toggleDataTable.value == 'database'" class="styled-table">
                 <thead>
                     <tr>
@@ -49,6 +42,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Data Table Code (Same as the original 2023 Servers Datatable) -->
 
             <table v-else="toggleDataTable" class="styled-table">
                 <thead>
@@ -78,39 +73,41 @@
         </div>
     </div>
 
+
     <!-- Slideshow Code -->
 
-    
 
     <div class="slideshow">
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/JaredAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/MoreFahd.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/EvanAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/IanAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/StephenAboutPagePic.png" style="border-radius: 1rem;" />
-        <img id="groupPhoto" class="collegePic2" src="/src/assets/EthanAboutPagePic.png" />
-        <img id="groupPhoto" class="collegePic2" src="/src/components/router/cheese.gif" />
+        <img class="collegePic2" src="/src/assets/JaredAboutPagePic.png" />
+        <img class="collegePic2" src="/src/assets/MoreFahd.png" />
+        <img class="collegePic2" src="/src/assets/EvanAboutPagePic.png" />
+        <img class="collegePic2" src="/src/assets/IanAboutPagePic.png" />
+        <img class="collegePic2" src="/src/assets/StephenAboutPagePic.png"
+            style="border-radius: 1rem;" />
+        <img class="collegePic2" src="/src/assets/EthanAboutPagePic.png" />
+        <img class="collegePic2" src="/src/components/router/cheese.gif" />
     </div>
 
 
 </template>
 
 
-<script setup href="./confetti.js"> //DO NOT REMOVE HREF, Confetti Does not work without it
+<script setup href="./confetti.js">//DO NOT REMOVE HREF, Confetti Does not work without it
 import { ref, onMounted, computed } from "vue";
 import toggleDataTable from "./state.js";
 import "./aboutPage.css";
-import "https://code.jquery.com/jquery-1.11.0.js";
+import "https://code.jquery.com/jquery-1.11.0.js"; //DO NOT REMOVE, Confetti Does not work without it
 import notification from "./notification.vue";
 import ood_notify from './ood_notify.vue';
 import router from "./router/index.js";
+
 const searchKeyword = ref("");
 var servers = ref(null);
 var databases = ref(null);
 console.log(toggleDataTable.value);
 var ood = false;
 
-// Fetches Data for Table
+// Fetches Data for the Servers Table and Internal DB Table
 
 onMounted(() => {
     fetch(import.meta.env.VITE_API_ENDPOINT + "/servers", {
@@ -136,6 +133,9 @@ onMounted(() => {
             console.error("Error fetching database data:", error);
         });
 });
+
+// Allows Data to be filtered
+
 const filteredServers = computed(() => {
     if (!searchKeyword.value) {
         return servers.value;
@@ -156,7 +156,7 @@ const filteredDatabases = computed(() => {
 });
 
 // All of the Needed JS confetti Code 
-// DO NOT REMOVE
+// DO NOT REMOVE LINES 158-505, Confetti will not work without it
 
 $(document).ready(function () {
     var frameRate = 30;
@@ -510,9 +510,8 @@ $(document).ready(function () {
 </script>
 
 <style>
-.background {
-    background: linear-gradient(to right, #2e5fe5, #a200ff);
-}
+
+/* calls the confetti within the actual page. also has the color of what the background is */
 
 #confetti {
     background: linear-gradient(to right, #2e5fe5, #a200ff);
@@ -524,9 +523,11 @@ $(document).ready(function () {
     z-index: 0;
 }
 
+/* defines the spin animation for the fortnite llama */
+
 #spin {
     position: relative;
-    z-index: 1;
+     z-index: 1; /* Puts the llama infront of the background */
 }
 
 #spin:hover {
@@ -543,6 +544,8 @@ $(document).ready(function () {
     }
 }
 
+
+
 .styled-table {
     border-collapse: collapse;
     margin: 25px 0;
@@ -553,7 +556,7 @@ $(document).ready(function () {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    z-index: 1;
+    z-index: 1; /* Puts the table infront of the background */
 }
 
 .running {
@@ -561,7 +564,6 @@ $(document).ready(function () {
     height: 1rem;
     border-radius: 0.5rem;
     background-color: lime;
-    /*border: 1px solid black;*/
     margin: auto;
 }
 
@@ -570,7 +572,6 @@ $(document).ready(function () {
     height: 1rem;
     border-radius: 0.5rem;
     background-color: red;
-    /*border: 1px solid black;*/
     margin: auto;
 }
 
@@ -582,13 +583,15 @@ $(document).ready(function () {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    z-index: 1;
+    z-index: 1; /* Puts the search bar infront of the background */
     border-radius: 1rem;
 }
 
 input[type="text"] {
     text-align: center;
 }
+
+/* All the code that darkens the header when your mouse hovers over it */
 
 .vm:hover {
     background-color: #3a25af;
@@ -626,11 +629,15 @@ input[type="text"] {
     transition: ease 0.5s;
 }
 
+/* what defines the natural color of the header */
+
 .styled-table thead tr {
     background-color: #2e50e9;
     color: #ffffff;
     text-align: center;
 }
+
+/* Defines the color for the body of the table */
 
 .styled-table tbody tr:nth-of-type(even):focus {
     background-color: #f3f3f3;
@@ -681,11 +688,5 @@ li {
 a {
     color: #42b983;
 }
-
-
-/* 
-body {
-    background: linear-gradient(to right, #2e5fe5, #a200ff);
-} */
 
 </style>
