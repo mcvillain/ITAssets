@@ -4,7 +4,7 @@
 
     <div id="confetti"></div>
 
-    <!-- Party Mode Llama, Table, and slideshow -->
+    <!-- The notification and OutOfDate_notify being called -->
 
     <notification />
     <ood_notify v-if="ood" />
@@ -155,8 +155,10 @@ const filteredDatabases = computed(() => {
     );
 });
 
+
 // All of the Needed JS confetti Code 
-// DO NOT REMOVE LINES 158-505, Confetti will not work without it
+// DO NOT REMOVE LINES 158-510, Confetti will not work without it
+
 
 $(document).ready(function () {
     var frameRate = 30;
@@ -511,7 +513,9 @@ $(document).ready(function () {
 
 <style>
 
+
 /* calls the confetti within the actual page. also has the color of what the background is */
+
 
 #confetti {
     background: linear-gradient(to right, #2e5fe5, #a200ff);
@@ -523,7 +527,9 @@ $(document).ready(function () {
     z-index: 0;
 }
 
+
 /* defines the spin animation for the fortnite llama */
+
 
 #spin {
     position: relative;
@@ -544,6 +550,8 @@ $(document).ready(function () {
     }
 }
 
+
+ /* All of the css for the datatable */
 
 
 .styled-table {
@@ -591,7 +599,9 @@ input[type="text"] {
     text-align: center;
 }
 
+
 /* All the code that darkens the header when your mouse hovers over it */
+
 
 .vm:hover {
     background-color: #3a25af;
@@ -629,7 +639,9 @@ input[type="text"] {
     transition: ease 0.5s;
 }
 
+
 /* what defines the natural color of the header */
+
 
 .styled-table thead tr {
     background-color: #2e50e9;
@@ -637,7 +649,9 @@ input[type="text"] {
     text-align: center;
 }
 
+
 /* Defines the color for the body of the table */
+
 
 .styled-table tbody tr:nth-of-type(even):focus {
     background-color: #f3f3f3;
