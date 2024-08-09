@@ -52,6 +52,7 @@ export async function ensure_uploaderdb() {
         console.warn("Waiting for sql server...");
         // console.error(err)
         let prom;
+        if (conn) conn.release();
         setTimeout(()=>prom=ensure_uploaderdb(), 1000);
         await prom;
     } 
