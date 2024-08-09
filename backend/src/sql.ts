@@ -40,6 +40,7 @@ export async function ensure_db_structure() {
         await _conn.query("CREATE DATABASE IF NOT EXISTS itassets;");
         await _conn.end();
         conn = await getPool().getConnection();
+        /*
         await conn.query(`
         CREATE FUNCTION ConvertIsoToEst(@isoTimestamp DATETIME)
             RETURNS NVARCHAR(50)
@@ -52,6 +53,7 @@ export async function ensure_db_structure() {
             RETURN FORMAT(@estTime, 'MM-dd-yy HH:mm:ss.fff', 'en-US');
             END;
         `);
+        */
         await conn.query(`
             CREATE TABLE IF NOT EXISTS azure_dbs (
                 name VARCHAR(255) PRIMARY KEY,
@@ -107,11 +109,9 @@ export async function ensure_db_structure() {
     } catch (err) {
         console.error("Waiting for sql server..." + err );
         let prom;
-        conn?.release();
+        if (conn) conn.release();
         setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
-        
-        
     }
 }
 
