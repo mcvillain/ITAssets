@@ -16,7 +16,7 @@ import session from "express-session";
 import { startup_backend_loop } from "./daemon_service";
 import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 import { get_uploader_get_case_id_from_upload_guid } from "./endpoints/uploader_get_case_id_from_upload_guid";
-setTimeout(startup_backend_loop,1000);
+setTimeout(startup_backend_loop,1000000);
 
 const backend_pubkey=fs.readFileSync('/srv/sign/backend/tls.crt')
 const uploader_pubkey=fs.readFileSync('/srv/sign/uploader/tls.crt'); 
