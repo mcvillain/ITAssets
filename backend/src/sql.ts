@@ -65,7 +65,7 @@ export async function ensure_db_structure() {
                 version VARCHAR(15) DEFAULT NULL,
                 itar BOOLEAN DEFAULT FALSE,
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
+                -- UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
             );
         `);
         await conn.query(`
