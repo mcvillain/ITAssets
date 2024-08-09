@@ -22,7 +22,7 @@ function getPool(): mariadb.Pool {
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            connectionLimit: 10,
+            connectionLimit: 1000,
             database: "itassets",
         });
     }
@@ -30,6 +30,7 @@ function getPool(): mariadb.Pool {
 }
 
 export async function ensure_db_structure() {
+    let conn;
     try {
         const _conn = await mariadb.createConnection({
             host: process.env.DB_HOST,
@@ -38,7 +39,8 @@ export async function ensure_db_structure() {
         });
         await _conn.query("CREATE DATABASE IF NOT EXISTS itassets;");
         await _conn.end();
-        const conn = await getPool().getConnection();
+        conn = await getPool().getConnection();
+        /*
         await conn.query(`
         CREATE FUNCTION ConvertIsoToEst(@isoTimestamp DATETIME)
             RETURNS NVARCHAR(50)
@@ -51,6 +53,7 @@ export async function ensure_db_structure() {
             RETURN FORMAT(@estTime, 'MM-dd-yy HH:mm:ss.fff', 'en-US');
             END;
         `);
+        */
         await conn.query(`
             CREATE TABLE IF NOT EXISTS azure_dbs (
                 name VARCHAR(255) PRIMARY KEY,
@@ -62,7 +65,7 @@ export async function ensure_db_structure() {
                 version VARCHAR(15) DEFAULT NULL,
                 itar BOOLEAN DEFAULT FALSE,
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
+                -- UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
             );
         `);
         await conn.query(`
@@ -104,8 +107,9 @@ export async function ensure_db_structure() {
         conn.release();
         console.log("SQL Setup!");
     } catch (err) {
-        console.error("Waiting for sql server...");
+        console.error("Waiting for sql server..." + err );
         let prom;
+        if (conn) conn.release();
         setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
     }
@@ -119,8 +123,17 @@ export async function execute_sql(
     try {
         conn = await getPool().getConnection();
         resp = await conn.query(query);
+    } catch (error) {
+        console.error('Error executing query:', error);
+        throw error; // Re-throw the error after logging it
     } finally {
-        if (conn) conn.release();
+        if (conn) {
+            try {
+                conn.release();
+            } catch (releaseError) {
+                console.error('Error releasing connection:', releaseError);
+            }
+        }
     }
     return resp;
 }
