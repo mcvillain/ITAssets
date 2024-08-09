@@ -30,6 +30,7 @@ function getPool(): mariadb.Pool {
 }
 
 export async function ensure_db_structure() {
+    let conn;
     try {
         const _conn = await mariadb.createConnection({
             host: process.env.DB_HOST,
@@ -38,7 +39,7 @@ export async function ensure_db_structure() {
         });
         await _conn.query("CREATE DATABASE IF NOT EXISTS itassets;");
         await _conn.end();
-        const conn = await getPool().getConnection();
+        conn = await getPool().getConnection();
         await conn.query(`
         CREATE FUNCTION ConvertIsoToEst(@isoTimestamp DATETIME)
             RETURNS NVARCHAR(50)
@@ -106,7 +107,7 @@ export async function ensure_db_structure() {
     } catch (err) {
         console.error("Waiting for sql server..." + err );
         let prom;
-        conn.release();
+        conn?.release();
         setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
         
