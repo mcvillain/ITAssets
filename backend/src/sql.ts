@@ -68,6 +68,7 @@ export async function ensure_db_structure() {
                 -- UPDATE azure_dbs SET LastCheckInTime = dbo.ConvertIsoToEst(current_timestamp());
             );
         `);
+        console.log("azure_dbs created");
         await conn.query(`
             CREATE TABLE IF NOT EXISTS local_dbs (
                 name VARCHAR(255) PRIMARY KEY,
@@ -79,6 +80,7 @@ export async function ensure_db_structure() {
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
         `);
+        console.log("local_dbs created");
         await conn.query(`
             CREATE TABLE IF NOT EXISTS servers (
                 Status VARCHAR(7),
@@ -91,6 +93,7 @@ export async function ensure_db_structure() {
                 LastCheckInTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
         `);
+        console.log("servers db created");
         await conn.query(`
             CREATE TABLE IF NOT EXISTS users (
                 guid CHAR(36) PRIMARY KEY DEFAULT (UUID()),
@@ -103,6 +106,7 @@ export async function ensure_db_structure() {
                 manager BOOLEAN DEFAULT FALSE
             );
         `);
+        console.log("users db created");
         conn.release();
         console.log("SQL Setup!");
     } catch (err) {
