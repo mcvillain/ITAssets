@@ -22,7 +22,7 @@ function getPool(): mariadb.Pool {
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            connectionLimit: 10,
+            connectionLimit: 100,
             database: "itassets",
         });
     }
