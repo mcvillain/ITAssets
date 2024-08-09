@@ -104,10 +104,13 @@ export async function ensure_db_structure() {
         conn.release();
         console.log("SQL Setup!");
     } catch (err) {
-        console.error("Waiting for sql server...");
+        console.error("Waiting for sql server..." + err );
         let prom;
+        conn.release();
         setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
+        
+        
     }
 }
 
