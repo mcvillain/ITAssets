@@ -271,12 +271,9 @@ export async function get_uploader_url(
         `Basic ${process.env.INVGATE_USER}`
     );
 
-    const raw = "";
-
-    fetch(`${process.env.INVGATE_URI}?=${case_id}`, {
+    fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
         method: "GET",
         headers: myHeaders,
-        body: raw,
         redirect: "follow",
     })
         .then((response) => {
