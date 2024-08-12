@@ -27,7 +27,7 @@
                         class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small"
                         label></v-chip>
                 </template>
-                <template v-slot:item.LastCheckInTime="{value}">
+                <template v-slot:item.LastCheckInTime="{ value }">
                     {{ new Date(value).toLocaleString() }}
                 </template>
             </v-data-table>
