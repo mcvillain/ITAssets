@@ -27,6 +27,9 @@
                         class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small"
                         label></v-chip>
                 </template>
+                <template v-slot:item.LastCheckInTime="{item}">
+                    {{ formatDate(item) }}
+                </template>
             </v-data-table>
         </div>
     </div>
@@ -75,10 +78,6 @@ onMounted(() => {
     })
         .then((response) => response.json())
         .then((data) => {
-            // Use the formatDate method for each server's LastCheckInTime
-            data.data.forEach(server => {
-              server.LastCheckInTime = formatDate(server.LastCheckInTime);
-            });
             databases.value = data.data;
             ood = data.ood;
             loading.value = false;
