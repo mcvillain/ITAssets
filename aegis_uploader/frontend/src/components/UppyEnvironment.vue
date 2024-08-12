@@ -31,7 +31,7 @@ function uploadError(error: any) {
 
 const uppy = new Uppy()
   .use(Dashboard, { inline: true, showProgressDetails: true, theme: 'dark', proudlyDisplayPoweredByUppy: false })
-  .use(Tus, { endpoint: 'https://uploads.aiscorp.com/uploads/uploads' })
+  .use(Tus, { endpoint: '/uploads/uploads' })
   .use(ScreenCapture)
   .use(GoldenRetriever)
   .use(Compressor, {quality: 0.6})
