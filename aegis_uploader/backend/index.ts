@@ -24,6 +24,8 @@ const server = new Server({
         directory: UPLOAD_PATH,
         configstore: new MemoryConfigstore(),
     }),
+    respectForwardedHeaders: true,
+    relativeLocation: true,
     async onUploadCreate(req: any, res: any, upload: any) {
         const case_id = await get_case_id(upload.metadata.upload_guid.toString(), uploader_privkey);
         if (typeof case_id !== 'string') {
