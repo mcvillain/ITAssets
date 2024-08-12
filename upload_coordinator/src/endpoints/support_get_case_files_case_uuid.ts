@@ -27,7 +27,7 @@ export async function get_support_get_case_files_case_uuid(req: Request, res: Re
     const searchTerms = search?search.split(" ").map((term: string) => `%${term}%`):[];
     const whereClause = search.length>0?' AND ('+searchTerms.map(term => `(file_path LIKE '${term}')`).join(' OR ')+')': '';
     const sortBy = req.body.sortBy;
-    const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY c.created_at DESC';
+    const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY uploaded_at DESC';
     const total = await execute_sql (`SELECT COUNT(guid) AS TOTAL FROM files WHERE case_id = '${case_id}'${whereClause}`);
     const data = await execute_sql (`SELECT file_path,file_size,uploaded_at,upload_complete FROM files WHERE case_id = '${case_id}'${whereClause} ${sortClause} LIMIT ${items_per_page} OFFSET ${skipped}`);
     const response = {
