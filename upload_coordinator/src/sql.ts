@@ -4,6 +4,7 @@ let _pool: mariadb.Pool | undefined;
 
 function getPool(): mariadb.Pool {
     if (!_pool) {
+        console.log("Making new pool...");
         _pool = mariadb.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -48,16 +49,18 @@ export async function ensure_uploaderdb() {
                 FOREIGN KEY (case_id) REFERENCES cases(case_id)
             );
         `);
-        conn.release();
+        // conn.release();
         console.log("SQL Setup!");
     } catch (err) {
         console.warn("Waiting for sql server...");
         // console.error(err)
         let prom;
-        if (conn) conn.release();
+        // if (conn) conn.release();
         setTimeout(()=>prom=ensure_uploaderdb(), 1000);
         await prom;
-    } 
+    } finally {
+        conn?.release();
+    }
 }
 
 export async function execute_sql(query: string): Promise<any> {
@@ -67,7 +70,7 @@ export async function execute_sql(query: string): Promise<any> {
         conn = await getPool().getConnection();
         resp = await conn.query(query);
     } finally {
-        if (conn) conn.release();
+        conn?.release();
     }
     return resp;
 }

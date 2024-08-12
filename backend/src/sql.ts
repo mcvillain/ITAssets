@@ -18,6 +18,7 @@ import {
 let _pool: mariadb.Pool | undefined;
 function getPool(): mariadb.Pool {
     if (!_pool) {
+        console.log("Making new pool...");
         _pool = mariadb.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -107,14 +108,16 @@ export async function ensure_db_structure() {
             );
         `);
         console.log("users db created");
-        conn.release();
+        // conn.release();
         console.log("SQL Setup!");
     } catch (err) {
         console.error("Waiting for sql server..." + err );
         let prom;
-        if (conn) conn.release();
+        // if (conn) conn.release();
         setTimeout(() => (prom = ensure_db_structure()), 1000);
         await prom;
+    } finally {
+        conn?.release();
     }
 }
 
@@ -130,13 +133,14 @@ export async function execute_sql(
         console.error('Error executing query:', error);
         throw error; // Re-throw the error after logging it
     } finally {
-        if (conn) {
-            try {
-                conn.release();
-            } catch (releaseError) {
-                console.error('Error releasing connection:', releaseError);
-            }
-        }
+        conn?.release();
+        // if (conn) {
+        //     try {
+        //         conn.release();
+        //     } catch (releaseError) {
+        //         console.error('Error releasing connection:', releaseError);
+        //     }
+        // }
     }
     return resp;
 }
