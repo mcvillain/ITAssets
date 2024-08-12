@@ -64,6 +64,8 @@ async function get_upload_url() {
         if (response.ok) {
             const data = await response.json();
             upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
+            case_id_hint.value = '';
+            case_id_hint_persist.value = false;
             rerender.value++;
         } else {
             const errorData = await response.text();
