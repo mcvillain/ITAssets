@@ -66,7 +66,7 @@ async function get_upload_url() {
             upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.uuid}`;
             rerender.value++;
         } else {
-            const errorData = await response.json();
+            const errorData = await response.text();
             console.error('Error from server:', errorData);
             case_id_hint.value = "Invalid Case ID";
             case_id_hint_persist.value = true;
