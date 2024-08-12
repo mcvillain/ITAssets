@@ -3,7 +3,7 @@
     <img v-show="agreed" alt="Aegis logo" class="logo" src="./assets/aegis-header-logo-en.svg" height="125" />
 
     <!-- Modal -->
-    <TransparentModal style="max-width: 75%;" :visible="showModal">
+    <TransparentModal :visible="showModal">
       <h1 class="modal-header HKGrotesk-Bold">Aegis Uploader Terms of Service</h1>
       <p class="modal-text HKGrotesk-Regular">By clicking "Agree" below, you consent to allow Aegis Software to store and process the personal information submitted above to provide you support as an Aegis Software customer currently covered under an active service contract.</p>
       <div style="display: flex; flex-direction: row; justify-content: end; width: 100%;">
