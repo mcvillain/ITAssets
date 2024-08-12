@@ -1,6 +1,9 @@
 # Choose the Image which has Node installed already
 FROM node:alpine
 EXPOSE 3000
+# Fix SSL
+RUN apk --no-cache add ca-certificates \
+  && update-ca-certificates
 # RUN apt-get -qq update && apt-get install sudo -y
 # RUN sudo apt-get -q -y install git npm
 RUN apk add curl
