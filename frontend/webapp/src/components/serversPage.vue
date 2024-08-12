@@ -28,7 +28,7 @@
                         label></v-chip>
                 </template>
                 <template v-slot:item.LastCheckInTime="{item}">
-                    {{ formatDate(item) }}
+                    {{ new Date(item).toLocaleString() }}
                 </template>
             </v-data-table>
         </div>
@@ -56,19 +56,19 @@ const headers = [
 ];
 const sortBy = ref([{ key: 'size', order: 'desc' }]);
 
-function formatDate(timestamp) {
-  // Create a Date object from the timestamp
-  const date = new Date(timestamp);
+// function formatDate(timestamp) {
+//   // Create a Date object from the timestamp
+//   const date = new Date(timestamp);
 
-  // Define options for date and time formatting
-  const options = {
-    year: '2-digit', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  };
+//   // Define options for date and time formatting
+//   const options = {
+//     year: '2-digit', month: '2-digit', day: '2-digit',
+//     hour: '2-digit', minute: '2-digit', second: '2-digit'
+//   };
 
-  // Format the date and time with Intl.DateTimeFormat
-  return new Intl.DateTimeFormat('en-US', options).format(date);
-}
+//   // Format the date and time with Intl.DateTimeFormat
+//   return new Intl.DateTimeFormat('en-US', options).format(date);
+// }
 
 
 
