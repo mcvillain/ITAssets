@@ -279,7 +279,13 @@ export async function get_uploader_url(
         body: raw,
         redirect: "follow",
     })
-        .then((response) => response.text())
+        .then((response) => {
+            if (response.status == 404) {
+                res.sendStatus(404);
+                throw "Case does not exist";
+            }
+            return response.text()
+        })
         .then((result) => {
             console.log(result);
 
