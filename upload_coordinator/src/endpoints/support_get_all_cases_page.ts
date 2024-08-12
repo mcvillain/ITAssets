@@ -34,7 +34,7 @@ export async function get_support_get_all_cases_page(req: Request, res: Response
     const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY c.created_at DESC';
     // Use SQL to query for the top 'ITEMS_PER_PAGE' results, skipping the ammt calculated before
     const count_row = await execute_sql (`SELECT COUNT(guid) as TOTAL FROM cases c${whereClause}`);
-    const data = await execute_sql (`SELECT c.guid as guid, c.case_id as case_id, c.owner as owner, c.upload_url_active as upload_url_active, c.created_at as created_at, c.itar as itar, case_size FROM cases c LEFT JOIN (SELECT case_id, SUM(file_size) AS case_size FROM files GROUP BY case_id) f ON c.case_id=f.case_id${whereClause} ${sortClause}${items_per_page>0?' LIMIT '+items_per_page:''} OFFSET ${skipped}`);
+    const data = await execute_sql (`SELECT c.guid as guid, c.case_id as case_id, c.owner as owner, c.upload_url_active as upload_url_active, c.created_at as created_at, c.itar as itar, case_size FROM cases c LEFT JOIN (SELECT case_id, SUM(file_size) AS case_size FROM files GROUP BY case_id) f ON c.case_id=f.case_id${whereClause} ${sortClause}${items_per_page>0?' LIMIT '+items_per_page+' OFFSET '+skipped:''}`);
     const response = {
         items: data,
         total: Number(count_row[0]['TOTAL']),
