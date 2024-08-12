@@ -265,73 +265,70 @@ export async function get_uploader_url(
     }
 
     let itar = false;
-    const myHeaders = new Headers();
-    myHeaders.append(
+    // const myHeaders = new Headers();
+    // myHeaders.append(
+    //     "Authorization",
+    //     `Basic ${process.env.INVGATE_USER}`
+    // );
+
+    // fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
+    //     method: "GET",
+    //     headers: myHeaders,
+    //     redirect: "follow",
+    // })
+    //     .then((response) => {
+    //         if (response.status == 404) {
+    //             res.sendStatus(404);
+    //             throw "Case does not exist";
+    //         }
+    //         return response.text()
+    //     })
+    //     .then((result) => {
+    //         console.log(result);
+
+    //         // Parse the result to get custom fields
+    //         const custom_fields = JSON.parse(result).custom_fields;
+    //         console.log("Custom fields:", custom_fields);
+
+    //         // Check the ITAR field
+    //         const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
+    //         console.log("ITAR:", itar);
+    //     })
+    //     .catch((error) => console.error(error));
+
+    // Correctly set the Authorization header
+    const headers = new Headers();
+    headers.set(
         "Authorization",
         `Basic ${process.env.INVGATE_USER}`
     );
 
-    fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
-    })
-        .then((response) => {
-            if (response.status == 404) {
-                res.sendStatus(404);
-                throw "Case does not exist";
-            }
-            return response.text()
-        })
-        .then((result) => {
-            console.log(result);
+    try {
+        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
+            headers,
+            redirect: "follow",
+        });
 
-            // Parse the result to get custom fields
-            const custom_fields = JSON.parse(result).custom_fields;
-            console.log("Custom fields:", custom_fields);
+        // console.log("INVGATE response status:", resp.status);
+        const textResponse = await resp.text();
+        // console.log("INVGATE response body:", textResponse);
 
-            // Check the ITAR field
-            const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
-            console.log("ITAR:", itar);
-        })
-        .catch((error) => console.error(error));
+        if (!resp.ok) {
+            console.error("Failed to fetch case ID details:", textResponse);
+            res.sendStatus(404);
+            return;
+        }
 
-    // Correctly set the Authorization header
-    // const headers = new Headers();
-    // headers.set(
-    //     "Authorization",
-    //     "Basic " +
-    //         Buffer.from(
-    //             `${process.env.INVGATE_USER}:${process.env.INVGATE_PASS}`
-    //         ).toString("base64")
-    // );
+        const custom_fields = JSON.parse(textResponse).custom_fields;
+        // console.log("Custom fields:", custom_fields);
 
-    // const fetchCaseDetails = async (case_id: any) => {
-    //     try {
-    //         const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
-    //             headers,
-    //         });
-
-    //         console.log("INVGATE response status:", resp.status);
-    //         const textResponse = await resp.text();
-    //         console.log("INVGATE response body:", textResponse);
-
-    //         if (!resp.ok) {
-    //             console.error("Failed to fetch case ID details:", textResponse);
-    //             res.sendStatus(404);
-    //             return;
-    //         }
-
-    //         const custom_fields = JSON.parse(textResponse).custom_fields;
-    //         console.log("Custom fields:", custom_fields);
-
-    //         const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
-    //         console.log("ITAR:", itar);
-    //     } catch (err) {
-    //         console.error("Error verifying case ID:", err);
-    //         res.status(500).send("Couldn't verify case ID");
-    //         return;
-    //     }
+        itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
+        // console.log("ITAR:", itar);
+    } catch (err) {
+        console.error("Error verifying case ID:", err);
+        res.status(500).send("Couldn't verify case ID");
+        return;
+    }
 
     let message: SignedMessage = signMessage(crypto.randomUUID());
     try {
