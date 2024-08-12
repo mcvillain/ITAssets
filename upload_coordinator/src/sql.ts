@@ -16,15 +16,17 @@ function getPool(): mariadb.Pool {
 }
 
 export async function ensure_uploaderdb() {
+    let _conn;
+    let conn;
     try {
-        const _conn = await mariadb.createConnection({
+        _conn = await mariadb.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
         });
         await _conn.query("CREATE DATABASE IF NOT EXISTS uploader_db;");
         await _conn.end();
-        const conn = await getPool().getConnection();
+        conn = await getPool().getConnection();
         await conn.query(`
             CREATE TABLE IF NOT EXISTS cases (
                 guid CHAR(36) UNIQUE,
