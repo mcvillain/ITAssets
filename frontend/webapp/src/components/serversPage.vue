@@ -30,6 +30,9 @@
                 <template v-slot:item.LastCheckInTime="{ value }">
                     {{ new Date(value).toLocaleString() }}
                 </template>
+                <template v-slot:item.IP="{value}">
+                    {{ value=="null"?'':value }}
+                </template>
             </v-data-table>
         </div>
     </div>

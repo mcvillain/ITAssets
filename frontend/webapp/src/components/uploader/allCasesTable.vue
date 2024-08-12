@@ -29,6 +29,10 @@
             <v-chip v-if="value == 1" color="red" text="ITAR" class="text-uppercase"
                 style="margin-left: 1rem; margin-right: 1rem;" size="small" label></v-chip>
         </template>
+        <!-- Creation Date Column -->
+        <template v-slot:item.created_at="{ value }">
+            {{ new Date(value).toLocaleString() }}
+        </template>
     </v-data-table-server>
 
 </template>
