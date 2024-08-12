@@ -4,8 +4,8 @@
 
     <!-- Modal -->
     <TransparentModal :visible="showModal">
-      <h1 class="modal-header HKGrotesk-Bold">Aegis TOS!</h1>
-      <p class="modal-text HKGrotesk-Regular">This is the modal content.</p>
+      <h1 class="modal-header HKGrotesk-Bold">Aegis Uploader Terms of Service</h1>
+      <p class="modal-text HKGrotesk-Regular">By clicking "Agree" below, you consent to allow Aegis Software to store and process the personal information submitted above to provide you support as an Aegis Software customer currently covered under an active service contract.</p>
       <div style="display: flex; flex-direction: row; justify-content: end; width: 100%;">
         <button class="agree-button HKGrotesk-Regular" @click="handleAgree">Agree</button>
       </div>
