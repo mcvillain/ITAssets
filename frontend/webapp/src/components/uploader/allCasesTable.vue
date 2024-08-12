@@ -22,7 +22,7 @@
         </template>
         <!-- Show Size in GB -->
         <template v-slot:item.case_size="{ value }">
-            {{ bytesToHumanReadable(value as number) }}
+            {{ (value as number)>0?bytesToHumanReadable(value as number):'0' }}
         </template>
         <!-- ITAR Column -->
         <template v-slot:item.itar="{ value }">

@@ -67,7 +67,7 @@
                     </template>
                     <!-- Show Size in GB -->
                     <template v-slot:item.file_size="{ value }">
-                        {{ bytesToHumanReadable(value as number) }}
+                        {{ (value as number)>0?bytesToHumanReadable(value as number):'0' }}
                     </template>
                 </v-data-table-server>
                 <v-divider></v-divider>
