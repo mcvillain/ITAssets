@@ -7,7 +7,7 @@
         <v-row>
             <v-col cols="12" md="5">
                 <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist"
-                    v-model="case_id" />
+                    v-model="case_id" @keyup.enter="get_upload_url" />
             </v-col>
             <v-col cols="12" md="2">
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
