@@ -42,6 +42,7 @@ export function convert_sql_local_db(sql_local_db: SQL_LocalDatabase): LocalData
     } as LocalDatabase;
 }
 export class SQL_LocalDatabase {
+    dbkey!: string;
     name!: string;
     size!: number;
     paths!: string;
