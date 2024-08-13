@@ -12,7 +12,9 @@ WORKDIR /srv/
 # RUN git clone https://github.com/mcvillain/ITAssets.git
 COPY ./src /srv/upload_coordinator
 WORKDIR /srv/upload_coordinator
+COPY ./startup.sh /srv/backend/startup
+RUN chmod +x /srv/backend/startup
 RUN npm install
 RUN npx tsc
-CMD ["NODE_EXTRA_CA_CERTS=node_modules/node_extra_ca_certs_mozilla_bundle/ca_bundle/ca_intermediate_root_bundle.pem", "node", "index.js"]
+CMD ["/srv/backend/startup"]
 
