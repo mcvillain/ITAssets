@@ -140,7 +140,7 @@ function delete_dbs_sql() {
 }
 function update_dbs_sql(current_dbs: LocalDatabase[]) {
     current_dbs.forEach((db: LocalDatabase) => {
-        const sql_query = `INSERT INTO local_dbs (key, name, size, paths, created, database_id, LastCheckInTime${db.version===undefined||db.version==='null'?'':', version'}) VALUES ('${db.key}', '${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}, ${new Date()}${db.version===undefined?'':', \''+db.version+'\''})`;
+        const sql_query = `INSERT INTO local_dbs (dbkey, name, size, paths, created, database_id, LastCheckInTime${db.version===undefined||db.version==='null'?'':', version'}) VALUES ('${db.key}', '${db.name}', '${db.size}', '${db.paths.join('|')}', '${db.created}', ${db.database_id}, '${new Date()}'${db.version===undefined?'':', \''+db.version+'\''})`;
         execute_sql(sql_query)
         .catch((error: any) => console.error(`An SQL error occured updating the local databases.\nSQL Query: ${sql_query}\nError:\n${error}`));
     });
