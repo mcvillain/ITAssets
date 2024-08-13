@@ -12,8 +12,12 @@
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
             </v-col>
             <v-col cols="12" md="5">
-                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url"
-                    append-inner-icon="mdi-content-copy" @click:append-inner="copyUploadUrl" />
+                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url" ref="copy_btn">
+                    <template v-slot:append-inner>
+                        <v-btn :ripple="true" icon="mdi-content-copy" @click="copyUploadUrl" />
+                    </template>
+                </v-text-field>
+                <v-snackbar v-model="copy_notify" :attach="copy_btn" timeout="1000" transition="fab-transition">Copied</v-snackbar>
             </v-col>
         </v-row>
     </div>
@@ -45,6 +49,7 @@ const current_user_cases_endpoint = ref('');
 const current_user = ref('')
 fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", { credentials: 'include' }).then((resp) => { if (resp.status === 401) { location.href = '/'; } return resp.json() }).then((body) => { let auth_lvl = body.auth_lvl; if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) { location.href = '/'; } current_user.value = body.username; current_user_cases_endpoint.value = `/uploads/get_user_cases/${encodeURIComponent(body.username)}`; });
 
+const copy_notify = ref(false);
 
 const case_id = ref('');
 const upload_url = ref('');
@@ -83,6 +88,7 @@ async function get_upload_url() {
 
 
 async function copyUploadUrl() {
+    copy_notify.value = true;
     await navigator.clipboard.writeText(upload_url.value);
 }
 
