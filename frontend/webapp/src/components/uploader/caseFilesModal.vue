@@ -69,6 +69,10 @@
                     <template v-slot:item.file_size="{ value }">
                         {{ (value as number)>0?bytesToHumanReadable(value as number):'0' }}
                     </template>
+                    <!-- Creation Date Column -->
+                    <template v-slot:item.uploaded_at="{ value }">
+                        {{ new Date(value).toLocaleString() }}
+                    </template>
                 </v-data-table-server>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -101,6 +105,7 @@ const itemsPerPage = ref(5);
 const headers = [
     { title: "File Name", sortable: true, key: 'file_path' },
     { title: "File Size", sortable: true, key: 'file_size' },
+    { title: "Started At", sortable: true, key: 'uploaded_at' },
     { title: "Upload Status", sortable: true, key: 'upload_complete' },
 ];
 const search = ref('');
