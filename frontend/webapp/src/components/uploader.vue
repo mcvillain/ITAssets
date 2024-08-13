@@ -12,12 +12,12 @@
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
             </v-col>
             <v-col cols="12" md="5">
-                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url" ref="copy_btn">
+                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url">
                     <template v-slot:append-inner>
-                        <v-btn :ripple="true" icon="mdi-content-copy" @click="copyUploadUrl" />
+                        <v-btn :ripple="true" icon="mdi-content-copy" @click="copyUploadUrl" id="copy_url_btn" />
                     </template>
                 </v-text-field>
-                <v-snackbar v-model="copy_notify" :attach="copy_btn" timeout="1000" transition="fab-transition">Copied</v-snackbar>
+                <v-snackbar v-model="copy_notify" attach="#copy_url_btn" timeout="1000" transition="fab-transition">Copied</v-snackbar>
             </v-col>
         </v-row>
     </div>
@@ -36,11 +36,12 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import notification from './notification.vue';
 // import mainTable from './uploader/mainTable.vue';
 import { ref } from 'vue'
 import AllCasesTable from './uploader/allCasesTable.vue';
+import { VNodeRef } from 'vue';
 
 const rerender = ref(0);
 
