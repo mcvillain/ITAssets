@@ -6,18 +6,21 @@
     <div style="padding-left: 2rem; padding-right: 2rem;">
         <v-row>
             <v-col cols="12" md="5">
-                <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist" v-model="case_id" />
+                <v-text-field clearable label="Case ID" :hint="case_id_hint" :persistent-hint="case_id_hint_persist"
+                    v-model="case_id" />
             </v-col>
             <v-col cols="12" md="2">
                 <v-btn min-height="56px" text="Get Upload URL" @click="get_upload_url"></v-btn>
             </v-col>
             <v-col cols="12" md="5">
-                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url">
+                <v-text-field :readonly="true" label="Upload Link" v-model="upload_url" :hint="copy_hint"
+                    :persistent-hint="copy_hint_persist">
                     <template v-slot:append-inner>
                         <v-btn :ripple="true" icon="mdi-content-copy" @click="copyUploadUrl" id="copy_url_btn" />
                     </template>
                 </v-text-field>
-                <v-snackbar v-model="copy_notify" attach="#copy_url_btn" timeout="1000" transition="fab-transition">Copied</v-snackbar>
+                <v-snackbar v-model="copy_notify" attach="#copy_url_btn" timeout="1000"
+                    transition="fab-transition">Copied</v-snackbar>
             </v-col>
         </v-row>
     </div>
@@ -27,7 +30,8 @@
         <div class="card m-3">
             <div class="card-body">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <AllCasesTable v-if="current_user_cases_endpoint!==''" title="My Cases" :endpoint="current_user_cases_endpoint" :key="rerender" />
+                    <AllCasesTable v-if="current_user_cases_endpoint !== ''" title="My Cases"
+                        :endpoint="current_user_cases_endpoint" :key="rerender" />
                     <div style="margin: 4rem;"></div>
                     <AllCasesTable title="All Cases" :endpoint="all_cases_endpoint" :key="rerender" />
                 </div>
@@ -51,6 +55,8 @@ const current_user = ref('')
 fetch(import.meta.env.VITE_API_ENDPOINT + "/auth", { credentials: 'include' }).then((resp) => { if (resp.status === 401) { location.href = '/'; } return resp.json() }).then((body) => { let auth_lvl = body.auth_lvl; if (!(auth_lvl == 1 || auth_lvl == 2 || auth_lvl == 3)) { location.href = '/'; } current_user.value = body.username; current_user_cases_endpoint.value = `/uploads/get_user_cases/${encodeURIComponent(body.username)}`; });
 
 const copy_notify = ref(false);
+const copy_hint = ref('');
+const copy_hint_persist = ref(false);
 
 const case_id = ref('');
 const upload_url = ref('');
@@ -84,12 +90,11 @@ async function get_upload_url() {
     }
 }
 
-
-
-
-
 async function copyUploadUrl() {
     copy_notify.value = true;
+    copy_hint.value = "Copied!";
+    copy_hint_persist.value = true;
+    setTimeout(() => { copy_hint.value = ''; copy_hint_persist.value = false; }, 1000);
     await navigator.clipboard.writeText(upload_url.value);
 }
 
