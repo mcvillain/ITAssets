@@ -13,10 +13,12 @@ import { post_uploader_checkin_new_file } from "./endpoints/uploader_checkin_new
 import { post_uploader_update_file_progress } from "./endpoints/uploader_update_file_progress";
 import session from "express-session";
 
-import { startup_backend_loop } from "./daemon_service";
 import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 import { get_uploader_get_case_id_from_upload_guid } from "./endpoints/uploader_get_case_id_from_upload_guid";
-setTimeout(startup_backend_loop,1000000);
+import { ensure_uploaderdb } from "./sql";
+import { update_failed_status } from "./daemon_service";
+setTimeout(ensure_uploaderdb,10000);
+setTimeout(update_failed_status,120000);
 
 const backend_pubkey=fs.readFileSync('/srv/sign/backend/tls.crt')
 const uploader_pubkey=fs.readFileSync('/srv/sign/uploader/tls.crt'); 
