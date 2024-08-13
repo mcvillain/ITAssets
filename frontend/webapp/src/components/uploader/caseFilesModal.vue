@@ -61,7 +61,7 @@
                     </template>
                     <!-- Labels for Upload Progress -->
                     <template v-slot:item.upload_complete="{ value }">
-                        <v-chip :color="value == 1 ? 'green' : 'purple'" :text="value == 1 ? 'Complete' : 'In Progress'"
+                        <v-chip :color="value == 1 ? 'green' : value == -1 ? 'red' : 'purple'" :text="value == 1 ? 'Complete' : value == -1? 'Failed' : 'In Progress'"
                             class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small"
                             label></v-chip>
                     </template>

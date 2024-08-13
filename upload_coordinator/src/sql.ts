@@ -45,7 +45,7 @@ export async function ensure_uploaderdb() {
                 case_id INT,
                 file_size FLOAT,
                 uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                upload_complete BOOLEAN DEFAULT FALSE,
+                upload_complete TINYINT(1) DEFAULT 0,
                 FOREIGN KEY (case_id) REFERENCES cases(case_id)
             );
         `);
