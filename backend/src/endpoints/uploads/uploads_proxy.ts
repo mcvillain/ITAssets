@@ -310,19 +310,21 @@ export async function get_uploader_url(
         });
 
         // console.log("INVGATE response status:", resp.status);
-        const textResponse = await resp.text();
+        
         // console.log("INVGATE response body:", textResponse);
 
         if (!resp.ok) {
+            const textResponse = await resp.text();
             console.error("Failed to fetch case ID details:", textResponse);
             res.sendStatus(404);
             return;
         }
 
-        const custom_fields = JSON.parse(textResponse).custom_fields;
+        const response = await resp.json();
+        const custom_fields = response.custom_fields;
         // console.log("Custom fields:", custom_fields);
 
-        itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
+        itar = custom_fields["8"] === true || custom_fields["8"] === "true"; // Ensure you check the exact format of this value
         // console.log("ITAR:", itar);
     } catch (err) {
         console.error("Error verifying case ID:", err);
