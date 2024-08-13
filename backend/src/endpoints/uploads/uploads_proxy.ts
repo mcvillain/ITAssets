@@ -250,6 +250,11 @@ export async function get_uploader_url(
             res.sendStatus(401);
             return;
         }
+        if (!user_id.account) {
+            console.error("Account not set on JWT??? Displaying JWT:\n" + JSON.stringify(user_id));
+            res.sendStatus(401);
+            return;
+        }
         username = user_id.account?.username;
         if (!username) {
             res.sendStatus(401);
