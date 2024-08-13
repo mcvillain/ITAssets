@@ -242,25 +242,21 @@ export async function get_uploader_url(
         return;
     }
 
-    let username;
-    if (auth_lvl < 3) {
-        const user_id: AuthenticationResult | undefined =
-            await loginMemcache.get(session_id);
-        if (!user_id) {
-            res.sendStatus(401);
-            return;
-        }
-        if (!user_id.account) {
-            console.error("Account not set on JWT??? Displaying JWT:\n" + JSON.stringify(user_id));
-            res.sendStatus(401);
-            return;
-        }
-        username = user_id.account?.username;
-        if (!username) {
-            res.sendStatus(401);
-            console.log("User tried to create link with undefined username");
-            return;
-        }
+    const user_id: AuthenticationResult | undefined = await loginMemcache.get(session_id);
+    if (!user_id) {
+        res.sendStatus(401);
+        return;
+    }
+    if (!user_id.account) {
+        console.error("Account not set on JWT??? Displaying JWT:\n" + JSON.stringify(user_id));
+        res.sendStatus(401);
+        return;
+    }
+    const username = user_id.account?.username;
+    if (!username) {
+        res.sendStatus(401);
+        console.log("User tried to create link with undefined username");
+        return;
     }
 
     const case_id = req.params.case_uuid;
