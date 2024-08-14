@@ -96,7 +96,7 @@ export async function get_localdb_csv(
 
 function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
-        const matched_db = current_dbs.find((existing_db) => existing_db.key === db.key);
+        const matched_db = current_dbs.find((existing_db) => `${existing_db.name}_${existing_db.database_id}` === `${db.name}_${db.database_id}`);
         if (matched_db !== undefined) {
             let idx = current_dbs.indexOf(matched_db);
             if (idx >= 0) {
@@ -114,7 +114,7 @@ function update_db_list(
 ): LocalDatabase[] {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
         const matched_db = current_dbs.find(
-            (existing_db) => existing_db.database_id === db.database_id
+            (existing_db) => `${existing_db.name}_${existing_db.database_id}` === `${db.name}_${db.database_id}`
         );
         if (matched_db !== undefined) {
             matched_db.paths.push(db.path);
