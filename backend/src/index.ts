@@ -173,7 +173,7 @@ app.get('/uploads/request_upload_url/:case_uuid', async (req: Request, res: Resp
 app.get('/uploads/get_case_owner/:case_uuid', async (req: Request, res: Response) => {
     await get_case_owner(req, res, loginCache);
 });
-app.get('/uploads/toggle_upload_url/:case_uuid', async (req: Request, res: Response) => {
+app.post('/uploads/toggle_upload_url/:case_uuid', async (req: Request, res: Response) => {
     await toggle_upload_url(req, res, loginCache);
 });
 

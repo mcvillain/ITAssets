@@ -7,21 +7,21 @@
             <v-card :title="'Case ' + case_id">
                 <v-card-text>
                     <v-row dense>
-                        <v-col cols="12" md="3" sm="6">
+                        <v-col cols="12" md="4" sm="6">
                             <v-text-field :readonly="true" label="Case Owner" v-model="case_owner"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="3" sm="6">
+                        <v-col cols="12" md="4" sm="6">
                             <v-text-field :readonly="true" :hint="upload_url_hint"
                                 :persistent-hint="upload_url_hint_persist" label="Upload Link" v-model="upload_url"
                                 append-inner-icon="mdi-content-copy" @click:append-inner="copyUploadUrl"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="3" sm="6">
+                        <v-col cols="12" md="2" sm="6" style="display: flex; justify-content: center; align-items: center;">
                             <!-- Toggle Case Link Button -->
                             <v-btn :prepend-icon="case_link_active ? 'mdi-link-variant' : 'mdi-link-variant-off'"
                                 :text="case_link_active ? 'Link Enabled' : 'Link Disabled'" :ripple="true"
                                 @click="toggle_link_active" />
                         </v-col>
-                        <v-col cols="12" md="3" sm="6"
+                        <v-col cols="12" md="2" sm="6"
                             style="display: flex; justify-content: center; align-content: center; align-items: center;">
                             <!-- Delete All Button -->
                             <v-dialog max-width="25%">
@@ -155,7 +155,7 @@ function popmsg(msg: string) {
 
 async function toggle_link_active() {
     try {
-        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/toggle_upload_url/${props.case_id}`);
+        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/toggle_upload_url/${props.case_id}`, { method: 'POST' });
         loadCaseData();
     } catch (err) {
         popmsg("Error toggling link...");

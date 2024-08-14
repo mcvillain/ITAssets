@@ -244,6 +244,7 @@ export async function toggle_upload_url(req: Request, res:Response, loginMemcach
     // Execute Function
     let message: SignedMessage = signMessage(req.params.case_uuid);
     fetch(`${UPLOAD_SERVICE}/toggle_upload_url/${message.message}`, {
+        method: 'POST',
         headers: new Headers({
             signature: message.signature,
         }),
