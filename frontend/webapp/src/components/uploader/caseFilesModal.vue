@@ -161,6 +161,7 @@ async function toggle_link_active() {
         popmsg("Error toggling link...");
         console.error(err);
     }
+    popmsg(`Upload Link ${case_link_active?'Enabled':'Disabled'}`);
 }
 
 function loadCaseData() {
