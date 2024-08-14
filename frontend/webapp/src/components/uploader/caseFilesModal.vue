@@ -7,18 +7,22 @@
             <v-card :title="'Case ' + case_id">
                 <v-card-text>
                     <v-row dense>
-                        <v-col cols="12" md="4" sm="6">
+                        <v-col cols="12" md="3" sm="6">
                             <v-text-field :readonly="true" label="Case Owner" v-model="case_owner"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="4" sm="6">
+                        <v-col cols="12" md="3" sm="6">
                             <v-text-field :readonly="true" :hint="upload_url_hint"
                                 :persistent-hint="upload_url_hint_persist" label="Upload Link" v-model="upload_url"
                                 append-inner-icon="mdi-content-copy" @click:append-inner="copyUploadUrl"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="4" sm="6"
-                            style="display: flex; justify-content: center; align-content: center;">
+                        <v-col cols="12" md="3" sm="6">
                             <!-- Toggle Case Link Button -->
-                            <v-btn :icon="case_link_active?'mdi-link-variant':'mdi-link-variant-off'" :ripple="true" @click="toggle_link_active" />
+                            <v-btn :prepend-icon="case_link_active ? 'mdi-link-variant' : 'mdi-link-variant-off'"
+                                :text="case_link_active ? 'Link Enabled' : 'Link Disabled'" :ripple="true"
+                                @click="toggle_link_active" />
+                        </v-col>
+                        <v-col cols="12" md="3" sm="6"
+                            style="display: flex; justify-content: center; align-content: center; align-items: center;">
                             <!-- Delete All Button -->
                             <v-dialog max-width="25%">
                                 <template v-slot:activator="{ props: activatorPropsV2 }">
@@ -64,13 +68,14 @@
                     </template>
                     <!-- Labels for Upload Progress -->
                     <template v-slot:item.upload_complete="{ value }">
-                        <v-chip :color="value == 1 ? 'green' : value == -1 ? 'red' : 'purple'" :text="value == 1 ? 'Complete' : value == -1? 'Failed' : 'In Progress'"
+                        <v-chip :color="value == 1 ? 'green' : value == -1 ? 'red' : 'purple'"
+                            :text="value == 1 ? 'Complete' : value == -1 ? 'Failed' : 'In Progress'"
                             class="text-uppercase" style="margin-left: 1rem; margin-right: 1rem;" size="small"
                             label></v-chip>
                     </template>
                     <!-- Show Size in GB -->
                     <template v-slot:item.file_size="{ value }">
-                        {{ (value as number)>0?bytesToHumanReadable(value as number):'0' }}
+                        {{ (value as number) > 0 ? bytesToHumanReadable(value as number) : '0' }}
                     </template>
                     <!-- Creation Date Column -->
                     <template v-slot:item.uploaded_at="{ value }">
@@ -85,7 +90,8 @@
                 </v-card-actions>
             </v-card>
             <!-- Popup -->
-            <v-snackbar v-model="popup" timeout="1000" transition="fab-transition" :text="popup_text" position="absolute" location-strategy="static" location="top right" />
+            <v-snackbar v-model="popup" timeout="1000" transition="fab-transition" :text="popup_text"
+                position="absolute" location-strategy="static" location="top right" />
         </template>
     </v-dialog>
 </template>
@@ -163,7 +169,7 @@ function loadCaseData() {
         const data: any = await resp.json();
         case_owner.value = data.owner;
         upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.guid}`;
-        case_link_active.value = data.upload_url_active==1;
+        case_link_active.value = data.upload_url_active == 1;
     }).catch(err => {
         popmsg("Error loading case data...")
         console.error(err);
