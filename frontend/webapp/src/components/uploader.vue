@@ -19,8 +19,8 @@
                         <v-btn :ripple="true" icon="mdi-content-copy" @click="copyUploadUrl" id="copy_url_btn" />
                     </template>
                 </v-text-field>
-                <v-snackbar v-model="copy_notify" attach="#copy_url_btn" timeout="1000"
-                    transition="fab-transition">Copied to clipboard!</v-snackbar>
+                <v-snackbar v-model="copy_notify" timeout="1000" transition="fab-transition" position="absolute"
+                    location-strategy="static" location="top right">Copied to clipboard!</v-snackbar>
             </v-col>
         </v-row>
     </div>
