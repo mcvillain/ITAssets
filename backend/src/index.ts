@@ -27,7 +27,7 @@ import { get_azuredb, get_azuredb_csv, post_azuredb } from "./endpoints/azure_db
 import { get_users, post_users } from "./endpoints/users";
 import session from "express-session";
 import { clientConfig, } from "./msauth_config";
-import { delete_all_case_files, get_all_cases, get_case_files, get_case_owner, get_uploader_url, get_user_cases } from "./endpoints/uploads/uploads_proxy";
+import { delete_all_case_files, get_all_cases, get_case_files, get_case_owner, get_uploader_url, get_user_cases, toggle_upload_url } from "./endpoints/uploads/uploads_proxy";
 
 dotenv.config();
 
@@ -172,6 +172,9 @@ app.get('/uploads/request_upload_url/:case_uuid', async (req: Request, res: Resp
 });
 app.get('/uploads/get_case_owner/:case_uuid', async (req: Request, res: Response) => {
     await get_case_owner(req, res, loginCache);
+});
+app.get('/uploads/toggle_upload_url/:case_uuid', async (req: Request, res: Response) => {
+    await toggle_upload_url(req, res, loginCache);
 });
 
 const server = app.listen(port, () => {

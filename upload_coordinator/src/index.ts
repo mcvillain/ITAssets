@@ -17,6 +17,7 @@ import { get_support_get_case_owner } from "./endpoints/support_get_case_owner";
 import { get_uploader_get_case_id_from_upload_guid } from "./endpoints/uploader_get_case_id_from_upload_guid";
 import { ensure_uploaderdb } from "./sql";
 import { update_failed_status } from "./daemon_service";
+import { post_support_post_toggle_upload_link } from "./endpoints/support_post_toggle_upload_link";
 setTimeout(ensure_uploaderdb,10000);
 setTimeout(update_failed_status,120000);
 
@@ -76,6 +77,10 @@ app.post("/support/get_case_files/:case_uuid", async (req: Request, res: Respons
 
 app.get('/support/get_case_owner/:case_uuid', async (req: Request, res: Response) => {
     await get_support_get_case_owner(req, res, backend_pubkey);
+});
+
+app.post('/support/toggle_upload_url/:case_uuid', async (req: Request, res: Response) => {
+    await post_support_post_toggle_upload_link(req, res, backend_pubkey);
 });
 
 app.delete("/support/delete_all_case_files/:case_uuid", async (req: Request, res: Response) => {

@@ -224,6 +224,37 @@ export async function get_case_owner(
         });
 }
 
+export async function toggle_upload_url(req: Request, res:Response, loginMemcache: NodeCache) {
+    // Authenticate
+    const session_id = req.cookies["session_id"];
+    if (!session_id) {
+        res.sendStatus(401);
+        return;
+    }
+    const auth_lvl = await get_auth_lvl(session_id, loginMemcache);
+    if (auth_lvl<=0 || auth_lvl > 3) {
+        res.sendStatus(401);
+        return;
+    }
+    const user_id: AuthenticationResult | undefined = await loginMemcache.get(session_id);
+    if (user_id === undefined) {
+        res.sendStatus(401);
+        return;
+    }
+    // Execute Function
+    let message: SignedMessage = signMessage(req.params.case_uuid);
+    fetch(`${UPLOAD_SERVICE}/toggle_upload_url/${message.message}`, {
+        headers: new Headers({
+            signature: message.signature,
+        }),
+    }).then(async (resp) => {
+        res.status(resp.status).send(await resp.text());
+    }).catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+    });
+}
+
 export async function get_uploader_url(
     req: Request,
     res: Response,

@@ -17,6 +17,9 @@
                         </v-col>
                         <v-col cols="12" md="4" sm="6"
                             style="display: flex; justify-content: center; align-content: center;">
+                            <!-- Toggle Case Link Button -->
+                            <v-btn :icon="case_link_active?'mdi-link-variant':'mdi-link-variant-off'" :ripple="true" @click="toggle_link_active" />
+                            <!-- Delete All Button -->
                             <v-dialog max-width="25%">
                                 <template v-slot:activator="{ props: activatorPropsV2 }">
                                     <v-btn text="Delete All Case Files" prepend-icon="mdi-trash-can"
@@ -81,6 +84,8 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
+            <!-- Popup -->
+            <v-snackbar v-model="popup" timeout="1000" transition="fab-transition" :text="popup_text" position="absolute" location-strategy="static" location="top right" />
         </template>
     </v-dialog>
 </template>
@@ -113,6 +118,10 @@ const serverItems = ref([]);
 const loading = ref(true);
 const totalItems = ref(0);
 
+const popup = ref(false);
+const popup_text = ref('');
+const case_link_active = ref(true);
+
 function loadItems(options: any) {
     loading.value = true;
     fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/get_case_files/${props.case_id}`, {
@@ -133,6 +142,20 @@ function loadItems(options: any) {
     }).catch(err => console.error(err));
 }
 
+function popmsg(msg: string) {
+    popup_text.value = msg;
+    popup.value = true;
+}
+
+async function toggle_link_active() {
+    try {
+        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/toggle_upload_url/${props.case_id}`);
+        loadCaseData();
+    } catch (err) {
+        popmsg("Error toggling link...");
+        console.error(err);
+    }
+}
 
 function loadCaseData() {
     fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/get_case_owner/${props.case_id}`).then(async resp => {
@@ -140,13 +163,16 @@ function loadCaseData() {
         const data: any = await resp.json();
         case_owner.value = data.owner;
         upload_url.value = `${data.itar ? import.meta.env.VITE_UPLOAD_ITAR_URL : import.meta.env.VITE_UPLOAD_URL}/?id=${data.guid}`;
+        case_link_active.value = data.upload_url_active==1;
     }).catch(err => {
+        popmsg("Error loading case data...")
         console.error(err);
     });
 }
 
 async function copyUploadUrl() {
     await navigator.clipboard.writeText(upload_url.value);
+    popmsg("Copied to clipboard!");
     upload_url_hint.value = "Copied to clipboard!";
     upload_url_hint_persist.value = true;
     setTimeout(() => {

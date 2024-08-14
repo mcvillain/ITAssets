@@ -20,7 +20,7 @@
                     </template>
                 </v-text-field>
                 <v-snackbar v-model="copy_notify" attach="#copy_url_btn" timeout="1000"
-                    transition="fab-transition">Copied</v-snackbar>
+                    transition="fab-transition">Copied to clipboard!</v-snackbar>
             </v-col>
         </v-row>
     </div>
@@ -92,7 +92,7 @@ async function get_upload_url() {
 
 async function copyUploadUrl() {
     copy_notify.value = true;
-    copy_hint.value = "Copied!";
+    copy_hint.value = "Copied to clipboard!";
     copy_hint_persist.value = true;
     setTimeout(() => { copy_hint.value = ''; copy_hint_persist.value = false; }, 1000);
     await navigator.clipboard.writeText(upload_url.value);
