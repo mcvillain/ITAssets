@@ -156,7 +156,7 @@ function update_dbs_sql(current_dbs: AzureDatabase[]) {
     current_dbs.forEach((db: AzureDatabase) => {
         const sql_query = `INSERT INTO azure_dbs (name, size, paths, created, database_id, cost${db.version === undefined || db.version === "null"? "": ", version"}, itar) 
             VALUES 
-            ('${db.name}', '${db.size}', '${db.paths.join("|")}', '${db.created}', ${db.database_id}, ${db.cost}${db.database_id}${db.version === undefined || db.version === "null"? "" : ", '" + db.version + "'"}, FALSE)`;
+            ('${db.name}', '${db.size}', '${db.paths.join("|")}', '${db.created}', ${db.database_id}, ${db.cost}${db.version === undefined || db.version === "null"? "" : ", '" + db.version + "'"}, FALSE)`;
         execute_sql(sql_query)
         .catch((error: any) => console.error(`An SQL error occured updating the local databases.\nSQL Query: ${sql_query}\nError:\n${error}`));
     });
