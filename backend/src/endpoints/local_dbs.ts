@@ -134,7 +134,7 @@ function update_db_list(
 }
 
 function delete_dbs_sql() {
-    execute_sql( // database_id = '${db.database_id}' AND 
+    return execute_sql( // database_id = '${db.database_id}' AND 
         `DELETE FROM local_dbs WHERE 1 = 1`
     );
 }
