@@ -156,16 +156,16 @@ function popmsg(msg: string) {
 async function toggle_link_active() {
     try {
         await fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/toggle_upload_url/${props.case_id}`, { method: 'POST' });
-        await loadCaseData();
+        loadCaseData();
     } catch (err) {
         popmsg("Error toggling link...");
         console.error(err);
     }
-    popmsg(`Upload Link ${case_link_active?'Enabled':'Disabled'}`);
+    popmsg(`Upload Link ${case_link_active?'Disabled':'Enabled'}`);
 }
 
 function loadCaseData() {
-    return fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/get_case_owner/${props.case_id}`).then(async resp => {
+    fetch(`${import.meta.env.VITE_API_ENDPOINT}/uploads/get_case_owner/${props.case_id}`).then(async resp => {
         if (!resp.ok) return;
         const data: any = await resp.json();
         case_owner.value = data.owner;
