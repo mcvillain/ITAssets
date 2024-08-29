@@ -280,7 +280,9 @@ onMounted(() => {
 .item {
     padding-left: 0.75rem;
 }
-
+.item:hover{
+  cursor: pointer;
+}
 
 .collapse-icon {
     /* position: absolute;
