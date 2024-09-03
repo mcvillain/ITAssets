@@ -31,7 +31,7 @@ function uploadError(error: any) {
 
 const uppy = new Uppy()
   .use(Dashboard, { inline: true, showProgressDetails: true, theme: 'dark', proudlyDisplayPoweredByUppy: false })
-  .use(Tus, { endpoint: '/uploads/uploads', chunkSize: 500000000 })
+  .use(Tus, { endpoint: '/uploads/uploads' })
   .use(ScreenCapture)
   .use(GoldenRetriever)
   .use(Compressor, {quality: 0.6})
