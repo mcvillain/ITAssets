@@ -95,7 +95,7 @@ async function copyUploadUrl() {
     copy_hint.value = "Copied to clipboard!";
     copy_hint_persist.value = true;
     setTimeout(() => { copy_hint.value = ''; copy_hint_persist.value = false; }, 1000);
-    await navigator.clipboard.writeText("https://" + upload_url.value);
+    await navigator.clipboard.writeText(upload_url.value);
 }
 
 </script>
