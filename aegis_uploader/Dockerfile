@@ -1,10 +1,11 @@
-FROM node:alpine
+FROM node:lts
 EXPOSE 3000
 # Fix SSL
-RUN apk --no-cache add ca-certificates \
-  && update-ca-certificates
+#RUN apk --no-cache add ca-certificates \
+#  && update-ca-certificates
 # Add SMB Client
-RUN apk add cifs-utils
+#RUN apk add cifs-utils
+RUN apt-get -qq update && apt-get install -y cifs-utils
 RUN mkdir -p /mnt/uploads
 # Build the frontend
 COPY ./frontend /srv/frontend

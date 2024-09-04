@@ -1,10 +1,11 @@
-FROM httpd:alpine
+FROM httpd:2.4
 EXPOSE 80
 EXPOSE 443
 # RUN apt-get -qq update && apt-get install sudo -y
 # RUN sudo apt-get -q -y install git npm
-RUN apk add curl
-RUN apk add npm
+#RUN apk add curl
+#RUN apk add npm
+RUN apt-get -qq update && apt-get install curl npm -y
 # RUN sed -i 's/\# Controls who can get stuff from this server./FallbackResource \/index.html/g' /usr/local/apache2/conf/httpd.conf
 COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
 WORKDIR /srv/
