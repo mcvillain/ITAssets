@@ -7,7 +7,7 @@ EXPOSE 3000
 # RUN apt-get -qq update && apt-get install sudo -y
 # RUN sudo apt-get -q -y install git npm
 #RUN apk add curl
-RUN sudo apt-get -qq update && apt-get install -y curl
+RUN apt-get -qq update && apt-get install -y curl
 WORKDIR /srv/
 # ENV VERSION = RANDOM_NUM
 # ENV FRONTEND_ORIGIN="https://itassets.aiscorp.com/"   
