@@ -29,7 +29,7 @@ export async function get_support_get_all_cases_page(req: Request, res: Response
     const search = req.body.search as string;
     const searchTerms = search?search.split(" ").map((term: string) => `%${term}%`):[];
     const ownerClause = owner===null?'(':`c.owner = '${owner}' AND (`;
-    const whereClause = (owner!==null?` WHERE ${ownerClause}`:' WHERE (')+(search.length>0?searchTerms.map(term => `c.case_id LIKE '${term}' OR c.owner LIKE '${term}')`).join(' OR '): '1=1') + ')';
+    const whereClause = (owner!==null?` WHERE ${ownerClause}`:' WHERE (')+(search.length>0?searchTerms.map(term => `c.case_id LIKE '${term}' OR c.owner LIKE '${term}'`).join(' OR '): '1=1') + ')';
     const sortBy = req.body.sortBy;
     const sortClause = (sortBy.length > 0)?`ORDER BY '${sortBy[0].key as string}' ${(sortBy[0].order as string).toUpperCase()}`:'ORDER BY c.created_at DESC';
     // Use SQL to query for the top 'ITEMS_PER_PAGE' results, skipping the ammt calculated before
