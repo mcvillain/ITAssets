@@ -102,6 +102,10 @@ function delete_outdated_dbs(
     incoming_dbs: IncomingAzureDB[],
     current_dbs: AzureDatabase[]
 ): AzureDatabase[] {
+    // Convert incoming_dbs to a set for faster lookup
+    const incomingDbIds = new Set(incoming_dbs.map(db => db.database_id));
+
+    // Remove databases that exist in incoming_dbs
     incoming_dbs.forEach((db: IncomingAzureDB) => {
         const matched_db = current_dbs.find(
             (existing_db) => existing_db.database_id === db.database_id
@@ -113,6 +117,10 @@ function delete_outdated_dbs(
             }
         }
     });
+
+    // NEW LOGIC: Remove databases from current_dbs that are NOT in incoming_dbs
+    current_dbs = current_dbs.filter(db => incomingDbIds.has(db.database_id));
+
     return current_dbs;
 }
 
