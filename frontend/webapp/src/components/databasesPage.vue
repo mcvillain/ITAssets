@@ -53,6 +53,7 @@ const headers = [
     { title: "Name", value: "name", sortable: true, filterable: true },
     { title: "Size", value: "size", sortable: true, filterable: false },
     { title: "", value: "paths", sortable: false, filterable: true },
+    { title: "Server", value: "server", sortable: true, filterable: false },
     { title: "Created", value: "created", sortable: true, filterable: true },
     { title: "Version", value: "version", sortable: true, filterable: true },
 ];
