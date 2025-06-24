@@ -94,6 +94,8 @@ export async function get_localdb_csv(
     res.sendStatus(401);
 }
 
+//original but incorrect logic
+/*
 function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
     incoming_dbs.forEach((db: IncomingLocalDB) => {
         const matched_db = current_dbs.find((existing_db) => `${existing_db.name}_${existing_db.database_id}` === `${db.name}_${db.database_id}`);
@@ -105,6 +107,13 @@ function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: Local
         }
     })
     return current_dbs;
+}
+*/
+
+//ChatGPT solution
+function delete_outdated_dbs(incoming_dbs: IncomingLocalDB[], current_dbs: LocalDatabase[]): LocalDatabase[] {
+    const incoming_keys = new Set(incoming_dbs.map(db => `${db.name}_${db.database_id}`));
+    return current_dbs.filter(db => incoming_keys.has(`${db.name}_${db.database_id}`));
 }
 
 
