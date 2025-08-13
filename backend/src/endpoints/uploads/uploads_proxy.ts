@@ -3,6 +3,8 @@ import { SignedMessage, signMessage } from "./signing";
 import { get_auth_lvl } from "../auth";
 import NodeCache from "node-cache";
 import { AuthenticationResult } from "@azure/msal-node";
+import { Client } from '@hubspot/api-client';
+import { FilterOperatorEnum } from "@hubspot/api-client/lib/codegen/crm/tickets";
 
 const UPLOAD_SERVICE = "http://itassets-coordinator-service:3000/support";
 
@@ -298,67 +300,45 @@ export async function get_uploader_url(
     }
 
     let itar = false;
-    // const myHeaders = new Headers();
-    // myHeaders.append(
-    //     "Authorization",
-    //     `Basic ${process.env.INVGATE_USER}`
-    // );
-
-    // fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
-    //     method: "GET",
-    //     headers: myHeaders,
-    //     redirect: "follow",
-    // })
-    //     .then((response) => {
-    //         if (response.status == 404) {
-    //             res.sendStatus(404);
-    //             throw "Case does not exist";
-    //         }
-    //         return response.text()
-    //     })
-    //     .then((result) => {
-    //         console.log(result);
-
-    //         // Parse the result to get custom fields
-    //         const custom_fields = JSON.parse(result).custom_fields;
-    //         console.log("Custom fields:", custom_fields);
-
-    //         // Check the ITAR field
-    //         const itar = custom_fields["8"] === "true"; // Ensure you check the exact format of this value
-    //         console.log("ITAR:", itar);
-    //     })
-    //     .catch((error) => console.error(error));
-
-    // Correctly set the Authorization header
-    const headers = new Headers();
-    headers.set(
-        "Authorization",
-        `Basic ${process.env.INVGATE_USER}`
-    );
+    const hubspotClient = new Client({ accessToken: process.env.HUBSPOT_ACCESS_TOKEN });
 
     try {
-        const resp = await fetch(`${process.env.INVGATE_URI}?id=${case_id}`, {
-            headers,
-            redirect: "follow",
-        });
 
-        // console.log("INVGATE response status:", resp.status);
-        
-        // console.log("INVGATE response body:", textResponse);
+        let ticket = null;
 
-        if (!resp.ok) {
-            const textResponse = await resp.text();
-            console.error("Failed to fetch case ID details:", textResponse);
+        // Fetch the ticket from HubSpot using Aegis Ticket Number if Case ID starts with "AIS-" -- Otherwise use Hubspot Object ID
+        if (case_id.startsWith("AIS-")) {
+            const searchResults = await hubspotClient.crm.tickets.searchApi.doSearch({
+                filterGroups: [{
+                    filters: [{
+                        propertyName: 'ais_ticket_number',
+                        operator: FilterOperatorEnum.Eq,
+                        value: case_id
+                    }]
+                }],
+                properties: ['itar'],
+                limit: 1
+            });
+    
+            if (searchResults.total > 0) {
+                ticket = searchResults.results[0];
+            }
+        }
+        else {
+            ticket = await hubspotClient.crm.tickets.basicApi.getById(
+                case_id,
+                ['itar']
+            );
+        }
+    
+        if (!ticket) {
+            console.error("Ticket not found in HubSpot");
             res.sendStatus(404);
             return;
         }
 
-        const response = await resp.json();
-        const custom_fields = response.custom_fields;
-        // console.log("Custom fields:", custom_fields);
+        itar = ticket.properties?.itar === 'true';
 
-        itar = custom_fields["8"] === true || custom_fields["8"] === "true"; // Ensure you check the exact format of this value
-        // console.log("ITAR:", itar);
     } catch (err) {
         console.error("Error verifying case ID:", err);
         res.status(500).send("Couldn't verify case ID");
