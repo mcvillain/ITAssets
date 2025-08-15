@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@azure/msal-node": "^2.9.2",
+    "@hubspot/api-client": "^13.0.1",
     "argon2id": "^1.0.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
@@ -10,8 +11,7 @@
     "mariadb": "^3.3.1",
     "node_extra_ca_certs_mozilla_bundle": "^1.0.7",
     "node-cache": "^5.1.2",
-    "then-request": "^6.0.2",
-    "@hubspot/api-client": "^13.0.1"
+    "then-request": "^6.0.2"
   },
   "scripts": {
     "start": "node index.js",
